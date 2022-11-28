@@ -1,4 +1,6 @@
 import * as Types from '../../constants/ActionType';
+import { Redirect } from 'react-router-dom';
+
 import callApi from '../../utils/apiCaller';
 import { toast } from 'react-toastify';
 import { startLoading, doneLoading } from '../../utils/loading';
@@ -7,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 export const actLoginRequest = (user) => {
     return async dispatch => {
         const res = await callApi('auth/login', 'POST', user);
+        console.log('actLoginRequest res: ', res);
         if (res && res.data.token) {
             console.log(res.data)
             const token = res.data.token
@@ -34,6 +37,7 @@ export const actActiveRequest = (activeCode, user) => {
             toast.success('Kích Hoạt Tài Khoản Thành Công! Đã Đăng Nhập!');
             localStorage.removeItem('username');
             localStorage.removeItem('password');
+            localStorage.setItem('errorCode', '');
         }
 
     };

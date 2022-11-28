@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { startLoading, doneLoading } from '../../utils/loading'
 import { Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom';
 import { GoogleLogin } from 'react-google-login'
 import "./style.css";
 toast.configure()
@@ -51,6 +52,14 @@ class Login extends Component {
     startLoading();
     await this.props.loginRequest(user);
     doneLoading();
+
+    setTimeout(() => {
+      const errorCode = localStorage.getItem('errorCode');
+      console.log('errorCode: ', errorCode);
+      if (errorCode === 'Tài khoản chưa kích hoạt. Vui lòng kiểm tra lại email để hoàn tất đăng kí') {
+        this.props.history.push(`/activeaccount`);
+      }
+    }, 1000);
 
   }
 
@@ -142,4 +151,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login)
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Login))

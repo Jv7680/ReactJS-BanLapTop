@@ -124,9 +124,9 @@ export const actFetchKeySearch = (newKeyPage) => {
 export const actFetchProductsDiscountRequest = (page) => {
     const newOffset = page === null || page === undefined ? 1 : page
     return async dispatch => {
-        const res = await callApi(`view/product/10discount`, 'GET', null);
+        const res = await callApi(`product/all`, 'GET', null);
         if (res && res.status === 200) {
-            dispatch(actFetchProductsDiscount(res.data));
+            dispatch(actFetchProductsDiscount(res.data.listProducts));
         }
     };
 }
@@ -142,10 +142,11 @@ export const actFetchProductsDiscount = (products) => {
 export const actFetchProductsBestRequest = (page) => {
     const newOffset = page === null || page === undefined ? 1 : page
     return async dispatch => {
-        const res = await callApi(`view/product/10bestproduct`, 'GET', null);
+        const res = await callApi(`product/all`, 'GET', null);
+        console.log('actFetchProductsBestRequest: ', res);
         if (res && res.status === 200) {
-            const array = Object.values(res.data.map)
-            console.log("chuyển thành mảng", array)
+            const array = Object.values(res.data.listProducts);
+            console.log("chuyển thành mảng", array);
             dispatch(actFetchProductsBest(array));
         }
     };

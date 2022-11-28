@@ -28,7 +28,8 @@ export default async function callApi(endpoint, method = 'GET', body, token) {
   }
   catch (err) {
     if (err.response && err.response.data) {
-      console.log(err.response.data)
+      console.log('err.response.data: ', err.response.data);
+      localStorage.setItem('errorCode', err.response.data.message);
       const error = err.response.data.message || err.response.data[0].defaultMessage;
       MySwal.fire({
         icon: 'error',

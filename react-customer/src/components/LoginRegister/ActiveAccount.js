@@ -45,9 +45,6 @@ class ActiveAccount extends Component {
         startLoading();
         await this.props.activeRequest(activeCode, user);
         doneLoading();
-
-        //await this.props.loginRequest(user);
-
     }
 
 
