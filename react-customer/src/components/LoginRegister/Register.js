@@ -4,19 +4,22 @@ import 'react-toastify/dist/ReactToastify.css';
 import { actRegisterRequest } from '../../redux/actions/auth';
 import { connect } from 'react-redux'
 import { startLoading, doneLoading } from '../../utils/loading'
+import { withRouter } from 'react-router-dom';
+
+
 toast.configure()
 
 class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstname:'',
-      lastname:'',
+      firstname: '',
+      lastname: '',
       gmail: '',
       password: '',
       repassword: '',
-      phonenumber:'',
-      address:''
+      phonenumber: '',
+      address: ''
     }
   }
 
@@ -30,7 +33,7 @@ class Register extends Component {
 
   handleSubmit = async (event) => {
     event.preventDefault();
-    const { firstname,lastname, gmail, password, repassword,phonenumber,address } = this.state;
+    const { firstname, lastname, gmail, password, repassword, phonenumber, address } = this.state;
     const user = {
       firstname,
       lastname,
@@ -40,37 +43,39 @@ class Register extends Component {
       phonenumber,
       address
     }
-    if (password !== repassword){
+    if (password !== repassword) {
       toast.error('Mật khẩu không khớp!')
-      return 
+      return
     }
     if (password.length < 6 || password.length > 32) {
       toast.error('Mật khẩu chỉ 6-32 ký tự');
       return
     }
-    if(phonenumber.length !== 10)
-    {
+    if (phonenumber.length !== 10) {
       toast.error('SĐT không hợp lệ');
       return
     }
-    
+
     console.log(user);
-  
+
     await this.props.registerRequest(user);
-    this.setState ({
-      firstname:'',
-      lastname:'',
-      gmail: '',
-      password: '',
-      repassword: '',
-      phonenumber:'',
-      address:''
-    } ) 
-  
+    // this.setState({
+    //   firstname: '',
+    //   lastname: '',
+    //   gmail: '',
+    //   password: '',
+    //   repassword: '',
+    //   phonenumber: '',
+    //   address: ''
+    // })
+    localStorage.setItem('username', user.gmail);
+    localStorage.setItem('password', user.password);
+
+    this.props.history.push(`/activeaccount`);
   }
 
   render() {
-    const { firstname,lastname, gmail, phonenumber,address,password,repassword } = this.state;
+    const { firstname, lastname, gmail, phonenumber, address, password, repassword } = this.state;
     return (
       <div className="col-sm-12 col-md-12 col-lg-6 col-xs-12">
         <form onSubmit={(event) => this.handleSubmit(event)} >
@@ -120,7 +125,7 @@ class Register extends Component {
               <div className="col-md-6 mb-20">
                 <label>Nhập lại mật khẩu *</label>
                 <input
-                   value={repassword}
+                  value={repassword}
                   onChange={this.handleChange}
                   className="mb-0"
                   type="password"
@@ -137,7 +142,7 @@ class Register extends Component {
                   className="mb-0"
                   type="text"
                   name="phonenumber"
-                  placeholder="Nhập số điện thoại (10 số) " /> 
+                  placeholder="Nhập số điện thoại (10 số) " />
               </div>
               <div className="col-md-12 mb-20">
                 <label>Địa chỉ *</label>
@@ -147,7 +152,7 @@ class Register extends Component {
                   className="mb-0"
                   type="text"
                   name="address"
-                  placeholder="Địa chỉ" /> 
+                  placeholder="Địa chỉ" />
               </div>
               <div className="col-12">
                 <button className="register-button mt-0">Đăng ký</button>
@@ -168,5 +173,5 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(Register)
+export default connect(null, mapDispatchToProps)(withRouter(Register))
 

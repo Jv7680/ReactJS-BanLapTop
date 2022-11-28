@@ -20,16 +20,21 @@ const store = createStore(appReducers, composeWithDevTools(
 ReactDOM.render(
   <Provider store={store}>
     <App />
-     <MessengerCustomerChat
+    <MessengerCustomerChat
       pageId="104269089019086"
       appId="403072068520652"
-      language= 'en_US'
-    />, 
+      language='en_US'
+    />,
     <ToastContainer
       position="top-right"
-      autoClose={1700}
-      pauseOnHover={false}
-      pauseOnVisibilityChange={false}
+      autoClose={3000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme="colored"
     />
   </Provider>,
   document.getElementById('root')

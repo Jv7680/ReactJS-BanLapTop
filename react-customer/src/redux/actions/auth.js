@@ -22,22 +22,38 @@ export const actLoginRequest = (user) => {
     };
 }
 
-export const actLoginGoogleRequest = (token, customerId, id,provider) => {
+export const actActiveRequest = (activeCode, user) => {
+    return async dispatch => {
+        const res = await callApi(`registration/activate/${activeCode}`, 'GET');
+        console.log('res active là:', res);
+        if (res === undefined) {
+            //do nothing
+        }
+        else {
+            dispatch(actLoginRequest(user));
+            toast.success('Kích Hoạt Tài Khoản Thành Công! Đã Đăng Nhập!');
+            localStorage.removeItem('username');
+            localStorage.removeItem('password');
+        }
+
+    };
+}
+
+export const actLoginGoogleRequest = (token, customerId, id, provider) => {
     return async dispatch => {
         const res = await callApi(`auth/oauth/google?id=${id}&customerId=${customerId}&provider=${provider}`, 'GET');
 
         console.log(`duw lieu xem co ten khong${provider}`)
         localStorage.setItem('_auth', token);
         localStorage.setItem('_id', customerId);
-        localStorage.setItem('_idaccount',id)
-        const data = {provider,...res.data}
-        if(res && res.status === 200)
-        {
+        localStorage.setItem('_idaccount', id)
+        const data = { provider, ...res.data }
+        if (res && res.status === 200) {
             dispatch(actLogin(token));
             dispatch(actFetchUser(data));
         }
-       
-        
+
+
 
 
     };
@@ -58,7 +74,6 @@ export const actRegisterRequest = (user) => {
         const res = await callApi('registration', 'POST', user);
         if (res && res.status === 200) {
             console.log(res)
-            toast.success(res.data)
             doneLoading()
         }
     };

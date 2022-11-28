@@ -30,14 +30,14 @@ class Login extends Component {
     });
   }
 
-  handleLoginGoogle = async event =>{
+  handleLoginGoogle = async event => {
     event.preventDefault();
     window.location.replace("http://banlinhkienpt.us-west-2.elasticbeanstalk.com/oauth2/authorize/google");
   }
 
   handleSubmit = async event => {
     event.preventDefault();
-    
+
     console.log(event)
     const { username, password } = this.state;
     if (password.length < 6 || password.length > 32) {
@@ -61,7 +61,7 @@ class Login extends Component {
     if (user !== null) {
       return <Redirect to="/"></Redirect>
     }
-    
+
     return (
       <div className="col-sm-12 col-md-12 col-xs-12 col-lg-6 mb-30">
         {/* Login Form s*/}
@@ -94,6 +94,7 @@ class Login extends Component {
               <div className="col-md-8">
                 <div className="check-box d-inline-block ml-0 ml-md-2 mt-10">
                   <Link to="/register"> Đăng ký</Link>
+                  {/* <Link to="/activeaccount"> Đăng ký</Link> */}
 
                 </div>
               </div>
@@ -120,7 +121,7 @@ class Login extends Component {
             </div>
           </div>
         </form>
-        
+
       </div>
     )
   }

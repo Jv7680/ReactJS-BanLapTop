@@ -22,6 +22,8 @@ import AfterCheckoutPage from './pages/AfterCheckoutPage';
 import LoginGooglePage from './pages/LoginGooglePage';
 import ProfilePage from './pages/ProfilePage';
 import ProductWishListPage from './pages/ProductWishListPage'
+import ActiveAccountPage from './pages/ActiveAccountPage';
+
 const routes = [
   {
     path: '/',
@@ -67,6 +69,11 @@ const routes = [
     path: '/register',
     exact: false,
     main: (match) => < RegisterPage match={match} />
+  },
+  {
+    path: '/activeaccount',
+    exact: false,
+    main: (match) => < ActiveAccountPage match={match} />
   },
   {
     path: '/forgot-password',

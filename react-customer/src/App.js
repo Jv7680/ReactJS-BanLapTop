@@ -8,6 +8,7 @@ import { actTokenRequest } from "./redux/actions/auth";
 import { css } from '@emotion/core';
 import { actShowLoading } from "./redux/actions/loading";
 import ClipLoader from 'react-spinners/ClipLoader';
+import ActiveAccount from "./components/LoginRegister/ActiveAccount";
 
 import './style.css'
 const override = css`
@@ -66,6 +67,8 @@ class App extends Component {
             )
         }
       </Router>
+
+      // <ActiveAccount></ActiveAccount>
     )
   }
   showContentMenus = routes => {
