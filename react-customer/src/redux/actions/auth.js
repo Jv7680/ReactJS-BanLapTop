@@ -13,7 +13,8 @@ export const actLoginRequest = (user) => {
         if (res && res.data.token) {
             console.log(res.data)
             const token = res.data.token
-            const id = res.data.customerId
+            //const id = res.data.customerId
+            const id = res.data.id
             const idAccount = res.data.id
             localStorage.setItem('_auth', token);
             localStorage.setItem('_id', id);

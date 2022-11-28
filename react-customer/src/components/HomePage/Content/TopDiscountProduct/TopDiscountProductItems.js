@@ -48,7 +48,7 @@ class TopDiscountProductItems extends Component {
       this.setState({
         redirectYourLogin: false
       })
-      this.props.addCart(id, product, quantity);
+      this.props.addCart(id, product, quantity, token);
     }
 
   };
@@ -111,8 +111,8 @@ const mapDispatchToProps = (dispatch) => {
     getInfoProduct: (id) => {
       dispatch(actGetProductRequest(id))
     },
-    addCart: (idCustomer, product, quantity) => {
-      dispatch(actAddCartRequest(idCustomer, product, quantity));
+    addCart: (idCustomer, product, quantity, token) => {
+      dispatch(actAddCartRequest(idCustomer, product, quantity, token));
     },
     addWishList: (id, idProduct) => {
       dispatch(actAddWishListRequest(id, idProduct));

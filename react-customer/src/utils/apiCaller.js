@@ -31,11 +31,18 @@ export default async function callApi(endpoint, method = 'GET', body, token) {
       console.log('err.response.data: ', err.response.data);
       localStorage.setItem('errorCode', err.response.data.message);
       const error = err.response.data.message || err.response.data[0].defaultMessage;
-      MySwal.fire({
-        icon: 'error',
-        title: 'Lỗi',
-        text: `${error}`
-      })
+      if (error === 'Giỏ hàng trống') {
+        //do nothing
+        //window.location.reload();
+      }
+      else {
+        MySwal.fire({
+          icon: 'error',
+          title: 'Lỗi',
+          text: `${error}`
+        })
+      }
+
     } else {
       MySwal.fire({
         icon: 'error',

@@ -4,31 +4,31 @@ import { actRemoveCartRequest, actUpdateCartRequest } from '../../redux/actions/
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { toast } from 'react-toastify';
+import { withRouter } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import './style.css'
 toast.configure()
 
 class ShoppingCartItems extends Component {
 
-
   upItem = (item) => {
-    if (item.quantity >= 5) {
+    if (item.cartProductQuantity >= 5) {
       toast.error('Tối đa 5 sản phẩm')
       return
     }
     let newItem = item;
-    newItem.quantity++;
+    newItem.cartProductQuantity++;
     this.props.changQuantityItem(newItem);
     // window.location.reload()
 
   }
   downItem = (item) => {
-    if (item.quantity <= 1) {
+    if (item.cartProductQuantity <= 1) {
       toast.error('Tối thiểu 1 sản phẩm')
       return
     }
     let newItem = item;
-    newItem.quantity--;
+    newItem.cartProductQuantity--;
     this.props.changQuantityItem(newItem);
     // window.location.reload()
 
@@ -39,11 +39,23 @@ class ShoppingCartItems extends Component {
     console.log("sản phẩm xóa", item)
     toast.success('Xóa thành công')
     // window.location.reload()
+
+    // setTimeout(() => {
+    //   if (localStorage.getItem('errorCode') === 'Giỏ hàng trống') {
+    //     let id = parseInt(localStorage.getItem("_id"));
+    //     //this.props.history.push(`/cart`);
+    //     // this.setState = {
+    //     //   emptyCart: true,
+    //     // };
+    //     localStorage.setItem('errorCode', '');
+    //   }
+    // }, 3000);
+
   }
 
   render() {
     const { item } = this.props;
-   
+
     return (
       <tr>
         <td className="li-product-remove">
@@ -53,28 +65,39 @@ class ShoppingCartItems extends Component {
         </td>
         <td className="li-product-thumbnail d-flex justify-content-center">
           <Link to={`/products/${item.productId}`} >
-            <div className="fix-cart"> <img className="fix-img" src={item.productImageDtoSet ? item.productImageDtoSet[0].image : null} alt="Li's Product" /></div>
+            <div className="fix-cart"> <img className="fix-img" src={item.product.image} alt="Li's Product" /></div>
           </Link></td>
         <td className="li-product-name">
-          <Link className="text-dark" to={`/products/${item.productId}`}>{item.nameProduct}</Link></td>
+          <Link className="text-dark" to={`/products/${item.product.productId}`}>{item.product.productName}</Link></td>
         <td className="product-subtotal">
-          <span className="amount">{formatNumber(item.priceAfterDiscount)}</span>
+          {/* <span className="amount">{formatNumber(item.priceAfterDiscount)}</span> */}
           {
-            item.discount > 0 ? (
-              <span className="amount"style={{ color: 'black', textDecoration: "line-through"}}>{formatNumber(item.unitPrice)}</span>
+            item.product.discount > 0 ? (
+              <span className="amount" style={{ color: 'black', textDecoration: "line-through" }}>{formatNumber(item.product.unitprice)}</span>
             )
-            :null
+              :
+              (
+                <span className="amount" style={{ color: 'black', textDecoration: "none" }}>{formatNumber(item.product.unitprice)}</span>
+              )
           }
         </td>
         <td className="quantity">
           <div className="cart-plus-minus">
-            <input onChange={() => { }} className="cart-plus-minus-box" value={this.props.item.quantity || 0} />
+            <input onChange={() => { }} className="cart-plus-minus-box" value={this.props.item.cartProductQuantity || 0} />
             <div className="dec qtybutton" onClick={() => this.downItem(item)}><i className="fa fa-angle-down" />
             </div>
             <div className="inc qtybutton" onClick={() => this.upItem(item)}><i className="fa fa-angle-up" /></div>
           </div>
         </td>
-        <td className="product-subtotal"><span className="amount">{formatNumber((item.priceAfterDiscount * item.quantity))}</span></td>
+        {
+          item.product.discount > 0 ? (
+            <td className="product-subtotal"><span className="amount">{formatNumber((item.product.discount / 100 * item.product.unitprice * item.cartProductQuantity))}</span></td>
+          )
+            :
+            (
+              <td className="product-subtotal"><span className="amount">{formatNumber((item.product.unitprice * item.cartProductQuantity))}</span></td>
+            )
+        }
       </tr>
     )
   }
@@ -91,4 +114,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(ShoppingCartItems)
+export default connect(null, mapDispatchToProps)(withRouter(ShoppingCartItems))

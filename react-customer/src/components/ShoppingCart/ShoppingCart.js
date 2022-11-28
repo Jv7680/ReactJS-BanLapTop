@@ -24,15 +24,15 @@ class ShoppingCart extends Component {
     }
     else {
     }
-    this.props.fetch_items(id);
-  
+    this.props.fetch_items(id, token);
+
 
 
   }
 
   showItem(items) {
     let result = null;
-    console.log(items)
+    console.log('items: ', items)
     if (items.length > 0) {
       result = items.map((item, index) => {
         return (
@@ -111,8 +111,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetch_items: (id) => {
-      dispatch(actFetchCartRequest(id))
+    fetch_items: (id, token) => {
+      dispatch(actFetchCartRequest(id, token))
     }
   }
 }
