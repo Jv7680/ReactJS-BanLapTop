@@ -9,47 +9,27 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const MySwal = withReactContent(Swal)
 let id;
-class OrderStatus3 extends Component {
+class OrderStatus5 extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            statusPage: 'đã duyệt',
+            statusPage: 'Đã hủy',
             redirectToProduct: false
         }
     }
     componentDidMount() {
         id = localStorage.getItem("_id");
         const { statusPage } = this.state
+        console.log("id,va trangj thai", id, statusPage)
 
-        //status = 3 là đang giao
-        this.fetch_reload_data(3, id);
+        //status = 5 là đã hủy
+        this.fetch_reload_data(5, id);
     }
     fetch_reload_data(statusPage, id) {
         this.props.fetch_orders(statusPage, id)
             .catch(err => {
                 console.log(err);
             })
-    }
-    handleRemove = (id) => {
-        MySwal.fire({
-            title: 'Xóa đơn hàng?',
-            text: `Bạn chắc chắn xóa đơn hàng ${id}!`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes'
-        }).then(async (result) => {
-            if (result.value) {
-                await this.props.delete_order(id);
-                await Swal.fire(
-                    'Xóa!',
-                    'Đơn hàng của bạn đã được xóa.!',
-                    'success'
-                )
-                window.location.reload();
-            }
-        })
     }
 
 
@@ -74,8 +54,8 @@ class OrderStatus3 extends Component {
                                                                     <th>id đơn hàng</th>
                                                                     <th>sản phẩm</th>
                                                                     <th>Tổng tiền</th>
-                                                                    <th>Ngày tạo</th>
-                                                                    <th>Trạng thái</th>
+                                                                    <th>Ngày hủy</th>
+                                                                    <th>Hủy đơn</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -123,7 +103,7 @@ class OrderStatus3 extends Component {
                                                                                 </Moment>
                                                                             </td>
                                                                             <td>
-                                                                                <span className="badge badge-pill badge-info mb-10">Đang giao</span>
+                                                                                <span className="badge badge-pill badge-danger mb-10">Đã hủy</span>
                                                                                 <br />
 
                                                                             </td>
@@ -166,6 +146,6 @@ const mapDispatchToProps = (dispatch) => {
         }
     }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(OrderStatus3)
+export default connect(mapStateToProps, mapDispatchToProps)(OrderStatus5)
 
 

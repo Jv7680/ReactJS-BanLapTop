@@ -71,7 +71,11 @@ export const actFetchOrders = orders => {
 };
 export const actDeleteOrderRequest = (id) => {
   return async dispatch => {
-    const res = await callApi(`orders/cancel/${id}`, "PUT");
+    let tokenAdmin = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0dSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTY2OTY5MzgxNywiZXhwIjoxNjcwMjk4NjE3fQ.uuqwj7hTrY8ivTKxUeVoG3Vr9_07pYpPJ_sHtXuIU_k';
+    let body = {
+      orderStatus: 5,
+    }
+    const res = await callApi(`admin/orders/update/${id}`, "PUT", body, tokenAdmin);
     if (res && res.status === 200) {
       dispatch(actDeleteOrder(id));
     }

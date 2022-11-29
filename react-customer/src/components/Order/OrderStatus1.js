@@ -73,7 +73,7 @@ class OrderStatus1 extends Component {
                                                                 <tr>
                                                                     <th>id đơn hàng</th>
                                                                     {/* Tạm thời bỏ sản phẩm */}
-                                                                    {/* <th>sản phẩm</th> */}
+                                                                    <th>sản phẩm</th>
                                                                     <th>Tổng tiền</th>
                                                                     <th>Ngày tạo</th>
                                                                     <th>Hủy đơn</th>
@@ -84,15 +84,15 @@ class OrderStatus1 extends Component {
                                                                     return (
                                                                         <tr key={index}>
                                                                             <th scope="row">{item.orderId}</th>
-                                                                            {/* <td>
+                                                                            <td>
                                                                                 {
-                                                                                    item.listProduct && item.listProduct.length ?
-                                                                                        item.listProduct.map((product, index) => {
+                                                                                    item.lstOrdersDetail && item.lstOrdersDetail.length ?
+                                                                                        item.lstOrdersDetail.map((product, index) => {
                                                                                             return (
                                                                                                 <>
                                                                                                     <li className='d-flex' key={index}>
                                                                                                         <div className="fix-order">
-                                                                                                            <img src={product.productImage} className="fix-img-order" alt="not found" />
+                                                                                                            <img src={product.imgLink} className="fix-img-order" alt="not found" />
                                                                                                         </div>
                                                                                                         <div>
                                                                                                             <h6 className='pl-3 pt-10'>{product.productName}</h6>
@@ -106,7 +106,7 @@ class OrderStatus1 extends Component {
                                                                                                                     fontStyle: "italic",
                                                                                                                 }}
                                                                                                             >
-                                                                                                                x{product.quantity}
+                                                                                                                SL: {product.quantity}
                                                                                                             </strong>
                                                                                                         </div>
 
@@ -117,7 +117,7 @@ class OrderStatus1 extends Component {
                                                                                             )
                                                                                         }) : null
                                                                                 }
-                                                                            </td> */}
+                                                                            </td>
                                                                             <td>{formatNumber(item.totalAmount)}</td>
                                                                             <td>
                                                                                 <Moment format="DD/MM/YYYY">

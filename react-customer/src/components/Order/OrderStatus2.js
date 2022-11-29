@@ -13,16 +13,16 @@ class OrderStatus2 extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            statusPage: 'đã duyệt',
+            statusPage: 'Chưa duyệt',
             redirectToProduct: false
         }
     }
     componentDidMount() {
-        id = localStorage.getItem("_id");
+        let id = parseInt(localStorage.getItem("_id"));
         const { statusPage } = this.state
 
-        //status = 3 là đang giao
-        this.fetch_reload_data(3, id);
+        //status = 2 là đã duyệt
+        this.fetch_reload_data(2, id);
     }
     fetch_reload_data(statusPage, id) {
         this.props.fetch_orders(statusPage, id)
@@ -47,7 +47,7 @@ class OrderStatus2 extends Component {
                     'Đơn hàng của bạn đã được xóa.!',
                     'success'
                 )
-                window.location.reload();
+                // window.location.reload();
             }
         })
     }
@@ -55,7 +55,7 @@ class OrderStatus2 extends Component {
 
     render() {
         const { orders } = this.props
-        console.log("oder laays dduioc", orders)
+        console.log("orders của redux: ", orders)
         return (
             <div className="content-inner">
                 <section className="tables">
@@ -72,10 +72,11 @@ class OrderStatus2 extends Component {
                                                             <thead>
                                                                 <tr>
                                                                     <th>id đơn hàng</th>
+                                                                    {/* Tạm thời bỏ sản phẩm */}
                                                                     <th>sản phẩm</th>
                                                                     <th>Tổng tiền</th>
                                                                     <th>Ngày tạo</th>
-                                                                    <th>Hủy đơn</th>
+                                                                    <th>Trạng thái</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -85,16 +86,17 @@ class OrderStatus2 extends Component {
                                                                             <th scope="row">{item.orderId}</th>
                                                                             <td>
                                                                                 {
-                                                                                    item.listProduct && item.listProduct.length ?
-                                                                                        item.listProduct.map((product, index) => {
+                                                                                    item.lstOrdersDetail && item.lstOrdersDetail.length ?
+                                                                                        item.lstOrdersDetail.map((product, index) => {
                                                                                             return (
                                                                                                 <>
                                                                                                     <li className='d-flex' key={index}>
                                                                                                         <div className="fix-order">
-                                                                                                            <img src={product.productImage} className="fix-img-order" alt="not found" />
+                                                                                                            <img src={product.imgLink} className="fix-img-order" alt="not found" />
                                                                                                         </div>
                                                                                                         <div>
                                                                                                             <h6 className='pl-3 pt-10'>{product.productName}</h6>
+
 
                                                                                                             <strong
                                                                                                                 className="pl-3 product-quantity"
@@ -104,7 +106,7 @@ class OrderStatus2 extends Component {
                                                                                                                     fontStyle: "italic",
                                                                                                                 }}
                                                                                                             >
-                                                                                                                x{product.quantity}
+                                                                                                                SL: {product.quantity}
                                                                                                             </strong>
                                                                                                         </div>
 
@@ -118,21 +120,24 @@ class OrderStatus2 extends Component {
                                                                             </td>
                                                                             <td>{formatNumber(item.totalAmount)}</td>
                                                                             <td>
-                                                                                <Moment format="YYYY/MM/DD">
+                                                                                <Moment format="DD/MM/YYYY">
                                                                                     {item.createDate}
                                                                                 </Moment>
                                                                             </td>
                                                                             <td>
-                                                                                <span className="badge badge-pill badge-info mb-10">Đang giao</span>
-                                                                                <br />
-
+                                                                                <span className="badge badge-pill badge-warning mb-10">Đã duyệt</span>
+                                                                                {/* <br />
+                                                                                <button className="btn btn-outline-danger"
+                                                                                    value={item.orderId}
+                                                                                    onClick={() => this.handleRemove(item.orderId)} > Hủy đơn</button> */}
                                                                             </td>
                                                                         </tr>
                                                                     )
-                                                                }) : null}
+                                                                }) : <tr>Chưa có Đơn </tr>}
                                                             </tbody>
                                                         </table>
-                                                    ) :
+                                                    )
+                                                    :
                                                     (
                                                         <img src='https://brabantia.com.vn/images/cart-empty.png' className="rounded mx-auto d-block"></img>
                                                     )
