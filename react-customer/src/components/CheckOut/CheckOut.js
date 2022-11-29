@@ -38,6 +38,7 @@ class CheckOut extends Component {
   componentDidMount() {
     token = localStorage.getItem("_auth");
   }
+
   toggleCheckout = async (e) => {
     e.preventDefault();
     let id = localStorage.getItem("_id");
@@ -46,10 +47,10 @@ class CheckOut extends Component {
     let list = [];
     let count = 0;
     let shippingTotal = 0;
-    const { toggleCheckout, shippingAddress,chooseAddress } = this.state;
-    res = addresses.find(e=>e.deliveryAddressId == chooseAddress)
+    const { toggleCheckout, shippingAddress, chooseAddress } = this.state;
+    res = addresses.find(e => e.deliveryAddressId == chooseAddress)
 
-    if ( chooseAddress === -1) {
+    if (chooseAddress === -1) {
       return toast.error("vui lòng chọn địa chỉ");
     }
 
@@ -65,7 +66,7 @@ class CheckOut extends Component {
         return (sum += item.quantity * item.priceAfterDiscount);
       }, 0);
     }
-    
+
     if (list) {
       const newOder = {
         address: res.deliveryAddress,
@@ -128,12 +129,11 @@ class CheckOut extends Component {
           break;
         case "MOMO":
           startLoading();
-          console.log(window.location.origin +"/order")
+          console.log(window.location.origin + "/order")
           resData = await callApi("payment/momo", "POST", newOder);
           console.log(resData)
           if (resData && resData.status == 200) {
-            if(is_empty(resData.data.payUrl))
-            {
+            if (is_empty(resData.data.payUrl)) {
               Swal.fire(
                 'Lỗi!',
                 `${resData.data.localMessage}`,
@@ -141,10 +141,10 @@ class CheckOut extends Component {
               )
               this.setState({ linkReplace: `${window.location.origin}/order/status1`, redirectTo: true })
             }
-            else{
+            else {
               this.setState({ linkReplace: resData.data.payUrl, redirectTo: true })
             }
-           
+
           }
           doneLoading();
           break;
@@ -152,7 +152,7 @@ class CheckOut extends Component {
           startLoading();
           resData = await callApi("payment/paypal", "POST", newOder);
           if (resData && resData.status == 200) {
-              this.setState({ linkReplace: resData.data.link, redirectTo: true })
+            this.setState({ linkReplace: resData.data.link, redirectTo: true })
           }
           doneLoading();
           break
@@ -183,9 +183,9 @@ class CheckOut extends Component {
     console.log(e.target.value)
     this.setState({ chooseCheckout: e.target.value })
   }
-  onChageAddress(e){
+  onChageAddress(e) {
     console.log(e.target.value)
-    this.setState({ chooseAddress: e.target.value})
+    this.setState({ chooseAddress: e.target.value })
   }
 
   render() {
@@ -279,10 +279,10 @@ class CheckOut extends Component {
                     ) : (
                       <BillDetail
                         ref={this.billing}
-                        addresses={addresses} 
-                        toggleCheckout = {(e) => this.toggleCheckout(e) }
-                        chooseAddress = {(e) => this.onChageAddress(e)}
-                        >
+                        addresses={addresses}
+                        toggleCheckout={(e) => this.toggleCheckout(e)}
+                        chooseAddress={(e) => this.onChageAddress(e)}
+                      >
 
                       </BillDetail>
                     )

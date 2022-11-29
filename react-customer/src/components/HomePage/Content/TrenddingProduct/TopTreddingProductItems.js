@@ -89,9 +89,13 @@ class TopTreddingProductItems extends Component {
                 product.discount > 0 ?
                   (
                     <span className="new-price" style={{ color: 'black', textDecoration: "line-through" }}>{product.unitprice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
-                  ) :
-                  null
-              }           </div>
+                  )
+                  :
+                  (
+                    <span className="new-price" style={{ color: 'black', textDecoration: "none" }}>{product.unitprice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
+                  )
+              }
+            </div>
           </div>
           <div className="add-actions">
             <ul className="add-actions-link">

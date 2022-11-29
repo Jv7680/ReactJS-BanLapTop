@@ -59,6 +59,7 @@ export const actFetchCartRequest = (id, token) => {
             console.log("giỏ hang của tôi", res.data.listCarts)
             dispatch(actFetchCart(res.data.listCarts));
         }
+        //Giỏ hàng trống
         else {
             dispatch(actFetchCart([]));
         }

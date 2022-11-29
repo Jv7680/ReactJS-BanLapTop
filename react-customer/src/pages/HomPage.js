@@ -6,9 +6,9 @@ export default class HomPage extends Component {
     render() {
         return (
             <div>
-                 <Slider></Slider>
-                 <TopDiscountProduct></TopDiscountProduct>
-                 <TopTreddingProduct></TopTreddingProduct>
+                <Slider></Slider>
+                <TopDiscountProduct></TopDiscountProduct>
+                <TopTreddingProduct></TopTreddingProduct>
             </div>
         )
     }

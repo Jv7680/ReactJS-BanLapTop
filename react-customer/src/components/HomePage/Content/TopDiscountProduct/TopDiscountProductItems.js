@@ -81,7 +81,16 @@ class TopDiscountProductItems extends Component {
             <h4><Link className="product_name text-truncate" onClick={(id) => this.getInfoProduct(product.productId)} to={`/products/${product.productId}`}>{product.productName}</Link></h4>
             <div className="price-box">
               {/* <span className="new-price" style={{ color: 'red' }}>{product.priceAfterDiscount.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span> */}
-              <span className="new-price" style={{ color: 'black', textDecoration: "line-through" }}>{product.unitprice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
+              {
+                product.discount > 0 ?
+                  (
+                    <span className="new-price" style={{ color: 'black', textDecoration: "line-through" }}>{product.unitprice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
+                  )
+                  :
+                  (
+                    <span className="new-price" style={{ color: 'black', textDecoration: "none" }}>{product.unitprice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
+                  )
+              }
             </div>
           </div>
           <div className="add-actions">

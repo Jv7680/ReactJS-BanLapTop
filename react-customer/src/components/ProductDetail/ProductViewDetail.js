@@ -31,7 +31,7 @@ class ProductViewDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      quantity: 0,
+      quantity: 1,
       redirectYourLogin: false
     };
   }
@@ -44,6 +44,7 @@ class ProductViewDetail extends Component {
       this.props.get_product(id);
     }
   }
+
   upItem = (quantity) => {
     if (quantity >= 5) {
       toast.error('Tối đa 5 sản phẩm')
@@ -53,14 +54,17 @@ class ProductViewDetail extends Component {
       quantity: quantity + 1
     })
   }
+
   downItem = (quantity) => {
     if (quantity <= 1) {
+      toast.error('Tối thiểu 1 sản phẩm')
       return
     }
     this.setState({
       quantity: quantity - 1
     })
   }
+
   handleChange = event => {
     let name = event.target.name;
     let value = event.target.type === "checkbox" ? event.target.checked : event.target.value;
@@ -83,7 +87,7 @@ class ProductViewDetail extends Component {
       this.setState({
         redirectYourLogin: false
       })
-      this.props.addCart(id, product, quantity);
+      this.props.addCart(id, product, quantity, token);
     }
 
   };
@@ -120,7 +124,7 @@ class ProductViewDetail extends Component {
                   {/* <div className="lg-image"> */}
                   <div className="fix-width-slick">
                     <Slider  {...settings}>
-                      {product.productImageList && product.productImageList.length
+                      {/* {product.productImageList && product.productImageList.length
                         ? product.productImageList.map((item, index) => {
                           return (
                             <div key={index} className="fix-img-div-slick">
@@ -128,7 +132,10 @@ class ProductViewDetail extends Component {
                             </div>
                           );
                         })
-                        : null}
+                        : null} */}
+                      <div className="fix-img-div-slick">
+                        <img className="fix-img-slick" src={product.image} alt="not found" />
+                      </div>
                     </Slider>
 
                     {/* <img className="fix-img" src={product.productImage} alt="Li's Product " /> */}
@@ -145,17 +152,22 @@ class ProductViewDetail extends Component {
                       <h1 className="font-weight-bold">Sản phẩm ngừng kinh doanh</h1>
                       :
                       <div className="price-box pt-20">
-                        <span className="new-price new-price-2 mr-30">
-                          {product && product.unitPrice ? product.priceAfterDiscount.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) : null}
-                        </span>
+                        {/* <span className="new-price new-price-2 mr-30">
+                          {product && product.unitprice ? product.priceAfterDiscount.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) : null}
+                        </span> */}
                         {
                           product.discount > 0 ?
                             (
                               <span className="new-price new-price-2" style={{ color: 'black', textDecoration: "line-through" }}>
-                                {product && product.unitPrice ? product.unitPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) : null}
+                                {product && product.unitprice ? product.unitprice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) : null}
                               </span>
-                            ) :
-                            null
+                            )
+                            :
+                            (
+                              <span className="new-price new-price-2" style={{ color: 'black', textDecoration: "none" }}>
+                                {product && product.unitprice ? product.unitprice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) : null}
+                              </span>
+                            )
 
                         }
 
@@ -181,7 +193,7 @@ class ProductViewDetail extends Component {
                               <input
                                 onChange={() => { }}
                                 className="cart-plus-minus-box"
-                                value={quantity ? quantity : 1}
+                                value={quantity}
                                 type="text"
                               />
                               <div onClick={() => this.downItem(quantity)} className="dec qtybutton">
@@ -231,19 +243,19 @@ class ProductViewDetail extends Component {
               <div className="product-description">
                 <span dangerouslySetInnerHTML={{ __html: product.description }}></span>
 
-                <RatingView rating={product.rating} listReviews={product.listReviews}></RatingView>
+                <RatingView rating={product.reviewsResponses.rating} listReviews={product.reviewsResponses.listReviews}></RatingView>
                 {
-                  product.listReviews ? (
+                  product.reviewsResponses.listReviews ? (
 
-                    product.listReviews.length > 0 ?
+                    product.reviewsResponses.listReviews.length > 0 ?
                       (
                         <div className="comment-list">
                           <h5 className="text-muted mt-40">
-                            <span className="badge badge-success">{product.listReviews.length}</span>{" "}
+                            <span className="badge badge-success">{product.reviewsResponses.listReviews.length}</span>{" "}
                             Comment
                           </h5>
                           {
-                            product.listReviews.map((cmt, index) => {
+                            product.reviewsResponses.listReviews.map((cmt, index) => {
                               return (
                                 <div key={index} class="comment-item media border p-3">
                                   <div className="media-body">
@@ -278,7 +290,7 @@ class ProductViewDetail extends Component {
                       )
                   ) :
                     (
-                      <h1>không có sản phẩm</h1>
+                      <h1>không có danh sách đánh giá sản phẩm</h1>
                     )
                 }
 
@@ -304,8 +316,8 @@ const mapDispatchToProps = dispatch => {
     get_product: productId => {
       dispatch(actGetProductRequest(productId));
     },
-    addCart: (idCustomer, product, quantity) => {
-      dispatch(actAddCartRequest(idCustomer, product, quantity));
+    addCart: (idCustomer, product, quantity, token) => {
+      dispatch(actAddCartRequest(idCustomer, product, quantity, token));
     }
 
   }
