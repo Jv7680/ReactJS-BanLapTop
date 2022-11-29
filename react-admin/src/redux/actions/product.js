@@ -9,9 +9,11 @@ import { is_empty } from '../../utils/validations';
 export const actFetchProductsRequest = (page) => {
   const newPage = page === null || page === undefined ? 1 : page;
   return async dispatch => {
-    const res = await callApi(`product/all?page=${newPage}`, 'GET', null)
+    let token = localStorage.getItem('_auth');
+    const res = await callApi(`product/all`, 'GET', null, token)
+    console.log('actFetchProductsRequest res: ', res);
     if (res && res.status === 200) {
-      dispatch(actFetchProducts(res.data.listProduct));
+      dispatch(actFetchProducts(res.data.listProducts));
     };
     return res;
   };
@@ -82,35 +84,33 @@ export const actAddProduct = (data) => {
   }
 }
 
-export const actDeleteProductRequest = (id,page) => {
+export const actDeleteProductRequest = (id, page) => {
   let newpage = is_empty(page) ? 1 : page;
   const data = {
     isDelete: "YES"
   }
   return async dispatch => {
     const res = await callApi(`product/delete/${id}?page=${newpage}`, 'PUT', data);
-    if(res && res.status == 200)
-    {
+    if (res && res.status == 200) {
       dispatch(actDeleteProduct(res.data.listProduct));
     }
-    
+
   }
 }
 
-export const actActiveProductRequest = (id,page) => {
+export const actActiveProductRequest = (id, page) => {
   let newpage = is_empty(page) ? 1 : page;
   const data = {
     isDelete: "NO"
   }
   return async dispatch => {
- 
+
     const res = await callApi(`product/delete/${id}?page=${newpage}`, 'PUT', data);
-    if(res && res.status == 200)
-    {
+    if (res && res.status == 200) {
       dispatch(actDeleteProduct(res.data.listProduct));
-     
+
     }
-    
+
   }
 }
 export const actDeleteProduct = (Products) => {

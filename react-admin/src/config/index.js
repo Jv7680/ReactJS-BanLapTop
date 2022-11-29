@@ -1,6 +1,6 @@
 export const config = {
     api: {
-        url: "http://localhost:8080/admin"
+        url: "http://localhost:8080"
         //url: "http://localhost:8080"
     },
     firebaseConfig: {

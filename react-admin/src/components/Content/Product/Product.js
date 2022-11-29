@@ -30,18 +30,18 @@ class Product extends Component {
   async componentDidMount() {
     const { currentPage } = this.state
     const res = await this.props.fetch_products(currentPage);
-    const resCatagory = await this.props.fetch_catagory();
+    //const resCatagory = await this.props.fetch_catagory();
     if (res && res.status === 200) {
       this.setState({
         total: res.data.totalPage,
         currentPage: res.data.currentPage
       })
     }
-    if (resCatagory && resCatagory.status == 200) {
-      this.setState({
-        dataCategory: resCatagory.data
-      })
-    }
+    // if (resCatagory && resCatagory.status == 200) {
+    //   this.setState({
+    //     dataCategory: resCatagory.data
+    //   })
+    // }
 
   }
   async pageChange(content) {
@@ -257,11 +257,11 @@ class Product extends Component {
                                 <td>{item.productName}</td>
                                 <td style={{ textAlign: "center" }}>
                                   <div className="fix-cart">
-                                    <img src={item && item.productImageSet ? item.productImageSet[0].image : null} className="fix-img" alt="not found" />
+                                    <img src={item.image} className="fix-img" alt="not found" />
                                   </div>
                                 </td>
-                                <td><p className="text-truncate" style={{ width: 300 }}>{item.descriptionProduct}</p></td>
-                                <td>{item.unitPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</td>
+                                <td><p className="text-truncate" style={{ width: 300 }}>{item.description}</p></td>
+                                <td>{item.unitprice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</td>
                                 <td>{item.quantity}</td>
                                 {/* <td>{item.properties}</td> */}
 

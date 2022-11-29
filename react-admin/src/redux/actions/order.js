@@ -6,34 +6,43 @@ import { actShowLoading, actHiddenLoading } from './loading'
 
 export const actFetchOrdersRequest = (status, page) => {
   const newPage = page === null || page === undefined || page <= 0 ? 1 : page;
-  const statusOrder = status == null|| status === undefined ? "chưa duyệt" : status;
-  const dataguidi = {statusOrder}
-  console.log("tranghientai",page)
+  const statusOrder = status == null || status === undefined ? "chưa duyệt" : status;
+  const dataguidi = { statusOrder }
+  console.log("tranghientai", page)
   return dispatch => {
     dispatch(actShowLoading());
     return new Promise((resolve, reject) => {
+      // callApi(`admin/orders/all?page=1&size=10`, "GET", null, localStorage.getItem('_auth'))
+      // .then(res => {
+      //   console.log('actFetchOrdersRequest res: ', res)
+      //   if (res && res.status === 200) {
+      //     dispatch(actFetchOrders(res.data.listOrders));
+      //     resolve(res.data);
+      //     setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
+      //   }
+      // })
       callApi(`orders?page=${newPage}`, "POST", dataguidi)
         .then(res => {
           if (res && res.status === 200) {
             dispatch(actFetchOrders(res.data.listOrders));
             resolve(res.data);
-            setTimeout(function(){ dispatch(actHiddenLoading()) }, 200);
+            setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
           }
         })
         .catch(err => {
           console.log(err);
           reject(err);
-          setTimeout(function(){ dispatch(actHiddenLoading()) }, 200);
+          setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
         });
     });
   };
 };
 
-export const actApproveOrdersRequest = (id,status,page) =>{
+export const actApproveOrdersRequest = (id, status, page) => {
   const newPage = page === null || page === undefined || page <= 0 ? 1 : page;
-  const ordersId = {ordersId:id}
-  const data = {"list":[ordersId]}
-  console.log("dữ liệu gửi đi",data)
+  const ordersId = { ordersId: id }
+  const data = { "list": [ordersId] }
+  console.log("dữ liệu gửi đi", data)
   return async dispatch => {
     const res = await callApi(`orders/approval?page=${newPage}`, 'PUT', data);
     if (res && res.status === 200) {
@@ -43,16 +52,16 @@ export const actApproveOrdersRequest = (id,status,page) =>{
   }
 }
 
-export const actDeliveredOrderRequest = (id,status,page) =>{
+export const actDeliveredOrderRequest = (id, status, page) => {
   const newPage = page === null || page === undefined || page <= 0 ? 1 : page;
-  const ordersId = {ordersId:id}
-  const data = {"list":[ordersId]}
-  console.log("dữ liệu gửi đi",data)
+  const ordersId = { ordersId: id }
+  const data = { "list": [ordersId] }
+  console.log("dữ liệu gửi đi", data)
   return async dispatch => {
     const res = await callApi(`orders/delivered?page=${newPage}`, 'PUT', data);
     if (res && res.status === 200) {
       toast.success('Giao hàng thành công')
-      dispatch(actFetchOrdersRequest(status,page));
+      dispatch(actFetchOrdersRequest(status, page));
     }
   }
 }

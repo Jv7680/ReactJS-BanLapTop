@@ -30,7 +30,8 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    this.props.fetch_dashboard();
+    //Chưa có api
+    //this.props.fetch_dashboard();
   }
   handleChangeDate(date, name) {
     console.log(date, name)

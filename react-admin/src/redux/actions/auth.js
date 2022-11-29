@@ -8,12 +8,13 @@ toast.configure()
 
 
 export const actLoginRequest = (user) => {
-    
+
     return dispatch => {
         dispatch(actShowLoading())
         return new Promise((resolve, reject) => {
             callApi('auth/login', 'POST', user)
                 .then(res => {
+                    console.log('actLoginRequest res: ', res);
                     const token = res.data.token
                     const nameRole = res.data.userRole
                     localStorage.setItem('_auth', token);
@@ -54,7 +55,7 @@ export const actLogin = (token) => {
     }
 }
 export const actGetNameRole = (role) => {
-    
+
     return {
         type: Types.GET_NAMEROLE,
         role

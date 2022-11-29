@@ -13,19 +13,20 @@ class NavBar extends Component {
     }
   }
   async componentDidMount() {
-    token = localStorage.getItem('_auth');
-    if (token) {
-      const res = await callApi('admin', 'GET', null, token);
-      if (res && res.status === 200) {
-        this.setState({
-          user: res.data
-        })
-      }
-    } else {
-      this.setState({
-        redirect: true
-      })
-    }
+    // token = localStorage.getItem('_auth');
+    // if (token) {
+    //   const res = await callApi('auth/login', 'GET', null, token);
+    //   console.log('ressssss: ', res);
+    //   if (res && res.status === 200) {
+    //     this.setState({
+    //       user: res.data
+    //     })
+    //   }
+    // } else {
+    //   this.setState({
+    //     redirect: true
+    //   })
+    // }
   }
   render() {
 

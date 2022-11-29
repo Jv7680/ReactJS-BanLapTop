@@ -34,8 +34,8 @@ class App extends Component {
     }
   }
   render() {
-    //const { auth, loading } = this.props;
-    const [auth, loading] = [true, false];
+    const { auth, loading } = this.props;
+    //const [auth, loading] = [true, false];
     return (
       <Router>
         {auth ?
