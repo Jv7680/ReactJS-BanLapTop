@@ -20,8 +20,9 @@ class OrderStatus2 extends Component {
     componentDidMount() {
         id = localStorage.getItem("_id");
         const { statusPage } = this.state
-        console.log("id,va trangj thai", id, statusPage)
-        this.fetch_reload_data(statusPage, id);
+
+        //status = 3 là đang giao
+        this.fetch_reload_data(3, id);
     }
     fetch_reload_data(statusPage, id) {
         this.props.fetch_orders(statusPage, id)
@@ -115,7 +116,7 @@ class OrderStatus2 extends Component {
                                                                                         }) : null
                                                                                 }
                                                                             </td>
-                                                                            <td>{formatNumber(item.amount)}</td>
+                                                                            <td>{formatNumber(item.totalAmount)}</td>
                                                                             <td>
                                                                                 <Moment format="YYYY/MM/DD">
                                                                                     {item.createDate}

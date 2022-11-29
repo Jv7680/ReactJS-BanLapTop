@@ -18,10 +18,11 @@ class OrderStatus1 extends Component {
         }
     }
     componentDidMount() {
-        id = localStorage.getItem("_id");
+        let id = parseInt(localStorage.getItem("_id"));
         const { statusPage } = this.state
-        console.log("id,va trangj thai", id, statusPage)
-        this.fetch_reload_data(statusPage, id);
+
+        //status = 1 là chưa duyệt
+        this.fetch_reload_data(1, id);
     }
     fetch_reload_data(statusPage, id) {
         this.props.fetch_orders(statusPage, id)
@@ -54,7 +55,7 @@ class OrderStatus1 extends Component {
 
     render() {
         const { orders } = this.props
-        console.log("oder laays dduioc", orders)
+        console.log("orders của redux: ", orders)
         return (
             <div className="content-inner">
                 <section className="tables">
@@ -71,7 +72,8 @@ class OrderStatus1 extends Component {
                                                             <thead>
                                                                 <tr>
                                                                     <th>id đơn hàng</th>
-                                                                    <th>sản phẩm</th>
+                                                                    {/* Tạm thời bỏ sản phẩm */}
+                                                                    {/* <th>sản phẩm</th> */}
                                                                     <th>Tổng tiền</th>
                                                                     <th>Ngày tạo</th>
                                                                     <th>Hủy đơn</th>
@@ -82,19 +84,19 @@ class OrderStatus1 extends Component {
                                                                     return (
                                                                         <tr key={index}>
                                                                             <th scope="row">{item.orderId}</th>
-                                                                            <td>
+                                                                            {/* <td>
                                                                                 {
                                                                                     item.listProduct && item.listProduct.length ?
                                                                                         item.listProduct.map((product, index) => {
                                                                                             return (
                                                                                                 <>
-                                                                                                    <li className = 'd-flex' key={index}>
+                                                                                                    <li className='d-flex' key={index}>
                                                                                                         <div className="fix-order">
                                                                                                             <img src={product.productImage} className="fix-img-order" alt="not found" />
                                                                                                         </div>
                                                                                                         <div>
                                                                                                             <h6 className='pl-3 pt-10'>{product.productName}</h6>
-                                                                                                            
+
 
                                                                                                             <strong
                                                                                                                 className="pl-3 product-quantity"
@@ -115,8 +117,8 @@ class OrderStatus1 extends Component {
                                                                                             )
                                                                                         }) : null
                                                                                 }
-                                                                            </td>
-                                                                            <td>{formatNumber(item.amount)}</td>
+                                                                            </td> */}
+                                                                            <td>{formatNumber(item.totalAmount)}</td>
                                                                             <td>
                                                                                 <Moment format="DD/MM/YYYY">
                                                                                     {item.createDate}

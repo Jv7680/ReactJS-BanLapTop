@@ -6,7 +6,7 @@ import Modal from "react-modal";
 import './style.css'
 import BeautyStars from "beauty-stars";
 import { connect } from 'react-redux'
-import { actFetchOrdersDeliveredRequest, actDeleteOrderRequest, actAddReview } from '../../redux/actions/order'
+import { actFetchOrdersDeliveredRequest, actDeleteOrderRequest, actAddReview, actFetchOrdersRequest } from '../../redux/actions/order'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const MySwal = withReactContent(Swal)
@@ -42,7 +42,8 @@ class OrderStatus3 extends Component {
         id = localStorage.getItem("_id");
         const { statusPage } = this.state
 
-        this.fetch_reload_data(statusPage, id);
+        //status = 4 là đã giao
+        this.fetch_reload_data(4, id);
     }
     fetch_reload_data(statusPage, id) {
         this.props.fetch_orders(statusPage, id)
@@ -216,7 +217,7 @@ class OrderStatus3 extends Component {
                                                             <thead>
                                                                 <tr>
                                                                     <th>id đơn hàng</th>
-                                                                    <th>sản phẩm</th>
+                                                                    {/* <th>sản phẩm</th> */}
                                                                     {/* <th>Tổng tiền</th> */}
                                                                     <th>Ngày tạo</th>
                                                                     <th>Hủy đơn</th>
@@ -228,7 +229,7 @@ class OrderStatus3 extends Component {
                                                                         <tr key={index}>
 
                                                                             <th scope="row">{item.orderId}</th>
-                                                                            <td className='d-flex'>
+                                                                            {/* <td className='d-flex'>
                                                                                 <div className="fix-order">
                                                                                     <img src={item.productImage} className="fix-img-order" alt="not found" />
                                                                                 </div>
@@ -248,7 +249,7 @@ class OrderStatus3 extends Component {
 
 
 
-                                                                            </td>
+                                                                            </td> */}
                                                                             {/* <td>{formatNumber.format(item.amount)}</td> */}
                                                                             <td>
                                                                                 <Moment format="DD/MM/YYYY">
@@ -312,7 +313,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetch_orders: (status, id) => {
-            return dispatch(actFetchOrdersDeliveredRequest(status, id))
+            //return dispatch(actFetchOrdersDeliveredRequest(status, id))
+            return dispatch(actFetchOrdersRequest(status, id))
         },
         delete_order: (id) => {
             dispatch(actDeleteOrderRequest(id))

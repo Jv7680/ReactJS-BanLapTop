@@ -9,19 +9,21 @@ import { actShowLoading, actHiddenLoading } from './loading'
 export const actFetchOrdersRequest = (status, id) => {
   const statusOrder = status == null || status === undefined ? "chưa duyệt" : status;
   const dataguidi = { statusOrder }
+  let token = localStorage.getItem('_auth');
   console.log("trạng thái gửi đi", statusOrder)
   return dispatch => {
     dispatch(actShowLoading());
     return new Promise((resolve, reject) => {
-      callApi(`orders/${id}`, "POST", dataguidi)
+      callApi(`orders/${id}?status=${status}`, "GET", null, token)
         .then(res => {
           if (res && res.status === 200) {
-            dispatch(actFetchOrders(res.data));
+            console.log('actFetchOrdersRequest res: ', res);
+            dispatch(actFetchOrders(res.data.listOrders));
             resolve(res.data);
             setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
           }
           else
-            dispatch(actFetchOrders(res.data));
+            dispatch(actFetchOrders([]));
           { setTimeout(function () { dispatch(actHiddenLoading()) }, 200); }
 
         })
@@ -70,10 +72,10 @@ export const actFetchOrders = orders => {
 export const actDeleteOrderRequest = (id) => {
   return async dispatch => {
     const res = await callApi(`orders/cancel/${id}`, "PUT");
-    if(res && res.status === 200){
+    if (res && res.status === 200) {
       dispatch(actDeleteOrder(id));
     }
-  
+
   };
 };
 
