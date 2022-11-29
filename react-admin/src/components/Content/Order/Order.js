@@ -4,7 +4,7 @@ import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Moment from 'react-moment';
 import { actFetchOrdersRequest, actApproveOrdersRequest, actDeleteOrderRequest } from '../../../redux/actions/order';
-import { actFetchDashboardRequest} from '../../../redux/actions/dashboard'
+import { actFetchDashboardRequest } from '../../../redux/actions/dashboard'
 
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -36,7 +36,7 @@ class Order extends Component {
   componentDidMount() {
     const { statusPage } = this.state
     this.fetch_reload_data(statusPage);
-    
+
   }
 
   fetch_reload_data(statusPage) {
@@ -54,7 +54,7 @@ class Order extends Component {
     const { statusPage } = this.state
     this.props.fetch_orders(statusPage, page);
     if (content <= 0) {
-      
+
       this.setState({
         currentPage: 1
       })
@@ -82,7 +82,7 @@ class Order extends Component {
     const { statusPage, currentPage } = this.state
     await this.props.approveOrder(id, statusPage, currentPage);
     await this.props.fetch_dashboard();
-    
+
   }
   handleRemove = (id) => {
     MySwal.fire({
@@ -137,7 +137,7 @@ class Order extends Component {
                     {/* <button onClick={()=>this.downloadExcel()} style={{ border: 0, background: "white" }}> <i className="fa fa-file-excel-o"
                         style={{fontSize: 18, color: '#1d7044'}}> Excel</i></button> */}
                   </div>
-                  
+
                   <div className="card-body">
                     <div className="table-responsive">
                       <table className="table table-hover">
@@ -225,7 +225,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(actFetchDashboardRequest())
     },
     fetch_orders: (status, offset) => {
-      return dispatch(actFetchOrdersRequest(status, offset))
+      return dispatch(actFetchOrdersRequest(1, offset))
     },
     approveOrder: (id, status, page) => {
       return dispatch(actApproveOrdersRequest(id, status, page))

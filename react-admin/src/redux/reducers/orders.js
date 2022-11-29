@@ -16,6 +16,7 @@ const orders = (state = initialState, action) => {
     switch (action.type) {
         case Types.FETCH_ORDERS:
             state = action.orders;
+            //console.log('action: ', action);
             return [...state];
         case Types.ADD_ORDER:
             state.push(action.data);
@@ -29,7 +30,7 @@ const orders = (state = initialState, action) => {
             state[index] = { ...action.data };
             return [...state];
         case Types.FIND_ORDERS:
-            state = action.orders ;
+            state = action.orders;
             return [...state];
         default: return [...state];
     }

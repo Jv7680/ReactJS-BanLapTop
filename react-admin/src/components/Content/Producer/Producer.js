@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import './style.css'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { actFetchProducersRequest,actDeleteProducerRequest} from '../../../redux/actions/producer';
+import { actFetchProducersRequest, actDeleteProducerRequest } from '../../../redux/actions/producer';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 
@@ -31,7 +31,7 @@ class Producer extends Component {
         console.log(err);
       })
   }
-  handleRemove = (id,name) => {
+  handleRemove = (id, name) => {
     MySwal.fire({
       title: `Xóa nhà cung cấp ${name} ?`,
       text: "Bạn chắc chắn muốn xóa nhà cung cấp này !",
@@ -54,7 +54,7 @@ class Producer extends Component {
   render() {
     let { producers } = this.props;
     const { searchText, total } = this.state;
-    console.log("dữ liệu nhà cung cấp",producers)
+    console.log("dữ liệu nhà cung cấp", producers)
     return (
       <div className="content-inner">
         {/* Page Header*/}
@@ -111,7 +111,7 @@ class Producer extends Component {
                                 <td>{item.supplierName}</td>
                                 <td style={{ textAlign: "center" }}>
                                   <div className="fix-cart">
-                                    <img src={item && item.supplierImage ?item.supplierImage:null} className="fix-img" alt="not found" />
+                                    <img src={item.imageLink} className="fix-img" alt="not found" />
                                   </div>
                                 </td>
 
@@ -119,7 +119,7 @@ class Producer extends Component {
                                   <div>
                                     <span title='Edit' className="fix-action"><Link to={`producers/edit/${item.supplierId}`}> <i className="fa fa-edit"></i></Link></span>
                                     <span
-                                      onClick={() => this.handleRemove(item.supplierId,item.supplierName)}
+                                      onClick={() => this.handleRemove(item.supplierId, item.supplierName)}
                                       title='Delete'
                                       className="fix-action"><Link to="#"> <i className="fa fa-trash" style={{ color: '#ff00008f' }}></i></Link></span>
                                   </div>

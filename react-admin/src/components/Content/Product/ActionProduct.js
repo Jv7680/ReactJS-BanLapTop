@@ -50,42 +50,49 @@ class ActionProduct extends Component {
       redirectToProduct: false,
       loading: false,
     };
+
+    //id của sản phẩm
     id = this.props.id
   }
 
   async componentDidMount() {
+    let token = localStorage.getItem('_auth');
     if (id) {
-      const res = await callApi(`product/${id}`, 'GET');
+      const res = await callApi(`product/${id}`, 'GET', null, token);
       if (res && res.status === 200) {
         console.log("dữ liệu trả về", res.data)
         this.setState({
           productName: res.data.productName,
           quantity: res.data.quantity,
-          productImageSet: res.data.productImageSet,
+          productImageSet: [res.data.image],
           discount: res.data.discount,
-          unitPrice: res.data.unitPrice,
-          descriptionProduct: res.data.descriptionProduct,
-          categoryId: res.data.categoryFKDto.categoryId,
-          supplierId: res.data.supplierFKDto.supplierId,
+          unitPrice: res.data.unitprice,
+          descriptionProduct: res.data.description,
+          //categoryId: res.data.categoryFKDto.categoryId,
+          //supplierId: res.data.supplierFKDto.supplierId,
 
         })
       }
     }
-    const resCategories = await callApi('category/all', 'GET');
-    if (resCategories && resCategories.status === 200) {
-      this.setState({
-        dataCategories: resCategories.data
-      })
-    }
-    console.log("dữ liệu trả về 2", resCategories.data)
-    const resSupplieres = await callApi('supplier/all', 'GET');
+
+    //Chưa có api
+    // const resCategories = await callApi('category/all', 'GET');
+    // if (resCategories && resCategories.status === 200) {
+    //   this.setState({
+    //     dataCategories: resCategories.data
+    //   })
+    // }
+    //console.log("dữ liệu trả về 2", resCategories.data)
+
+    const resSupplieres = await callApi('admin/supplier/all', 'GET', null, token);
+    console.log("dữ liệu trả về suplier", resSupplieres.data)
     if (resSupplieres && resSupplieres.status === 200) {
       this.setState({
         dataSupplieres: resSupplieres.data
       })
     }
 
-    console.log("dữ liệu trả về 3", resSupplieres.data)
+    //console.log("dữ liệu trả về 3", resSupplieres.data)
 
   }
 
@@ -149,19 +156,19 @@ class ActionProduct extends Component {
     } = this.state;
 
     const newListImage = []
-    if(productImageSet.length>0){
-        productImageSet.map(item =>{
-        newListImage.push({ name: item.image})
+    if (productImageSet.length > 0) {
+      productImageSet.map(item => {
+        newListImage.push({ name: item.image })
       })
     }
     this.setState({
       loading: true
     })
     if (filesImage.length > 0)
-    for (const file of filesImage) {
-      const builder = await uploadImage(file);
-      newListImage.push({ name: builder});
-    }
+      for (const file of filesImage) {
+        const builder = await uploadImage(file);
+        newListImage.push({ name: builder });
+      }
     // up ảnh firebase
 
     const newProductName = productName === '' ? null : productName;
@@ -173,17 +180,30 @@ class ActionProduct extends Component {
     const newSupplierId = parseInt(supplierId);
     // const newImage = productImage === '' ? 'http://via.placeholder.com/300x200' : productImage;
     // console.log("image", newImage)
+    // const newProduct = {
+    //   productName: newProductName,
+    //   quantity: newQuantity,
+    //   discount: newDiscount,
+    //   unitPrice: newUnitPrice,
+    //   descriptionProduct: newDescriptionProduct,
+    //   categoryId: newCategoryId,
+    //   supplierId: newSupplierId,
+    //   productImage: newListImage
+    // }
+
     const newProduct = {
-      productName: newProductName,
-      quantity: newQuantity,
-      discount: newDiscount,
-      unitPrice: newUnitPrice,
-      descriptionProduct: newDescriptionProduct,
-      categoryId: newCategoryId,
-      supplierId: newSupplierId,
-      productImage: newListImage
+      "productId": parseInt(id),
+      "productName": newProductName,
+      "quantity": newQuantity,
+      "image": "testImage",
+      "unitprice": newUnitPrice,
+      "discount": newDiscount,
+      "description": newDescriptionProduct,
+      "supplierId": newSupplierId
     }
+
     if (!id) {
+      console.log('newProduct: ', newProduct);
       await this.props.add_Product(newProduct);
       this.setState({
         loading: false,
@@ -192,6 +212,7 @@ class ActionProduct extends Component {
 
     }
     else {
+      console.log('newProduct: ', newProduct);
       await this.props.edit_Product(id, newProduct);
       this.setState({
         loading: false,
@@ -218,7 +239,9 @@ class ActionProduct extends Component {
   ];
 
   render() {
+    //const { productName, quantity, productImageSet, filesImage, discount, unitPrice, descriptionProduct, dataSupplieres, categoryId, dataCategories, supplierId, loading, redirectToProduct } = this.state;
     const { productName, quantity, productImageSet, filesImage, discount, unitPrice, descriptionProduct, dataSupplieres, categoryId, dataCategories, supplierId, loading, redirectToProduct } = this.state;
+    console.log(productName);
     if (redirectToProduct) {
       return <Redirect to='/products'></Redirect>
     }
@@ -247,10 +270,10 @@ class ActionProduct extends Component {
             <li className="breadcrumb-item"><Link to="/products">Sản phẩm</Link></li>
             {
               !id ?
-               <li className="breadcrumb-item active">thêm sản phẩm</li>
-               :<li className="breadcrumb-item active"> Sửa sản phẩm</li>
+                <li className="breadcrumb-item active">thêm sản phẩm</li>
+                : <li className="breadcrumb-item active"> Sửa sản phẩm</li>
             }
-            
+
           </ul>
         </div>
         {/* Forms Section*/}
@@ -325,7 +348,7 @@ class ActionProduct extends Component {
                       </div>
                       <div className="line" />
                       {/* loại sản phẩm */}
-                      <div className="form-group row">
+                      {/* <div className="form-group row">
                         <label
                           className="col-sm-3 form-control-label">
                           Loại sản phẩm
@@ -365,7 +388,7 @@ class ActionProduct extends Component {
                             : null
                           }
                         </div>
-                      </div>
+                      </div> */}
                       <div className="line" />
                       {/* nhà cung cấp */}
                       <div className="form-group row">
@@ -386,6 +409,7 @@ class ActionProduct extends Component {
                         </div>
                       </div>
                       <div className="line" />
+
                       {/* image */}
                       <div className="form-group row">
                         <label htmlFor="fileInput" className="col-sm-3 form-control-label">Ảnh</label>
@@ -404,7 +428,7 @@ class ActionProduct extends Component {
                                       productImageSet && productImageSet.length > 0 ?
                                         productImageSet.map((itemImage, index) => {
                                           return (
-                                            < span key={itemImage.imageId}>
+                                            < span key={index}>
                                               <div className='model m-3'>
                                                 <div className="modal-content">
                                                   <div className="modal-header">
@@ -414,17 +438,16 @@ class ActionProduct extends Component {
                                                       <span aria-hidden="true">&times;</span>
                                                     </button>
                                                   </div>
-                                                  <img src={itemImage.image} style={{ height: 100, width: 100 }} alt="notfound" />
+                                                  <img src={itemImage} style={{ height: 100, width: 100 }} alt="notfound" />
                                                 </div>
                                               </div>
                                             </span>
-
                                           )
                                         })
                                         : null
 
                                     }
-                                    {
+                                    {/* {
                                       filesImage && filesImage.length > 0 ?
                                         filesImage.map((itemImage, index) => {
 
@@ -447,7 +470,7 @@ class ActionProduct extends Component {
                                         })
                                         : null
 
-                                    }
+                                    } */}
                                   </div>
                                 </aside>
                               </section>

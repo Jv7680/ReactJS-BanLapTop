@@ -3,7 +3,7 @@ import './style.css'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Moment from 'react-moment';
-import { actFetchOrdersRequest, actDeliveredOrderRequest,actDeleteOrderRequest } from '../../../redux/actions/order';
+import { actFetchOrdersRequest, actDeliveredOrderRequest, actDeleteOrderRequest } from '../../../redux/actions/order';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Paginator from 'react-js-paginator';
@@ -115,10 +115,8 @@ class OrderStatus3 extends Component {
 
   render() {
     const { orders } = this.props;
-    console.log("dữ liệu this.props.", this.props)
+    console.log("dữ liệu orders của redux: ", orders)
     const { searchText, total, statusPage } = this.state;
-
-    console.log(orders)
 
     return (
       <div className="content-inner">
@@ -157,7 +155,7 @@ class OrderStatus3 extends Component {
                         className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search"
                         aria-label="Search" />
                     </div>
-                    
+
                   </form>     */}
                   <div className="card-body">
                     <div className="table-responsive">
@@ -165,13 +163,14 @@ class OrderStatus3 extends Component {
                         <thead>
                           <tr>
                             <th>id đơn hàng</th>
-                            <th>Tên khách hàng</th>
+                            {/* <th>Tên khách hàng</th> */}
                             {/* <th>Address</th> */}
-                            <th>Số điện thoại</th>
-                            <th>Trạng thái</th>
+                            {/* <th>Số điện thoại</th>
+                            <th>Trạng thái</th> */}
 
                             <th>Tổng tiền</th>
-                            <th>Ngày tạo HĐ</th>
+                            <th>Ngày Đặt Hàng</th>
+                            <th>Ngày Nhận Hàng</th>
                             <th>Chi tiết</th>
 
                           </tr>
@@ -181,19 +180,25 @@ class OrderStatus3 extends Component {
                             return (
                               <tr key={index}>
                                 <th scope="row">{item.orderId}</th>
-                                <td>{item.customerFKDto.lastName}</td>
-                                <td>{item.phoneNumber}</td>
-                                <td>
+                                {/* <td>{item.customerFKDto.lastName}</td>
+                                <td>{item.phoneNumber}</td> */}
+                                {/* <td>
                                   <div className="col">
                                     <label className="fix-status px-2" style={{ background: '#5cb85c' }} >{item.statusOrder}
                                     </label>
                                   </div>
-                                </td>
+                                </td> */}
                                 <td>{item.totalAmount}</td>
-                                <td>
+                                {/* <td>
                                   <Moment format="YYYY/MM/DD">
                                     {item.createDate}
                                   </Moment>
+                                </td> */}
+                                <td>
+                                  <span>{new Date(item.orderDate).getFullYear()}/{new Date(item.orderDate).getMonth()}/{new Date(item.orderDate).getDate()}</span>
+                                </td>
+                                <td>
+                                  <span>{new Date(item.receiptDate).getFullYear()}/{new Date(item.receiptDate).getMonth()}/{new Date(item.receiptDate).getDate()}</span>
                                 </td>
                                 <td>
                                   <div>
@@ -212,7 +217,7 @@ class OrderStatus3 extends Component {
                       </table>
                     </div>
                   </div>
-              
+
                 </div>
                 <nav aria-label="Page navigation example" style={{ float: "right" }}>
                   <ul className="pagination">
@@ -243,7 +248,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetch_orders: (status, offset) => {
-      return dispatch(actFetchOrdersRequest(status, offset))
+      return dispatch(actFetchOrdersRequest(4, offset))
     },
     deliveredOrder: (id) => {
       return dispatch(actDeliveredOrderRequest(id))

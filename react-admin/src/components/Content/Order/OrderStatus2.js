@@ -4,7 +4,7 @@ import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Moment from 'react-moment';
 import { actFetchOrdersRequest, actDeliveredOrderRequest, actDeleteOrderRequest } from '../../../redux/actions/order';
-import { actFetchDashboardRequest} from '../../../redux/actions/dashboard'
+import { actFetchDashboardRequest } from '../../../redux/actions/dashboard'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Paginator from 'react-js-paginator';
@@ -235,7 +235,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetch_orders: (status, offset) => {
-      return dispatch(actFetchOrdersRequest(status, offset))
+      return dispatch(actFetchOrdersRequest(2, offset))
     },
     fetch_dashboard: () => {
       dispatch(actFetchDashboardRequest())

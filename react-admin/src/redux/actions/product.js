@@ -122,12 +122,17 @@ export const actDeleteProduct = (Products) => {
 
 
 export const actEditProductRequest = (id, data) => {
-  console.log(data)
   return async dispatch => {
-    const res = await callApi(`product/${id}`, 'PUT', data);
+    let token = localStorage.getItem('_auth');
+
+    console.log('Dữ liệu được gửi cho server cập nhât: ', data);
+
+    const res = await callApi(`admin/product/update`, 'PUT', data, token);
+    console.log('actEditProductRequest res: ', res);
     if (res && res.status === 200) {
       toast.success('Sửa sản phẩm thành công')
-      dispatch(actEditProduct(res.data));
+      //dispatch(actEditProduct(res.data));
+      dispatch(actFetchProductsRequest(1));
     }
   }
 }

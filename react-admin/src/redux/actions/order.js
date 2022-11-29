@@ -10,7 +10,7 @@ export const actFetchOrdersRequest = (status, page) => {
   const dataguidi = { statusOrder }
   console.log("tranghientai", page)
   return dispatch => {
-    dispatch(actShowLoading());
+    //dispatch(actShowLoading());
     return new Promise((resolve, reject) => {
       // callApi(`admin/orders/all?page=1&size=10`, "GET", null, localStorage.getItem('_auth'))
       // .then(res => {
@@ -21,12 +21,14 @@ export const actFetchOrdersRequest = (status, page) => {
       //     setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
       //   }
       // })
-      callApi(`orders?page=${newPage}`, "POST", dataguidi)
+      let token = localStorage.getItem('_auth');
+      callApi(`admin/orders?status=${status}&page=1&size=5`, "GET", null, token)
         .then(res => {
           if (res && res.status === 200) {
+            console.log('actFetchOrdersRequest res: ', res);
             dispatch(actFetchOrders(res.data.listOrders));
             resolve(res.data);
-            setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
+            //setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
           }
         })
         .catch(err => {

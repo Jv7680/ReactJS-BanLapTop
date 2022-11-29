@@ -9,7 +9,8 @@ export const actFetchProducersRequest = () => {
   return dispatch => {
     dispatch(actShowLoading());
     return new Promise((resolve, reject) => {
-      callApi('supplier/all', 'GET', null)
+      let token = localStorage.getItem('_auth');
+      callApi('admin/supplier/all', 'GET', null, token)
         .then(res => {
           if (res && res.status === 200) {
             dispatch(actFetchProducers(res.data));
