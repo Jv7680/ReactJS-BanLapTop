@@ -5,6 +5,8 @@ import { Redirect } from 'react-router-dom'
 import { toast } from 'react-toastify';
 import { actFetchAddressRequest } from '../../redux/actions/address';
 import 'react-toastify/dist/ReactToastify.css';
+import { withRouter } from 'react-router-dom';
+
 toast.configure()
 
 let id;
@@ -19,23 +21,25 @@ class SumTotal extends Component {
   }
 
 
-  checkAuthenticate = async () => {
+  checkAuthenticate = () => {
     id = localStorage.getItem("_id");
     const { sumTotal } = this.props;
     if (!sumTotal.length) {
       return toast.error('Vui lòng chọn sản phẩm để mua');
     }
-    if (id) {
-      await this.props.fetch_address(id);
-      this.setState({
-        redirectYourOrder: true
-      })
-    } else {
-      toast.error('Đăng nhập trước khi thanh toán');
-      this.setState({
-        redirectYourLogin: true
-      })
-    }
+    // if (id) {
+    //   await this.props.fetch_address(id);
+    //   this.setState({
+    //     redirectYourOrder: true
+    //   })
+    // } else {
+    //   toast.error('Đăng nhập trước khi thanh toán');
+    //   this.setState({
+    //     redirectYourLogin: true
+    //   })
+    // }
+
+    this.props.history.push(`/orderinfo`);
   }
 
   render() {
@@ -55,6 +59,7 @@ class SumTotal extends Component {
         return sum += item.cartProductQuantity
       }, 0)
     }
+    localStorage.setItem('total', amount);
 
     if (redirectYourOrder) {
       return <Redirect to="/checkout"></Redirect>
@@ -95,4 +100,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SumTotal)
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SumTotal))

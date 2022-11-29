@@ -9,6 +9,7 @@ import { css } from '@emotion/core';
 import { actShowLoading } from "./redux/actions/loading";
 import ClipLoader from 'react-spinners/ClipLoader';
 import ActiveAccount from "./components/LoginRegister/ActiveAccount";
+import OrderInfo from "./components/Order/OrderInfo";
 
 import './style.css'
 const override = css`

@@ -23,6 +23,7 @@ import LoginGooglePage from './pages/LoginGooglePage';
 import ProfilePage from './pages/ProfilePage';
 import ProductWishListPage from './pages/ProductWishListPage'
 import ActiveAccountPage from './pages/ActiveAccountPage';
+import OrderInfoPage from './pages/OrderInfoPage';
 
 const routes = [
   {
@@ -74,6 +75,11 @@ const routes = [
     path: '/activeaccount',
     exact: false,
     main: (match) => < ActiveAccountPage match={match} />
+  },
+  {
+    path: '/orderinfo',
+    exact: false,
+    main: (match) => < OrderInfoPage match={match} />
   },
   {
     path: '/forgot-password',
