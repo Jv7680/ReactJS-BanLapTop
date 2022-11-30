@@ -3,6 +3,8 @@ import * as Config from '../constants/Config';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import store from '..';
+import { actFetchOrders } from '../redux/actions/order'
 const MySwal = withReactContent(Swal)
 toast.configure()
 
@@ -38,11 +40,31 @@ export default async function callApi(endpoint, method = 'GET', body, token) {
     if (err.response && err.response.data) {
       console.log('callAPI error: ', err);
       const error = err.response.data.message || err.response.data[0].defaultMessage;
-      MySwal.fire({
-        icon: 'error',
-        title: 'Lỗi',
-        text: `${error}`
-      })
+
+      //xử lý riêng các error của đơn hàng
+      if (error === "Không có đơn hàng nào có trạng thái Đang chờ duyệt") {
+        store.dispatch(actFetchOrders([]));
+      }
+      else if (error === "Không có đơn hàng nào có trạng thái Đã duyệt") {
+        store.dispatch(actFetchOrders([]));
+      }
+      else if (error === "Không có đơn hàng nào có trạng thái Đang giao") {
+        store.dispatch(actFetchOrders([]));
+      }
+      else if (error === "Không có đơn hàng nào có trạng thái Đã giao") {
+        store.dispatch(actFetchOrders([]));
+      }
+      else if (error === "Không có đơn hàng nào có trạng thái Đã hủy") {
+        store.dispatch(actFetchOrders([]));
+      }
+      else {
+        MySwal.fire({
+          icon: 'error',
+          title: 'Lỗi',
+          text: `${error}`
+        })
+      }
+
     } else {
       console.log('callAPI error: ', err);
       MySwal.fire({

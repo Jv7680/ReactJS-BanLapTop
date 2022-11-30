@@ -36,3 +36,4 @@ ReactDOM.render(
 );
 
 
+export default store

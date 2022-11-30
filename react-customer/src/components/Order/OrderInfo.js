@@ -18,6 +18,7 @@ class OrderInfo extends Component {
         super(props);
 
         this.state = {
+            recipientname: "",
             address: "",
             phoneNumber: "",
             customerNote: "",
@@ -55,8 +56,8 @@ class OrderInfo extends Component {
     handleSubmit = async event => {
         event.preventDefault();
         // console.log(event)
-        const { address, phoneNumber, customerNote } = this.state;
-        console.log('address, phoneNumber, customerNote là: ', address, phoneNumber, customerNote);
+        const { recipientname, address, phoneNumber, customerNote } = this.state;
+        console.log('recipientname, address, phoneNumber, customerNote là: ', recipientname, address, phoneNumber, customerNote);
 
         let id = localStorage.getItem('_id');
         let token = localStorage.getItem('_auth');
@@ -64,6 +65,7 @@ class OrderInfo extends Component {
             accountId: id,
             address: address,
             phoneNumber: phoneNumber,
+            recipientname: recipientname,
             total: localStorage.getItem('total'),
             customerNote: customerNote,
             cartItemList: this.cartItemList,
@@ -85,7 +87,7 @@ class OrderInfo extends Component {
 
 
     render() {
-        const { address, phoneNumber, customerNote } = this.state;
+        const { recipientname, address, phoneNumber, customerNote } = this.state;
         // const { user } = this.props;
         // if (user !== null) {
         //     return <Redirect to="/"></Redirect>
@@ -99,6 +101,15 @@ class OrderInfo extends Component {
                         <h4 className="login-title">Thông tin đơn hàng</h4>
                         <div className="row">
                             <div className="col-md-12 col-12 mb-20">
+                                <label>Tên người nhận hàng *</label>
+                                <input
+                                    value={recipientname}
+                                    onChange={this.handleChange}
+                                    className="mb-0"
+                                    type="text"
+                                    placeholder="Tên người nhận hàng"
+                                    name='recipientname'
+                                />
                                 <label>Địa chỉ *</label>
                                 <input
                                     value={address}

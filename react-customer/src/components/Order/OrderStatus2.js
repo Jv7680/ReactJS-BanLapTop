@@ -75,6 +75,8 @@ class OrderStatus2 extends Component {
                                                                     {/* Tạm thời bỏ sản phẩm */}
                                                                     <th>sản phẩm</th>
                                                                     <th>Tổng tiền</th>
+                                                                    <th>Khách hàng</th>
+                                                                    <th>Số điện thoại</th>
                                                                     <th>Ngày tạo</th>
                                                                     <th>Trạng thái</th>
                                                                 </tr>
@@ -119,6 +121,8 @@ class OrderStatus2 extends Component {
                                                                                 }
                                                                             </td>
                                                                             <td>{formatNumber(item.totalAmount)}</td>
+                                                                            <td>{item.receiptName}</td>
+                                                                            <td>{item.phoneNumber}</td>
                                                                             <td>
                                                                                 <Moment format="DD/MM/YYYY">
                                                                                     {item.createDate}

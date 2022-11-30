@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import Moment from 'react-moment';
 import { actFetchOrdersRequest, actApproveOrdersRequest, actDeleteOrderRequest } from '../../../redux/actions/order';
 import { actFetchDashboardRequest } from '../../../redux/actions/dashboard'
+import { formatNumber } from '../../../config/TYPE'
 
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -174,12 +175,11 @@ class OrderStatus5 extends Component {
                           <tr>
                             <th>id đơn hàng</th>
                             <th>sản phẩm</th>
-                            <th>Địa chỉ</th>
-                            {/* <th>Address</th> */}
-                            <th>Ghi chú</th>
-                            {/* <th>Trạng thái</th> */}
-
                             <th>Tổng tiền</th>
+                            <th>Khách hàng</th>
+                            <th>Số điện thoại</th>
+                            <th>Địa chỉ</th>
+                            <th>Ghi chú</th>
                             <th>Ngày tạo HĐ</th>
                             <th>Ngày hủy HĐ</th>
                             {/* <th>Xóa</th>
@@ -227,15 +227,11 @@ class OrderStatus5 extends Component {
                                       }) : null
                                   }
                                 </td>
+                                <td>{formatNumber(item.totalAmount)}</td>
+                                <td>{item.receiptName}</td>
+                                <td>{item.phoneNumber}</td>
                                 <td>{item.address}</td>
                                 <td>{item.customerNote}</td>
-                                {/* <td>
-                                  <div className="col">
-                                    <label className="fix-status px-2 bg-danger" >1
-                                    </label>
-                                  </div>
-                                </td> */}
-                                <td>{item.totalAmount}</td>
                                 <td>
                                   <Moment format="YYYY/MM/DD">
                                     {item.createDate}

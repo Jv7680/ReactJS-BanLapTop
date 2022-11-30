@@ -5,6 +5,8 @@ import { connect } from 'react-redux'
 import Moment from 'react-moment';
 import { actFetchOrdersRequest, actDeliveredOrderRequest, actDeleteOrderRequest } from '../../../redux/actions/order';
 import Swal from 'sweetalert2'
+import { formatNumber } from '../../../config/TYPE'
+
 import withReactContent from 'sweetalert2-react-content'
 import Paginator from 'react-js-paginator';
 import { css } from '@emotion/core';
@@ -171,9 +173,11 @@ class OrderStatus4 extends Component {
                             {/* <th>Số điện thoại</th>
                             <th>Trạng thái</th> */}
                             <th>Sản phẩm</th>
+                            <th>Tổng tiền</th>
+                            <th>Khách hàng</th>
+                            <th>Số điện thoại</th>
                             <th>Địa chỉ</th>
                             <th>Ghi chú</th>
-                            <th>Tổng tiền</th>
                             <th>Ngày Đặt Hàng</th>
                             <th>Ngày Nhận Hàng</th>
                             {/* <th>Chi tiết</th> */}
@@ -219,17 +223,11 @@ class OrderStatus4 extends Component {
                                       }) : null
                                   }
                                 </td>
+                                <td>{formatNumber(item.totalAmount)}</td>
+                                <td>{item.receiptName}</td>
+                                <td>{item.phoneNumber}</td>
                                 <td>{item.address}</td>
                                 <td>{item.customerNote}</td>
-                                {/* <td>{item.customerFKDto.lastName}</td>
-                                <td>{item.phoneNumber}</td> */}
-                                {/* <td>
-                                  <div className="col">
-                                    <label className="fix-status px-2" style={{ background: '#5cb85c' }} >{item.statusOrder}
-                                    </label>
-                                  </div>
-                                </td> */}
-                                <td>{item.totalAmount}</td>
                                 {/* <td>
                                   <Moment format="YYYY/MM/DD">
                                     {item.createDate}

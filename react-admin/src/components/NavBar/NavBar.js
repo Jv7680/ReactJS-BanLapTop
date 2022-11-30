@@ -45,7 +45,7 @@ class NavBar extends Component {
     console.log('dashboard: ', dashboard)
 
     return (
-      <nav className="side-navbar">
+      <nav className="side-navbar" style={{ minWidth: "190px" }}>
         {/* Sidebar Header*/}
         <div className="sidebar-header d-flex align-items-center">
           <div className="avatar">

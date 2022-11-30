@@ -22,7 +22,7 @@ export const actFetchOrdersRequest = (status, page) => {
       //   }
       // })
       let token = localStorage.getItem('_auth');
-      callApi(`admin/orders?status=${status}&page=1&size=20`, "GET", null, token)
+      let callApiResult = callApi(`admin/orders?status=${status}&page=1&size=20`, "GET", null, token)
         .then(res => {
           if (res && res.status === 200) {
             console.log('actFetchOrdersRequest res: ', res);
@@ -32,10 +32,12 @@ export const actFetchOrdersRequest = (status, page) => {
           }
         })
         .catch(err => {
-          console.log(err);
+          console.log("error: ", err);
           reject(err);
           setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
         });
+
+      console.log("callApiResult: ", callApiResult);
     });
   };
 };
