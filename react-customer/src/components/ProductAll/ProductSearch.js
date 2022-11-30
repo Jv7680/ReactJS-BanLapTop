@@ -15,16 +15,16 @@ class ShopCategory extends Component {
       total: 0
     };
   }
-  componentDidMount(){
-    const {totalPage} = this.props.search 
-    this.setState({total:totalPage})
+  componentDidMount() {
+    const { totalPage } = this.props.search
+    this.setState({ total: totalPage })
   }
 
   pageChange(content) {
     const page = content;
-    const {key} = this.props.search
-    console.log("khóa tìm kiếm chage",key)
-    this.props.fetch_products(key,page);
+    const { key } = this.props.search
+    console.log("khóa tìm kiếm chage", key)
+    this.props.fetch_products(key, page);
     this.setState({
       currentPage: content
     })
@@ -32,9 +32,9 @@ class ShopCategory extends Component {
   }
 
   render() {
-    let { products,search } = this.props;
+    let { products, search } = this.props;
     const { total } = this.state;
-    console.log("sản phẩm search và trang",products,search)
+    console.log("sản phẩm search và trang", products, search)
     return (
       <div className="content-wraper pt-60 pb-60">
         <div className="container">
@@ -44,8 +44,9 @@ class ShopCategory extends Component {
               <div className="single-banner shop-page-banner">
                 <a href="/">
                   <img
-                    src="https://i.ibb.co/rfh0sf4/2.jpg"
+                    src="http://baominhcomputer.com/wp-content/uploads/2021/12/home_collection_2_image-1.jpg.webp"
                     alt="Li's Static Banner"
+                    style={{ height: "300px" }}
                   />
                 </a>
               </div>
@@ -106,13 +107,13 @@ class ShopCategory extends Component {
                       <div className="row">
                         {products && products.length
                           ? products.map((item, index) => {
-                              return (
-                                <ProductItem
-                                  key={index}
-                                  product={item}
-                                ></ProductItem>
-                              );
-                            })
+                            return (
+                              <ProductItem
+                                key={index}
+                                product={item}
+                              ></ProductItem>
+                            );
+                          })
                           : null}
                       </div>
                     </div>
@@ -125,11 +126,11 @@ class ShopCategory extends Component {
                     </div>
                     <div className="col-lg-6 col-md-6">
                       <ul className="pagination-box">
-                      <Paginator
-                        pageSize={1}
-                        totalElements={search.totalPage}
-                        onPageChangeCallback={(e) => {this.pageChange(e)}}
-                      />
+                        <Paginator
+                          pageSize={1}
+                          totalElements={search.totalPage}
+                          onPageChangeCallback={(e) => { this.pageChange(e) }}
+                        />
                       </ul>
                     </div>
                   </div>
@@ -146,7 +147,7 @@ class ShopCategory extends Component {
 const mapStateToProps = (state) => {
   return {
     products: state.products,
-    search:state.search
+    search: state.search
   }
 }
 

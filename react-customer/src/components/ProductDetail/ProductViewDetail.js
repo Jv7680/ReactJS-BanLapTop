@@ -36,14 +36,15 @@ class ProductViewDetail extends Component {
     };
   }
 
-  async componentDidMount() {
-    token = localStorage.getItem("_auth");
-    const { id } = this.props;
-    const res = await callApi(`product/${id}`, "GET"); console.log('ressss', res);
-    if (res && res.status === 200) {
-      this.props.get_product(id);
-    }
-  }
+  // componentDidMount = async () => {
+  //   token = localStorage.getItem("_auth");
+  //   const { id } = this.props;
+  //   const res = await callApi(`product/${id}`, "GET");
+  //   console.log('ressss', res);
+  //   // if (res && res.status === 200) {
+  //   //   this.props.get_product(id);
+  //   // }
+  // }
 
   upItem = (quantity) => {
     if (quantity >= 5) {
@@ -109,6 +110,7 @@ class ProductViewDetail extends Component {
       slidesToScroll: 1
     };
     const { product, user } = this.props;
+    console.log('product state của redux: ', product);
     const { quantity, redirectYourLogin } = this.state;
     if (redirectYourLogin) {
       return <Redirect to="/login"></Redirect>
@@ -242,7 +244,7 @@ class ProductViewDetail extends Component {
             >
               <div className="product-description">
                 <span dangerouslySetInnerHTML={{ __html: product.description }}></span>
-
+                {console.log('product.reviewsResponses: ', product)}
                 <RatingView rating={product.reviewsResponses.rating} listReviews={product.reviewsResponses.listReviews}></RatingView>
                 {
                   product.reviewsResponses.listReviews ? (
@@ -283,8 +285,7 @@ class ProductViewDetail extends Component {
 
                         <div className="comment-list">
                           <h5 className="text-muted mt-40">
-                            <span className="badge badge-success">0</span>
-                            Comment
+                            <span className="badge badge-success">Chưa Có Comment</span>
                           </h5>
                         </div>
                       )

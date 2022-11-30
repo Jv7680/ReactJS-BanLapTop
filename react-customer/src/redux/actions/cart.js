@@ -24,6 +24,7 @@ export const actAddCartRequest = (customerId, product, quantity, token) => {
             return toast.error(`Sản phẩm của chúng tôi hiện còn có ${product.quantity} sản phẩm`)
         }
         console.log("dữ liệu chuẩn bị gửi đi", dataguidi);
+        let token = localStorage.getItem('_auth');
         const res = await callApi('cart', 'POST', dataguidi, token);
         console.log("dữ liệu chuẩn bị gửi về", res)
 

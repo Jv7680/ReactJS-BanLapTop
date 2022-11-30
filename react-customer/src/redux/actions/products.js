@@ -58,13 +58,15 @@ export const actGetProductOfKeyRequest = (key, page) => {
     return dispatch => {
         dispatch(actShowLoading());
         return new Promise((resolve, reject) => {
-            callApi(`view/product/search?keyword=${newKey}&page=${newPage}`, 'GET')
+            let token = localStorage.getItem('_auth');
+            console.log('newKey: ', newKey);
+            callApi(`product/search?keyword=${newKey}`, 'GET', null, token)
                 .then(res => {
                     if (res && res.status === 200) {
                         localStorage.setItem("_keyword", newKey)
-                        console.log("trả về rồi lala", res.data)
+                        console.log("actGetProductOfKeyRequest res", res)
                         const newKeyPage = { key: newKey, totalPage: res.data.totalPage }
-                        dispatch(actFetchProducts(res.data.listProduct));
+                        dispatch(actFetchProducts(res.data.listProducts));
                         dispatch(actFetchKeySearch(newKeyPage));
                         console.log("lưu search", newKeyPage)
                         resolve(res.data);

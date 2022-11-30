@@ -6,6 +6,7 @@ import { actFetchCartRequest } from '../../redux/actions/cart';
 import { startLoading, doneLoading } from '../../utils/loading'
 import { actGetProductOfKeyRequest } from '../../redux/actions/products'
 import { actFetchWishListRequest } from '../../redux/actions/wishlist'
+import { withRouter } from 'react-router-dom';
 
 
 
@@ -38,6 +39,7 @@ class HeaderMiddle extends Component {
   handleClick = async () => {
     const { textSearch } = this.state;
     if (textSearch === '' || textSearch === null) {
+      //this.props.history.push(`/`);
       return toast.error('Vui lòng nhập sản phẩm cần tìm ...');
     }
     else {
@@ -58,7 +60,7 @@ class HeaderMiddle extends Component {
     let count2 = 0;
     if (countCart.length > 0) {
       countCart.forEach(item => {
-        count += item.quantity
+        count += item.cartProductQuantity
       });
     }
     console.log("yêu thích", countWishList)
@@ -106,7 +108,7 @@ class HeaderMiddle extends Component {
                   {/* Begin Header Middle Wishlist Area */}
                   <li className="hm-wishlist">
                     <Link to="/wishlist">
-                      <span className="cart-item-count wishlist-item-count"> {countWishList.length}</span>
+                      {/* <span className="cart-item-count wishlist-item-count"> {countWishList.length}</span> */}
                       <i className="fa fa-heart-o" />
                     </Link>
                   </li>
@@ -117,7 +119,7 @@ class HeaderMiddle extends Component {
                       <div className="hm-minicart-trigger">
                         <i className="item-icon fab fa-opencart"></i>
                         <span className="item-text">
-                          <span className="cart-item-count">{count}</span>
+                          {/* <span className="cart-item-count">{count}</span> */}
                         </span>
                       </div>
                     </Link>
@@ -155,4 +157,4 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(HeaderMiddle)
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(HeaderMiddle))

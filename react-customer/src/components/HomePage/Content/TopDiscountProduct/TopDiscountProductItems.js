@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom';
 
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify';
@@ -30,9 +31,16 @@ class TopDiscountProductItems extends Component {
       [name]: value
     });
   }
-  getInfoProduct = (id) => {
-    console.log("vào đây để lấy thông tin san phẩm", id)
-    this.props.getInfoProduct(id);
+  getInfoProduct = async (id) => {
+    console.log("getInfoProduct id", id)
+    await this.props.getInfoProduct(id);
+
+    //Cần delay để tránh việc vào trang thông tin sản phẩm mà chưa call api xong
+    setTimeout(() => {
+      console.log('call api xong');
+      this.props.history.push(`/products/${id}`);
+    }, 250);
+
   }
   addItemToCart = product => {
     const { quantity } = this.state;
@@ -71,14 +79,14 @@ class TopDiscountProductItems extends Component {
 
       <div className="single-product-wrap" >
         <div className="fix-img-div-new product-image">
-          <Link onClick={(id) => this.getInfoProduct(product.productId)} to={`/products/${product.productId}`}>
+          <Link onClick={(id) => this.getInfoProduct(product.productId)} >
             <img className="fix-img" src={product.image} alt="Li's Product " />
           </Link>
           <span className="sticker">{product.discount}%</span>
         </div>
         <div className="product_desc">
           <div className="product_desc_info">
-            <h4><Link className="product_name text-truncate" onClick={(id) => this.getInfoProduct(product.productId)} to={`/products/${product.productId}`}>{product.productName}</Link></h4>
+            <h4><Link className="product_name text-truncate" onClick={(id) => this.getInfoProduct(product.productId)} >{product.productName}</Link></h4>
             <div className="price-box">
               {/* <span className="new-price" style={{ color: 'red' }}>{product.priceAfterDiscount.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span> */}
               {
@@ -96,7 +104,7 @@ class TopDiscountProductItems extends Component {
           <div className="add-actions">
             <ul className="add-actions-link">
               <li className="add-cart active"><Link to="#" onClick={() => this.addItemToCart(product)} >Thêm vào giỏ</Link></li>
-              <li><Link onClick={(id) => this.getInfoProduct(product.productId)} to={`/products/${product.productId}`} title="quick view" className="quick-view-btn" data-toggle="modal" data-target="#exampleModalCenter"><i className="fa fa-eye" /></Link></li>
+              <li><Link onClick={(id) => this.getInfoProduct(product.productId)} title="quick view" className="quick-view-btn" data-toggle="modal" data-target="#exampleModalCenter"><i className="fa fa-eye" /></Link></li>
               <li><Link onClick={() => this.addItemToFavorite(product.productId)} className="links-details" title="Yêu thích" ><i className="fa fa-heart-o" /></Link></li>
             </ul>
           </div>
@@ -128,4 +136,4 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(TopDiscountProductItems)
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(TopDiscountProductItems))
