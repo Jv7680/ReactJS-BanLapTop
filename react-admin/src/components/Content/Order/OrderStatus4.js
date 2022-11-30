@@ -3,14 +3,11 @@ import './style.css'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Moment from 'react-moment';
-import { actFetchOrdersRequest, actApproveOrdersRequest, actDeleteOrderRequest } from '../../../redux/actions/order';
-import { actFetchDashboardRequest } from '../../../redux/actions/dashboard'
-
+import { actFetchOrdersRequest, actDeliveredOrderRequest, actDeleteOrderRequest } from '../../../redux/actions/order';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Paginator from 'react-js-paginator';
 import { css } from '@emotion/core';
-import callApi from '../../../utils/apiCaller';
 const MySwal = withReactContent(Swal)
 let status;
 const override = css`
@@ -22,14 +19,14 @@ const override = css`
     transform: translate(-50%, -50%);
     z-index: 9999;
 `;
-class OrderStatus3 extends Component {
+class OrderStatus4 extends Component {
   constructor(props) {
     super(props);
     this.state = {
       searchText: '',
       total: 0,
       currentPage: 1,
-      statusPage: 'Chưa duyệt',
+      statusPage: 'Đã giao',
       redirectToProduct: false
     }
 
@@ -37,8 +34,8 @@ class OrderStatus3 extends Component {
   componentDidMount() {
     const { statusPage } = this.state
 
-    //status = 3 là đang được giao
-    this.fetch_reload_data(3);
+    //status = 4 là đã giao
+    this.fetch_reload_data(4);
 
   }
 
@@ -56,19 +53,9 @@ class OrderStatus3 extends Component {
     const page = content;
     const { statusPage } = this.state
     this.props.fetch_orders(statusPage, page);
-    if (content <= 0) {
-
-      this.setState({
-        currentPage: 1
-      })
-    }
-    else {
-      this.setState({
-        currentPage: content
-      })
-
-    }
-
+    this.setState({
+      currentPage: content
+    })
     window.scrollTo(0, 0);
   }
 
@@ -80,32 +67,32 @@ class OrderStatus3 extends Component {
       [name]: value
     });
   }
-  handleBrowse = async (id) => {
-    // const id = event.target.value;
-    // const { statusPage, currentPage } = this.state
-    // await this.props.approveOrder(id, statusPage, currentPage);
-    // await this.props.fetch_dashboard();
+  handleBrowse = (event) => {
+    const id = event.target.value;
+    console.log("Đơn được duyệt", id)
+    MySwal.fire({
+      title: 'Duyệt đơn hàng?',
+      text: "Bạn chắc chắn duyệt đơn này!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes'
+    }).then(async (result) => {
+      if (result.value) {
+        const { statusPage, currentPage } = this.state
+        await this.props.deliveredOrder(id, statusPage, currentPage);
+        Swal.fire(
+          'Xong!',
+          'Đơn hàng đã được duyệt.',
+          'success'
+        )
+      }
+    })
+  }
 
-    //gọi api
-    let token = localStorage.getItem('_auth');
-    //gửi body với status 4 để đơn hàng có trạng thái đã giao
-    let body = {
-      orderStatus: 4,
-    }
-    await callApi(`admin/orders/update/${id}`, "PUT", body, token);
-
-    Swal.fire(
-      'Giao hàng!',
-      `Đơn hàng ${id} đã được giao.!`,
-      'success'
-    )
-
-    setTimeout(() => {
-      //gọi lại fetch để set lại state orders của redux, sẽ khiến component này tự render lại
-      console.log('set lại state');
-      this.fetch_reload_data(3);
-    }, 250);
-
+  handleSubmit = (event) => {
+    event.preventDefault();
   }
   handleRemove = (id) => {
     MySwal.fire({
@@ -115,7 +102,8 @@ class OrderStatus3 extends Component {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes'
+      confirmButtonText: 'OK',
+      cancelButtonText: 'Không'
     }).then(async (result) => {
       if (result.value) {
         await this.props.delete_order(id);
@@ -124,23 +112,15 @@ class OrderStatus3 extends Component {
           'Đơn hàng của bạn đã được xóa.!',
           'success'
         )
-
-        setTimeout(() => {
-          //gọi lại fetch để set lại state orders của redux, sẽ khiến component này tự render lại
-          console.log('set lại state');
-          this.fetch_reload_data(1);
-        }, 250);
       }
     })
-  }
-  handleSubmit = (event) => {
-    event.preventDefault();
   }
 
   render() {
     const { orders } = this.props;
+    console.log("dữ liệu orders của redux: ", orders)
     const { searchText, total, statusPage } = this.state;
-    console.log('orders state của redux', orders)
+
     return (
       <div className="content-inner">
         {/* Page Header*/}
@@ -162,29 +142,42 @@ class OrderStatus3 extends Component {
               <div className="col-lg-12">
                 <div className="card">
                   <div className="card-header d-flex align-items-center">
-                    <h3 className="h4">Đơn hàng đã duyệt</h3>
+                    <h3 className="h4">Đơn đã giao</h3>
                     {/* <button onClick={()=>this.downloadExcel()} style={{ border: 0, background: "white" }}> <i className="fa fa-file-excel-o"
                         style={{fontSize: 18, color: '#1d7044'}}> Excel</i></button> */}
                   </div>
+                  {/* <form
+                    onSubmit={(event) => this.handleSubmit(event)}
+                    className="form-inline md-form form-sm mt-0" style={{ justifyContent: 'flex-end', paddingTop: 5, paddingRight: 20 }}>
+                    <div>
+                      <button style={{ border: 0, background: 'white' }}><i className="fa fa-search" aria-hidden="true"></i></button>
+                      <input
+                        name="searchText"
+                        onChange={this.handleChange}
+                        value={searchText}
+                        className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search"
+                        aria-label="Search" />
+                    </div>
 
+                  </form>     */}
                   <div className="card-body">
                     <div className="table-responsive">
                       <table className="table table-hover">
                         <thead>
                           <tr>
                             <th>id đơn hàng</th>
-                            <th>sản phẩm</th>
-                            <th>Địa chỉ</th>
+                            {/* <th>Tên khách hàng</th> */}
                             {/* <th>Address</th> */}
+                            {/* <th>Số điện thoại</th>
+                            <th>Trạng thái</th> */}
+                            <th>Sản phẩm</th>
+                            <th>Địa chỉ</th>
                             <th>Ghi chú</th>
-                            {/* <th>Trạng thái</th> */}
-
                             <th>Tổng tiền</th>
-                            <th>Ngày tạo HĐ</th>
-                            <th>Xóa</th>
-                            <th>Giao thành công
+                            <th>Ngày Đặt Hàng</th>
+                            <th>Ngày Nhận Hàng</th>
+                            {/* <th>Chi tiết</th> */}
 
-                            </th>
                           </tr>
                         </thead>
                         <tbody>
@@ -228,28 +221,37 @@ class OrderStatus3 extends Component {
                                 </td>
                                 <td>{item.address}</td>
                                 <td>{item.customerNote}</td>
+                                {/* <td>{item.customerFKDto.lastName}</td>
+                                <td>{item.phoneNumber}</td> */}
                                 {/* <td>
                                   <div className="col">
-                                    <label className="fix-status px-2 bg-danger" >1
+                                    <label className="fix-status px-2" style={{ background: '#5cb85c' }} >{item.statusOrder}
                                     </label>
                                   </div>
                                 </td> */}
                                 <td>{item.totalAmount}</td>
-                                <td>
+                                {/* <td>
                                   <Moment format="YYYY/MM/DD">
                                     {item.createDate}
                                   </Moment>
-                                </td>
-                                <td style={{ textAlign: "left" }}>
-                                  <div >
-                                    {/* Tạm bỏ chức năng xem chi tiết đơn hàng do chưa có api */}
-                                    {/* <span title='Edit' className="fix-action"><Link to={`/orders/edit/${item.orderId}`}> <i className="fa fa-edit"></i></Link></span> */}
-                                    <span title='Delete' onClick={() => this.handleRemove(item.orderId)} className="fix-action"><Link to="#"> <i className="fa fa-trash" style={{ color: '#ff00008f' }}></i></Link></span>
-                                  </div>
+                                </td> */}
+                                <td>
+                                  <span>{new Date(item.orderDate).getFullYear()}/{new Date(item.orderDate).getMonth()}/{new Date(item.orderDate).getDate()}</span>
                                 </td>
                                 <td>
-                                  <button className="btn btn-primary" value={item.orderId} onClick={() => this.handleBrowse(item.orderId)} > Check</button>
+                                  <span>{new Date(item.receiptDate).getFullYear()}/{new Date(item.receiptDate).getMonth()}/{new Date(item.receiptDate).getDate()}</span>
                                 </td>
+                                {/* tạm đóng chi tiết */}
+                                {/* <td>
+                                  <div>
+                                    <span title='Edit' className="fix-action"><Link to={`/orders/edit/${item.orderId}`}> <i className="fa fa-edit"></i></Link></span>
+
+                                    <span title='Delete' onClick={() => this.handleRemove(item.orderId)} className="fix-action"><Link to="#"> <i className="fa fa-trash" style={{ color: '#ff00008f' }}></i></Link></span>
+                                  </div>
+                                </td> */}
+                                {/* <td>
+                                  <button className="btn btn-primary" value={item.orderId} onClick={this.handleBrowse} > Duyệt</button>
+                                </td> */}
                               </tr>
                             )
                           }) : null}
@@ -257,6 +259,7 @@ class OrderStatus3 extends Component {
                       </table>
                     </div>
                   </div>
+
                 </div>
                 <nav aria-label="Page navigation example" style={{ float: "right" }}>
                   <ul className="pagination">
@@ -286,14 +289,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetch_dashboard: () => {
-      dispatch(actFetchDashboardRequest())
-    },
     fetch_orders: (status, offset) => {
-      return dispatch(actFetchOrdersRequest(status, offset))
+      return dispatch(actFetchOrdersRequest(4, offset))
     },
-    approveOrder: (id, status, page) => {
-      return dispatch(actApproveOrdersRequest(id, status, page))
+    deliveredOrder: (id) => {
+      return dispatch(actDeliveredOrderRequest(id))
     },
     delete_order: (id) => {
       dispatch(actDeleteOrderRequest(id))
@@ -301,4 +301,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(OrderStatus3)
+export default connect(mapStateToProps, mapDispatchToProps)(OrderStatus4)

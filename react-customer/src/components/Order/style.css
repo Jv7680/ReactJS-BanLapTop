@@ -107,10 +107,11 @@ span {
   height: 120px;
   width: 80px;
   overflow: hidden;
-  
+
 }
-.fix-img-order{
- height: 100px;
+
+.fix-img-order {
+  height: 100px;
   width: 80px;
   overflow: hidden;
   padding-bottom: 10px;

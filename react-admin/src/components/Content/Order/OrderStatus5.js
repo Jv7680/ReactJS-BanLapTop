@@ -22,7 +22,7 @@ const override = css`
     transform: translate(-50%, -50%);
     z-index: 9999;
 `;
-class OrderStatus3 extends Component {
+class OrderStatus5 extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -37,8 +37,8 @@ class OrderStatus3 extends Component {
   componentDidMount() {
     const { statusPage } = this.state
 
-    //status = 3 là đang được giao
-    this.fetch_reload_data(3);
+    //status = 5 là đã hủy
+    this.fetch_reload_data(5);
 
   }
 
@@ -88,22 +88,22 @@ class OrderStatus3 extends Component {
 
     //gọi api
     let token = localStorage.getItem('_auth');
-    //gửi body với status 4 để đơn hàng có trạng thái đã giao
+    //gửi body với status 3 để đơn hàng có trạng thái đang giao
     let body = {
-      orderStatus: 4,
+      orderStatus: 3,
     }
     await callApi(`admin/orders/update/${id}`, "PUT", body, token);
 
     Swal.fire(
       'Giao hàng!',
-      `Đơn hàng ${id} đã được giao.!`,
+      `Đơn hàng ${id} đang được giao.!`,
       'success'
     )
 
     setTimeout(() => {
       //gọi lại fetch để set lại state orders của redux, sẽ khiến component này tự render lại
       console.log('set lại state');
-      this.fetch_reload_data(3);
+      this.fetch_reload_data(1);
     }, 250);
 
   }
@@ -181,10 +181,11 @@ class OrderStatus3 extends Component {
 
                             <th>Tổng tiền</th>
                             <th>Ngày tạo HĐ</th>
-                            <th>Xóa</th>
-                            <th>Giao thành công
+                            <th>Ngày hủy HĐ</th>
+                            {/* <th>Xóa</th>
+                            <th>Giao hàng
 
-                            </th>
+                            </th> */}
                           </tr>
                         </thead>
                         <tbody>
@@ -240,16 +241,21 @@ class OrderStatus3 extends Component {
                                     {item.createDate}
                                   </Moment>
                                 </td>
-                                <td style={{ textAlign: "left" }}>
+                                <td>
+                                  <Moment format="YYYY/MM/DD">
+                                    {item.createDate}
+                                  </Moment>
+                                </td>
+                                {/* Tạm bỏ chức năng xem chi tiết đơn hàng do chưa có api */}
+                                {/* <td style={{ textAlign: "left" }}>
                                   <div >
-                                    {/* Tạm bỏ chức năng xem chi tiết đơn hàng do chưa có api */}
-                                    {/* <span title='Edit' className="fix-action"><Link to={`/orders/edit/${item.orderId}`}> <i className="fa fa-edit"></i></Link></span> */}
+                                    <span title='Edit' className="fix-action"><Link to={`/orders/edit/${item.orderId}`}> <i className="fa fa-edit"></i></Link></span>
                                     <span title='Delete' onClick={() => this.handleRemove(item.orderId)} className="fix-action"><Link to="#"> <i className="fa fa-trash" style={{ color: '#ff00008f' }}></i></Link></span>
                                   </div>
                                 </td>
                                 <td>
-                                  <button className="btn btn-primary" value={item.orderId} onClick={() => this.handleBrowse(item.orderId)} > Check</button>
-                                </td>
+                                  <button className="btn btn-primary" value={item.orderId} onClick={() => this.handleBrowse(item.orderId)} > Giao</button>
+                                </td> */}
                               </tr>
                             )
                           }) : null}
@@ -301,4 +307,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(OrderStatus3)
+export default connect(mapStateToProps, mapDispatchToProps)(OrderStatus5)

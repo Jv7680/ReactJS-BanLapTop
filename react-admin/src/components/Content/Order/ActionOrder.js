@@ -25,7 +25,8 @@ class ActionOrder extends Component {
     async componentDidMount() {
         if (id) {
             const res = await callApi(`orders/detail/${id}`, 'GET');
-            
+
+            let { orders } = this.props;
             const resOrderDetails = res.data.list
             console.log("danh sách sản phẩm", res.data)
             this.setState({
@@ -60,7 +61,7 @@ class ActionOrder extends Component {
         event.preventDefault();
     }
 
-  
+
 
 
 
@@ -70,8 +71,8 @@ class ActionOrder extends Component {
         let orderDetailAmount = 0;
         const { history } = this.props
         console.log("props trong action", history)
-        console.log("ủ ủa",dataOrderDetails)
-        
+        console.log("ủ ủa", dataOrderDetails)
+
         return (
 
             <div className="content-inner">
@@ -150,7 +151,7 @@ class ActionOrder extends Component {
                                                                                     <td>
                                                                                         <b style={{ fontSize: 16 }}>
                                                                                             {
-                                                                                                totalAmount.toLocaleString('it-IT', {style : 'currency', currency : 'VND'})
+                                                                                                totalAmount.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })
                                                                                             }
                                                                                         </b></td>
                                                                                 </tr>
@@ -196,5 +197,10 @@ class ActionOrder extends Component {
     }
 }
 
+const mapStateToProps = (state) => {
+    return {
+        orders: state.orders
+    }
+}
 
-export default (ActionOrder)
+export default connect(mapStateToProps, null)(ActionOrder)

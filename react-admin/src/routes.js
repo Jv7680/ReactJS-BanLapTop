@@ -11,7 +11,8 @@ import ActionUserPage from './pages/ActionUserPage';
 import OrderPage from './pages/OrderPage';
 import OrderStatus2Page from './pages/OrderStatus2Page';
 import OrderStatus3Page from './pages/OrderStatus3Page';
-
+import OrderStatus4Page from './pages/OrderStatus4Page';
+import OrderStatus5Page from './pages/OrderStatus5Page';
 
 const routes = [
     {
@@ -48,6 +49,16 @@ const routes = [
         path: '/orders/status3',
         exact: true,
         main: () => <OrderStatus3Page />
+    },
+    {
+        path: '/orders/status4',
+        exact: true,
+        main: () => <OrderStatus4Page />
+    },
+    {
+        path: '/orders/status5',
+        exact: true,
+        main: () => <OrderStatus5Page />
     },
     {
         path: '/orders/edit/:id',

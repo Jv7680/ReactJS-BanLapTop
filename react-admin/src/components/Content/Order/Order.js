@@ -10,6 +10,7 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Paginator from 'react-js-paginator';
 import { css } from '@emotion/core';
+import callApi from '../../../utils/apiCaller';
 const MySwal = withReactContent(Swal)
 let status;
 const override = css`
@@ -35,7 +36,9 @@ class Order extends Component {
   }
   componentDidMount() {
     const { statusPage } = this.state
-    this.fetch_reload_data(statusPage);
+
+    //status = 1 là chờ duyệt
+    this.fetch_reload_data(1);
 
   }
 
@@ -77,11 +80,31 @@ class Order extends Component {
       [name]: value
     });
   }
-  handleBrowse = async (event) => {
-    const id = event.target.value;
-    const { statusPage, currentPage } = this.state
-    await this.props.approveOrder(id, statusPage, currentPage);
-    await this.props.fetch_dashboard();
+  handleBrowse = async (id) => {
+    // const id = event.target.value;
+    // const { statusPage, currentPage } = this.state
+    // await this.props.approveOrder(id, statusPage, currentPage);
+    // await this.props.fetch_dashboard();
+
+    //gọi api
+    let token = localStorage.getItem('_auth');
+    //gửi body với status 2 để duyệt đơn
+    let body = {
+      orderStatus: 2,
+    }
+    await callApi(`admin/orders/update/${id}`, "PUT", body, token);
+
+    Swal.fire(
+      'Duyệt!',
+      `Đơn hàng ${id} đã được duyệt.!`,
+      'success'
+    )
+
+    setTimeout(() => {
+      //gọi lại fetch để set lại state orders của redux, sẽ khiến component này tự render lại
+      console.log('set lại state');
+      this.fetch_reload_data(1);
+    }, 250);
 
   }
   handleRemove = (id) => {
@@ -101,6 +124,12 @@ class Order extends Component {
           'Đơn hàng của bạn đã được xóa.!',
           'success'
         )
+
+        setTimeout(() => {
+          //gọi lại fetch để set lại state orders của redux, sẽ khiến component này tự render lại
+          console.log('set lại state');
+          this.fetch_reload_data(1);
+        }, 250);
       }
     })
   }
@@ -111,7 +140,7 @@ class Order extends Component {
   render() {
     const { orders } = this.props;
     const { searchText, total, statusPage } = this.state;
-    console.log(orders)
+    console.log('orders state của redux', orders)
     return (
       <div className="content-inner">
         {/* Page Header*/}
@@ -144,14 +173,15 @@ class Order extends Component {
                         <thead>
                           <tr>
                             <th>id đơn hàng</th>
-                            <th>Tên khách hàng</th>
+                            <th>sản phẩm</th>
+                            <th>Địa chỉ</th>
                             {/* <th>Address</th> */}
-                            <th>Số điện thoại</th>
-                            <th>Trạng thái</th>
+                            <th>Ghi chú</th>
+                            {/* <th>Trạng thái</th> */}
 
                             <th>Tổng tiền</th>
                             <th>Ngày tạo HĐ</th>
-                            <th>Chi tiết</th>
+                            <th>Xóa</th>
                             <th>Duyệt
 
                             </th>
@@ -162,28 +192,63 @@ class Order extends Component {
                             return (
                               <tr key={index}>
                                 <th scope="row">{item.orderId}</th>
-                                <td>{item.customerFKDto.lastName}</td>
-                                <td>{item.phoneNumber}</td>
                                 <td>
+                                  {
+                                    item.lstOrdersDetail && item.lstOrdersDetail.length ?
+                                      item.lstOrdersDetail.map((product, index) => {
+                                        return (
+                                          <>
+                                            <li className='d-flex' key={index}>
+                                              <div className="fix-order">
+                                                <img src={product.imgLink} className="fix-img-order" alt="not found" />
+                                              </div>
+                                              <div>
+                                                <h6 className='pl-3 pt-10'>{product.productName}</h6>
+
+
+                                                <strong
+                                                  className="pl-3 product-quantity"
+                                                  style={{
+                                                    paddingLeft: 10,
+                                                    color: "coral",
+                                                    fontStyle: "italic",
+                                                  }}
+                                                >
+                                                  SL: {product.quantity}
+                                                </strong>
+                                              </div>
+
+
+                                            </li>
+                                          </>
+
+                                        )
+                                      }) : null
+                                  }
+                                </td>
+                                <td>{item.address}</td>
+                                <td>{item.customerNote}</td>
+                                {/* <td>
                                   <div className="col">
-                                    <label className="fix-status px-2 bg-danger" >{item.statusOrder}
+                                    <label className="fix-status px-2 bg-danger" >1
                                     </label>
-                                  </div> </td>
+                                  </div>
+                                </td> */}
                                 <td>{item.totalAmount}</td>
                                 <td>
                                   <Moment format="YYYY/MM/DD">
                                     {item.createDate}
                                   </Moment>
                                 </td>
-                                <td>
-                                  <div>
-                                    <span title='Edit' className="fix-action"><Link to={`/orders/edit/${item.orderId}`}> <i className="fa fa-edit"></i></Link></span>
-
+                                <td style={{ textAlign: "left" }}>
+                                  <div >
+                                    {/* Tạm bỏ chức năng xem chi tiết đơn hàng do chưa có api */}
+                                    {/* <span title='Edit' className="fix-action"><Link to={`/orders/edit/${item.orderId}`}> <i className="fa fa-edit"></i></Link></span> */}
                                     <span title='Delete' onClick={() => this.handleRemove(item.orderId)} className="fix-action"><Link to="#"> <i className="fa fa-trash" style={{ color: '#ff00008f' }}></i></Link></span>
                                   </div>
                                 </td>
                                 <td>
-                                  <button className="btn btn-primary" value={item.orderId} onClick={this.handleBrowse} > Duyệt</button>
+                                  <button className="btn btn-primary" value={item.orderId} onClick={() => this.handleBrowse(item.orderId)} > Duyệt</button>
                                 </td>
                               </tr>
                             )
@@ -225,7 +290,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(actFetchDashboardRequest())
     },
     fetch_orders: (status, offset) => {
-      return dispatch(actFetchOrdersRequest(1, offset))
+      return dispatch(actFetchOrdersRequest(status, offset))
     },
     approveOrder: (id, status, page) => {
       return dispatch(actApproveOrdersRequest(id, status, page))

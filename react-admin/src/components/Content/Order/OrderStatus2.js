@@ -3,12 +3,14 @@ import './style.css'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Moment from 'react-moment';
-import { actFetchOrdersRequest, actDeliveredOrderRequest, actDeleteOrderRequest } from '../../../redux/actions/order';
+import { actFetchOrdersRequest, actApproveOrdersRequest, actDeleteOrderRequest } from '../../../redux/actions/order';
 import { actFetchDashboardRequest } from '../../../redux/actions/dashboard'
+
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Paginator from 'react-js-paginator';
 import { css } from '@emotion/core';
+import callApi from '../../../utils/apiCaller';
 const MySwal = withReactContent(Swal)
 let status;
 const override = css`
@@ -27,14 +29,17 @@ class OrderStatus2 extends Component {
       searchText: '',
       total: 0,
       currentPage: 1,
-      statusPage: 'Đã duyệt',
+      statusPage: 'Chưa duyệt',
       redirectToProduct: false
     }
 
   }
   componentDidMount() {
     const { statusPage } = this.state
-    this.fetch_reload_data(statusPage);
+
+    //status = 2 là đã duyệt
+    this.fetch_reload_data(2);
+
   }
 
   fetch_reload_data(statusPage) {
@@ -75,11 +80,31 @@ class OrderStatus2 extends Component {
       [name]: value
     });
   }
-  handleBrowse = async (event) => {
-    const id = event.target.value;
-    const { statusPage, currentPage } = this.state
-    await this.props.deliveredOrder(id, statusPage, currentPage);
-    await this.props.fetch_dashboard();
+  handleBrowse = async (id) => {
+    // const id = event.target.value;
+    // const { statusPage, currentPage } = this.state
+    // await this.props.approveOrder(id, statusPage, currentPage);
+    // await this.props.fetch_dashboard();
+
+    //gọi api
+    let token = localStorage.getItem('_auth');
+    //gửi body với status 3 để đơn hàng có trạng thái đang giao
+    let body = {
+      orderStatus: 3,
+    }
+    await callApi(`admin/orders/update/${id}`, "PUT", body, token);
+
+    Swal.fire(
+      'Giao hàng!',
+      `Đơn hàng ${id} đang được giao.!`,
+      'success'
+    )
+
+    setTimeout(() => {
+      //gọi lại fetch để set lại state orders của redux, sẽ khiến component này tự render lại
+      console.log('set lại state');
+      this.fetch_reload_data(1);
+    }, 250);
 
   }
   handleRemove = (id) => {
@@ -99,19 +124,23 @@ class OrderStatus2 extends Component {
           'Đơn hàng của bạn đã được xóa.!',
           'success'
         )
+
+        setTimeout(() => {
+          //gọi lại fetch để set lại state orders của redux, sẽ khiến component này tự render lại
+          console.log('set lại state');
+          this.fetch_reload_data(1);
+        }, 250);
       }
     })
   }
-
   handleSubmit = (event) => {
     event.preventDefault();
   }
 
   render() {
     const { orders } = this.props;
-    console.log("dữ liệu this.props.", this.props)
     const { searchText, total, statusPage } = this.state;
-
+    console.log('orders state của redux', orders)
     return (
       <div className="content-inner">
         {/* Page Header*/}
@@ -133,39 +162,27 @@ class OrderStatus2 extends Component {
               <div className="col-lg-12">
                 <div className="card">
                   <div className="card-header d-flex align-items-center">
-                    <h3 className="h4">Đơn hàng đang giao</h3>
+                    <h3 className="h4">Đơn hàng đã duyệt</h3>
                     {/* <button onClick={()=>this.downloadExcel()} style={{ border: 0, background: "white" }}> <i className="fa fa-file-excel-o"
                         style={{fontSize: 18, color: '#1d7044'}}> Excel</i></button> */}
                   </div>
-                  {/* <form
-                    onSubmit={(event) => this.handleSubmit(event)}
-                    className="form-inline md-form form-sm mt-0" style={{ justifyContent: 'flex-end', paddingTop: 5, paddingRight: 20 }}>
-                    <div>
-                      <button style={{ border: 0, background: 'white' }}><i className="fa fa-search" aria-hidden="true"></i></button>
-                      <input
-                        name="searchText"
-                        onChange={this.handleChange}
-                        value={searchText}
-                        className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search"
-                        aria-label="Search" />
-                    </div>
 
-                  </form> */}
                   <div className="card-body">
                     <div className="table-responsive">
                       <table className="table table-hover">
                         <thead>
                           <tr>
                             <th>id đơn hàng</th>
-                            <th>Tên khách hàng</th>
+                            <th>sản phẩm</th>
+                            <th>Địa chỉ</th>
                             {/* <th>Address</th> */}
-                            <th>Số điện thoại</th>
-                            <th>Trạng thái</th>
+                            <th>Ghi chú</th>
+                            {/* <th>Trạng thái</th> */}
 
                             <th>Tổng tiền</th>
                             <th>Ngày tạo HĐ</th>
-                            <th>Chi tiết</th>
-                            <th>Duyệt
+                            <th>Xóa</th>
+                            <th>Giao hàng
 
                             </th>
                           </tr>
@@ -175,28 +192,63 @@ class OrderStatus2 extends Component {
                             return (
                               <tr key={index}>
                                 <th scope="row">{item.orderId}</th>
-                                <td>{item.customerFKDto.lastName}</td>
-                                <td>{item.phoneNumber}</td>
                                 <td>
+                                  {
+                                    item.lstOrdersDetail && item.lstOrdersDetail.length ?
+                                      item.lstOrdersDetail.map((product, index) => {
+                                        return (
+                                          <>
+                                            <li className='d-flex' key={index}>
+                                              <div className="fix-order">
+                                                <img src={product.imgLink} className="fix-img-order" alt="not found" />
+                                              </div>
+                                              <div>
+                                                <h6 className='pl-3 pt-10'>{product.productName}</h6>
+
+
+                                                <strong
+                                                  className="pl-3 product-quantity"
+                                                  style={{
+                                                    paddingLeft: 10,
+                                                    color: "coral",
+                                                    fontStyle: "italic",
+                                                  }}
+                                                >
+                                                  SL: {product.quantity}
+                                                </strong>
+                                              </div>
+
+
+                                            </li>
+                                          </>
+
+                                        )
+                                      }) : null
+                                  }
+                                </td>
+                                <td>{item.address}</td>
+                                <td>{item.customerNote}</td>
+                                {/* <td>
                                   <div className="col">
-                                    <label className="fix-status px-2  bg-warning" >{item.statusOrder}
+                                    <label className="fix-status px-2 bg-danger" >1
                                     </label>
-                                  </div> </td>
+                                  </div>
+                                </td> */}
                                 <td>{item.totalAmount}</td>
                                 <td>
                                   <Moment format="YYYY/MM/DD">
                                     {item.createDate}
                                   </Moment>
                                 </td>
-                                <td>
-                                  <div>
-                                    <span title='Edit' className="fix-action"><Link to={`/orders/edit/${item.orderId}`}> <i className="fa fa-edit"></i></Link></span>
-
+                                <td style={{ textAlign: "left" }}>
+                                  <div >
+                                    {/* Tạm bỏ chức năng xem chi tiết đơn hàng do chưa có api */}
+                                    {/* <span title='Edit' className="fix-action"><Link to={`/orders/edit/${item.orderId}`}> <i className="fa fa-edit"></i></Link></span> */}
                                     <span title='Delete' onClick={() => this.handleRemove(item.orderId)} className="fix-action"><Link to="#"> <i className="fa fa-trash" style={{ color: '#ff00008f' }}></i></Link></span>
                                   </div>
                                 </td>
                                 <td>
-                                  <button className="btn btn-primary" value={item.orderId} onClick={this.handleBrowse} > Giao hàng</button>
+                                  <button className="btn btn-primary" value={item.orderId} onClick={() => this.handleBrowse(item.orderId)} > Giao</button>
                                 </td>
                               </tr>
                             )
@@ -234,14 +286,14 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetch_orders: (status, offset) => {
-      return dispatch(actFetchOrdersRequest(2, offset))
-    },
     fetch_dashboard: () => {
       dispatch(actFetchDashboardRequest())
     },
-    deliveredOrder: (id, status, page) => {
-      return dispatch(actDeliveredOrderRequest(id, status, page))
+    fetch_orders: (status, offset) => {
+      return dispatch(actFetchOrdersRequest(status, offset))
+    },
+    approveOrder: (id, status, page) => {
+      return dispatch(actApproveOrdersRequest(id, status, page))
     },
     delete_order: (id) => {
       dispatch(actDeleteOrderRequest(id))

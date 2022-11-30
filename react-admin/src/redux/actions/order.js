@@ -22,7 +22,7 @@ export const actFetchOrdersRequest = (status, page) => {
       //   }
       // })
       let token = localStorage.getItem('_auth');
-      callApi(`admin/orders?status=${status}&page=1&size=5`, "GET", null, token)
+      callApi(`admin/orders?status=${status}&page=1&size=20`, "GET", null, token)
         .then(res => {
           if (res && res.status === 200) {
             console.log('actFetchOrdersRequest res: ', res);
@@ -70,7 +70,12 @@ export const actDeliveredOrderRequest = (id, status, page) => {
 
 export const actDeleteOrderRequest = (id) => {
   return async dispatch => {
-    await callApi(`orders/cancel/${id}`, "PUT");
+    let token = localStorage.getItem('_auth');
+    //gửi body với status 5 để hủy đơn
+    let body = {
+      orderStatus: 5,
+    }
+    await callApi(`admin/orders/update/${id}`, "PUT", body, token);
     dispatch(actDeleteOrder(id));
   };
 };
