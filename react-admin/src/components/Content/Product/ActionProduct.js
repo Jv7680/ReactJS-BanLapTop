@@ -10,6 +10,7 @@ import { uploadImage } from '../../../utils/upload'
 import Dropzone from 'react-dropzone';
 import { css } from '@emotion/core';
 import ClipLoader from 'react-spinners/ClipLoader';
+import { toast } from 'react-toastify';
 let token;
 let id;
 const override = css`
@@ -46,6 +47,8 @@ class ActionProduct extends Component {
       dataSupplieres: [],
       categoryId: 1,
       supplierId: 1,
+      image: '',
+      renderImageLink: false,
       // hình để đưa ra giao diện
       redirectToProduct: false,
       loading: false,
@@ -68,10 +71,17 @@ class ActionProduct extends Component {
           discount: res.data.discount,
           unitPrice: res.data.unitprice,
           descriptionProduct: res.data.description,
+          image: res.data.image,
           //categoryId: res.data.categoryFKDto.categoryId,
           //supplierId: res.data.supplierFKDto.supplierId,
 
         })
+
+        //đưa ảnh hiện tại vào imgLinkCheckOld
+        setTimeout(() => {
+          let { image } = this.state;
+          document.getElementById('imgLinkCheckOld').attributes.src.nodeValue = image;
+        }, 100);
       }
     }
 
@@ -104,6 +114,31 @@ class ActionProduct extends Component {
       [name]: value
     });
   }
+
+  handleCheckImage = (event) => {
+    let { image, renderImageLink } = this.state;
+    console.log('imageLink là:', image);
+
+    //Check lỗi độ dài
+    if (image.length === 0) {
+      toast.warning('Bạn chưa nhập link!');
+      return false;
+    }
+    else if (image.length > 500) {
+      toast.error('Link quá dài! Yêu cầu nhỏ hơn 500 ký tự.');
+      return false;
+    }
+
+    this.setState({
+      renderImageLink: true,
+    });
+
+    setTimeout(() => {
+      document.getElementById('imgLinkCheck').attributes.src.nodeValue = image;
+    }, 100);
+
+  }
+
   handleChangeSelecProducer = (event) => {
     let value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
     this.setState({
@@ -178,6 +213,7 @@ class ActionProduct extends Component {
     const newDescriptionProduct = descriptionProduct === '' ? 'không mô tả' : descriptionProduct;
     const newCategoryId = parseInt(categoryId);
     const newSupplierId = parseInt(supplierId);
+    const { image } = this.state;
     // const newImage = productImage === '' ? 'http://via.placeholder.com/300x200' : productImage;
     // console.log("image", newImage)
     // const newProduct = {
@@ -191,11 +227,21 @@ class ActionProduct extends Component {
     //   productImage: newListImage
     // }
 
+    const addNewProduct = {
+      "productName": newProductName,
+      "quantity": newQuantity,
+      "image": image,
+      "unitprice": newUnitPrice,
+      "discount": newDiscount,
+      "description": newDescriptionProduct,
+      "supplierId": newSupplierId
+    }
+
     const newProduct = {
       "productId": parseInt(id),
       "productName": newProductName,
       "quantity": newQuantity,
-      "image": "testImage",
+      "image": image,
       "unitprice": newUnitPrice,
       "discount": newDiscount,
       "description": newDescriptionProduct,
@@ -203,8 +249,8 @@ class ActionProduct extends Component {
     }
 
     if (!id) {
-      console.log('newProduct: ', newProduct);
-      await this.props.add_Product(newProduct);
+      console.log('addNewProduct: ', addNewProduct);
+      await this.props.add_Product(addNewProduct);
       this.setState({
         loading: false,
         redirectToProduct: true
@@ -212,6 +258,11 @@ class ActionProduct extends Component {
 
     }
     else {
+      // let checkImage = this.handleCheckImage(null);
+      // if (!checkImage) {
+      //   return;
+      // }
+
       console.log('newProduct: ', newProduct);
       await this.props.edit_Product(id, newProduct);
       this.setState({
@@ -240,7 +291,7 @@ class ActionProduct extends Component {
 
   render() {
     //const { productName, quantity, productImageSet, filesImage, discount, unitPrice, descriptionProduct, dataSupplieres, categoryId, dataCategories, supplierId, loading, redirectToProduct } = this.state;
-    const { productName, quantity, productImageSet, filesImage, discount, unitPrice, descriptionProduct, dataSupplieres, categoryId, dataCategories, supplierId, loading, redirectToProduct } = this.state;
+    const { productName, quantity, productImageSet, filesImage, discount, unitPrice, descriptionProduct, dataSupplieres, categoryId, dataCategories, supplierId, image, renderImageLink, loading, redirectToProduct } = this.state;
     console.log(productName);
     if (redirectToProduct) {
       return <Redirect to='/products'></Redirect>
@@ -413,8 +464,8 @@ class ActionProduct extends Component {
                       {/* image */}
                       <div className="form-group row">
                         <label htmlFor="fileInput" className="col-sm-3 form-control-label">Ảnh</label>
-                        <div className="col-9 col-sm-9">
-                          <Dropzone onDrop={this.onDrop}>
+                        <div className="col-9 col-sm-9" >
+                          {/* <Dropzone onDrop={this.onDrop}>
                             {({ getRootProps, getInputProps }) => (
                               <section style={{ border: '1px dotted' }}>
                                 <div {...getRootProps({ className: 'dropzone' })}>
@@ -445,37 +496,73 @@ class ActionProduct extends Component {
                                           )
                                         })
                                         : null
-
                                     }
-                                    {/* {
-                                      filesImage && filesImage.length > 0 ?
-                                        filesImage.map((itemImage, index) => {
-
-                                          return (
-                                            < span key={index}>
-                                              <div className='model m-3'>
-                                                <div className="modal-content">
-                                                  <div className="modal-header">
-                                                    <button onClick={() => this.removeImage(index, false)}
-                                                      type="button" className="close_button" >
-                                                      <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                  </div>
-                                                  <img src={URL.createObjectURL(itemImage)} style={{ height: 100, width: 100 }} alt="notfound" />
-                                                </div>
-                                              </div>
-                                            </span>
-
-                                          )
-                                        })
-                                        : null
-
-                                    } */}
                                   </div>
                                 </aside>
                               </section>
                             )}
-                          </Dropzone>
+                          </Dropzone> */}
+
+                          {/* Xử lý image */}
+                          <input
+                            type="text"
+                            onChange={this.handleChange}
+                            value={image}
+                            name="image"
+                            className="form-control"
+                            style={{ width: "93%", display: "inline" }}
+                          />
+                          <button
+                            className="btn btn-primary"
+                            type='button'
+                            onClick={(event) => { this.handleCheckImage(event) }}
+                            style={{ margin: "0 5px" }}
+                          >
+                            Check
+                          </button>
+                          {/* Dành cho edit sản phẩm */}
+                          {
+                            this.props.id ?
+                              (
+                                <p>
+                                  <img
+                                    id='imgLinkCheckOld'
+                                    src="" alt="not found"
+                                    style={{
+                                      width: "200px",
+                                      marginRight: "50px"
+                                    }}
+                                  />
+                                  <span style={{ fontSize: "20px", color: "#5f68df" }}>(Ảnh Hiện Tại)</span>
+                                </p>
+                              )
+                              :
+                              (
+                                null
+                              )
+                          }
+                          {
+                            !renderImageLink ?
+                              (
+                                null
+                              )
+                              :
+                              (
+                                <p>
+                                  <img
+                                    id='imgLinkCheck'
+                                    src="" alt="not found"
+                                    style={{
+                                      width: "200px",
+                                      marginRight: "50px"
+                                    }}
+                                  />
+                                  <span style={{ fontSize: "20px", color: "#5f68df" }}>(Ảnh Mới)</span>
+                                </p>
+                              )
+                          }
+
+
                         </div>
                       </div>
                       {/* chức năng */}

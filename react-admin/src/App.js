@@ -11,7 +11,6 @@ import { actShowLoading } from "./redux/actions/loading";
 import Header from './components/Header/Header';
 import NavBar from './components/NavBar/NavBar';
 import LoginPage from './pages/LoginPage'
-import Test from './pages/test';
 import "./style.css";
 const override = css`
   display: block;

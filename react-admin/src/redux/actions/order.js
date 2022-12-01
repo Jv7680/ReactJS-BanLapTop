@@ -37,7 +37,7 @@ export const actFetchOrdersRequest = (status, page) => {
           setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
         });
 
-      console.log("callApiResult: ", callApiResult);
+
     });
   };
 };

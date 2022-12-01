@@ -23,7 +23,9 @@ class HeaderMiddle extends Component {
     id = localStorage.getItem("_id");
     if (token) {
       this.props.fetch_items(id);
-      this.props.fetch_wishlist(id);
+
+      //tạm bỏ vì chưa có api
+      //this.props.fetch_wishlist(id);
     }
 
   }
@@ -105,6 +107,7 @@ class HeaderMiddle extends Component {
               {/* Begin Header Middle Right Area */}
               <div className="header-middle-right">
                 <ul className="hm-menu">
+
                   {/* Begin Header Middle Wishlist Area */}
                   <li className="hm-wishlist">
                     <Link to="/wishlist">
@@ -112,6 +115,7 @@ class HeaderMiddle extends Component {
                       <i className="fa fa-heart-o" />
                     </Link>
                   </li>
+
                   {/* Header Middle Wishlist Area End Here */}
                   {/* Begin Header Mini Cart Area */}
                   <li className="hm-minicart">

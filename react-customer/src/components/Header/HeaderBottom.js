@@ -10,7 +10,8 @@ import { startLoading, doneLoading } from '../../utils/loading'
 class HeaderBottom extends Component {
 
   componentDidMount() {
-    this.props.fetchAllcategories();
+    //tạm đóng vì chưa có api
+    //this.props.fetchAllcategories();
   }
 
   loaddingPage = () => {

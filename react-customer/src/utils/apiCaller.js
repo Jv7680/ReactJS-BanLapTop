@@ -3,6 +3,10 @@ import * as Config from '../constants/Config';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import store from '../index'
+import { actFetchCart } from '../redux/actions/cart'
+
+
 const MySwal = withReactContent(Swal)
 toast.configure()
 
@@ -32,8 +36,7 @@ export default async function callApi(endpoint, method = 'GET', body, token) {
       localStorage.setItem('errorCode', err.response.data.message);
       const error = err.response.data.message || err.response.data[0].defaultMessage;
       if (error === 'Giỏ hàng trống') {
-        //do nothing
-        //window.location.reload();
+        store.dispatch(actFetchCart([]));
       }
       else {
         MySwal.fire({

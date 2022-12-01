@@ -53,6 +53,7 @@ export const actFetchCartRequest = (id, token) => {
     console.log("dữ liệu chuẩn bị gửi đi", id)
     return async dispatch => {
         console.log("dữ liệu chuẩn bị gửi đi", id)
+        let token = localStorage.getItem('_auth');
         const res = await callApi(`cart/${id}`, 'GET', null, token);
         console.log('actFetchCartRequest res: ', res);
 

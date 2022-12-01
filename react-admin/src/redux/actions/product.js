@@ -68,12 +68,14 @@ export const actFetchProducts = (products) => {
 export const actAddProductRequest = (data) => {
   console.log("duw lieu request", data)
   return async dispatch => {
-    const res = await callApi('product', 'POST', data);
+    let token = localStorage.getItem('_auth');
+    const res = await callApi('admin/product', 'POST', data, token);
     console.log("res", res)
     if (res && res.status === 200) {
       toast.success('Thêm sản phẩm thành công')
       console.log("dữ liệu trả về", res.data)
-      dispatch(actAddProduct(res.data));
+      //dispatch(actAddProduct(res.data));
+      dispatch(actFetchProductsRequest(1));
     }
   }
 }
