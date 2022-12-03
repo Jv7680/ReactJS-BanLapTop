@@ -17,17 +17,17 @@ class ProductAll extends Component {
     this.fetch_reload_data();
   }
 
-  fetch_reload_data(){
+  fetch_reload_data() {
     this.props.fetch_products().then(res => {
       this.setState({
         total: res.totalPage
       });
     }).catch(err => {
-      console.log(err);  
+      console.log(err);
     })
   }
 
-  pageChange(content){
+  pageChange(content) {
     const page = content;
     this.props.fetch_products(page);
     this.setState({
@@ -40,7 +40,7 @@ class ProductAll extends Component {
   render() {
     let { products } = this.props;
     const { total } = this.state;
-    
+
     return (
       <div className="content-wraper pt-60 pb-60">
         <div className="container">
@@ -112,13 +112,13 @@ class ProductAll extends Component {
                       <div className="row">
                         {products && products.length
                           ? products.map((item, index) => {
-                              return (
-                                <ProductItem
-                                  key={index}
-                                  product={item}
-                                ></ProductItem>
-                              );
-                            })
+                            return (
+                              <ProductItem
+                                key={index}
+                                product={item}
+                              ></ProductItem>
+                            );
+                          })
                           : null}
                       </div>
                     </div>
@@ -131,11 +131,11 @@ class ProductAll extends Component {
                     </div>
                     <div className="col-lg-6 col-md-6">
                       <ul className="pagination-box">
-                      <Paginator
-                        pageSize={1}
-                        totalElements={total}
-                        onPageChangeCallback={(e) => {this.pageChange(e)}}
-                      />
+                        <Paginator
+                          pageSize={1}
+                          totalElements={total}
+                          onPageChangeCallback={(e) => { this.pageChange(e) }}
+                        />
                       </ul>
                     </div>
                   </div>

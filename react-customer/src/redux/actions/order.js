@@ -71,7 +71,16 @@ export const actFetchOrders = orders => {
 };
 export const actDeleteOrderRequest = (id) => {
   return async dispatch => {
-    let tokenAdmin = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0dSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTY2OTY5MzgxNywiZXhwIjoxNjcwMjk4NjE3fQ.uuqwj7hTrY8ivTKxUeVoG3Vr9_07pYpPJ_sHtXuIU_k';
+    //Lấy admin token
+    // let bodyAdmin = {
+    //   username: 'tin',
+    //   password: '123456',
+    // }
+    // const resAdmin = await callApi(`auth/login`, "PUT", bodyAdmin);
+    // console.log('resAdmin: ', resAdmin);
+
+
+    let tokenAdmin = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aW4iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE2Njk5Mzk2ODksImV4cCI6MTY3MDU0NDQ4OX0.zqDesuC7oUMPfP7BxXfVg1-LssHJWcM0lc96YsCkxHM';
     let body = {
       orderStatus: 5,
     }

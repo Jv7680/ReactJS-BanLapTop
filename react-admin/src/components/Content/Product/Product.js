@@ -45,44 +45,49 @@ class Product extends Component {
 
   }
   async pageChange(content) {
-    const { searchText, category, currentPage } = this.state
-    const page = content;
-    if (category == "All") {
-      if (is_empty(searchText)) {
-        this.props.fetch_products(page);
-        this.setState({
-          currentPage: content
-        })
-      }
-      else {
-        const res = await this.props.find_products(searchText, page)
-        if (res && res.status == 200) {
+    // const { searchText, category, currentPage } = this.state
+    // const page = content;
+    // if (category == "All") {
+    //   if (is_empty(searchText)) {
+    //     this.props.fetch_products(page);
+    //     this.setState({
+    //       currentPage: content
+    //     })
+    //   }
+    //   else {
+    //     const res = await this.props.find_products(searchText, page)
+    //     if (res && res.status == 200) {
 
-          this.setState({
-            currentPage: res.data.currentPage,
-            total: res.data.totalPage,
-          })
-        }
-      }
-    }
-    else {
-      const res = await this.props.find_products_by_catagory(category, page)
-      if (res && res.status == 200) {
-        this.setState(
-          {
-            currentPage: res.data.currentPage,
-            total: res.data.totalPage
-          }
-        )
-      }
+    //       this.setState({
+    //         currentPage: res.data.currentPage,
+    //         total: res.data.totalPage,
+    //       })
+    //     }
+    //   }
+    // }
+    // else {
+    //   const res = await this.props.find_products_by_catagory(category, page)
+    //   if (res && res.status == 200) {
+    //     this.setState(
+    //       {
+    //         currentPage: res.data.currentPage,
+    //         total: res.data.totalPage
+    //       }
+    //     )
+    //   }
 
-    }
+    // }
 
+    this.props.fetch_products(content);
+    this.setState({
+      currentPage: content
+    })
     window.scrollTo(0, 0);
 
   }
-  handleRemove = (id, currentPage, name) => {
-    // console.log(currentPage )
+  handleRemove = (id, name) => {
+    let { currentPage } = this.state;
+    console.log('currentPage product', currentPage)
     MySwal.fire({
       title: `Xóa sản phẩm ${name} ?`,
       text: "Bạn chắc chắn muốn xóa sản phẩm này !",
@@ -191,12 +196,20 @@ class Product extends Component {
                       style={{ fontSize: 18, color: '#1d7044' }}> Excel</i></button>
                   </div> */}
 
+
+                  <div className='d-flex' style={{ margin: "0 15px 15px auto" }}>
+                    <div>
+                      <Link to='/products/add' className="btn btn-primary" >Thêm mới</Link>
+                    </div>
+                  </div>
+
+
                   <form
                     className="form-inline md-form form-sm mt-0 justify-content-between"
-                    style={{ justifyContent: 'flex-end', paddingTop: 5, paddingRight: 20 }}
+                    style={{ justifyContent: 'flex-end', marginLeft: "auto" }}
                     onSubmit={(event) => this.handleSearch(event)}
                   >
-                    <div className="col-sm-">
+                    {/* <div className="col-sm-">
 
                       {
                         dataCategory && dataCategory.length > 0 ?
@@ -218,19 +231,17 @@ class Product extends Component {
 
 
                       }
-                    </div>
+                    </div> */}
                     <div className='d-flex'>
                       <div>
-                        <button style={{ border: 0, background: 'white' }}> <i className="fa fa-search" aria-hidden="true"></i></button>
                         <input
                           name="searchText"
                           onChange={this.handleChange}
                           className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search"
                           aria-label="Tìm kiếm" />
+                        <button style={{ border: 0, background: 'white' }}> <i className="fa fa-search" aria-hidden="true"></i></button>
                       </div>
-                      <Link to='/products/add' className="btn btn-primary" >Thêm mới</Link>
                     </div>
-
                   </form>
                   <div className="card-body">
                     <div className="table-responsive">
@@ -245,7 +256,7 @@ class Product extends Component {
                             <th>Tồn kho</th>
                             {/* <th>Properties</th> */}
 
-                            <th style={{ textAlign: "center" }}>sửa</th>
+                            <th style={{ textAlign: "center" }}>Chức năng</th>
                             <th>trạng thái</th>
                           </tr>
                         </thead>
@@ -268,14 +279,15 @@ class Product extends Component {
                                 <td style={{ textAlign: "center" }}>
                                   <div>
                                     <span title='Edit' className="fix-action"><Link to={`/products/edit/${item.productId}`}> <i className="fa fa-edit"></i></Link></span>
-                                    {/* <span
+                                    <span
                                       onClick={() => this.handleRemove(item.productId, item.productName)}
                                       title='Delete'
-                                      className="fix-action">
+                                      className="fix-action"
+                                    >
                                       <Link to="#">
                                         <i className="fa fa-trash" style={{ color: '#ff00008f' }}></i>
                                       </Link>
-                                    </span> */}
+                                    </span>
                                   </div>
 
                                 </td>
@@ -309,10 +321,10 @@ class Product extends Component {
               </div>
             </div>
           </div>
-        </section>
+        </section >
         {/* Page Footer*/}
-        <MyFooter></MyFooter>
-      </div>
+        <MyFooter MyFooter ></MyFooter>
+      </div >
     )
   }
 }

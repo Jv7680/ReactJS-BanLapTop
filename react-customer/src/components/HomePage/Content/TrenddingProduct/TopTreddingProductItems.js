@@ -82,41 +82,65 @@ class TopTreddingProductItems extends Component {
             <img className="fix-img" src={product.image} alt="Li's Product " />
           </Link>
           {
-            product.discount > 0 ? (
-              <span className="sticker">{product.discount}%</span>
-            ) :
-              null
+            product.discount === 0 ?
+              (
+                null
+              )
+              :
+              (
+                <span className="sticker">{product.discount}%</span>
+              )
           }
         </div>
         <div className="product_desc">
           <div className="product_desc_info">
-            <h4><Link className="product_name text-truncate" onClick={(id) => this.getInfoProduct(product.productId)} >{product.productName}</Link></h4>
-            <div className="price-box">
-              {/* <span className="new-price" style={{ color: 'red' }}>{product.priceAfterDiscount.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span> */}
+            <h4>
+              <Link className="product_name text-truncate" onClick={(id) => this.getInfoProduct(product.productId)} >{product.productName}</Link>
+            </h4>
+            {
+              product.discount > 0 ?
+                (
+                  <>
+                    <span className="new-price new-price-2" style={{ color: 'black', textDecoration: "line-through" }}>
+                      {product.unitprice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}  <span>&emsp;-{product.discount}%</span><br />
+                      <span>Chỉ còn: {(product.unitprice * ((100 - product.discount) / 100)).toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
+                    </span>
+
+                  </>
+                )
+                :
+                (
+                  <>
+                    <span className="new-price new-price-2" style={{ color: 'black', textDecoration: "none" }}>
+                      {product && product.unitprice ? product.unitprice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) : null}<br />&emsp;
+                    </span>
+                  </>
+                )
+            }
+
+          </div>
+
+          <div className="add-actions">
+            <ul className="add-actions-link">
               {
-                product.discount > 0 ?
+                product.quantity === 0 ?
                   (
-                    <span className="new-price" style={{ color: 'black', textDecoration: "line-through" }}>{product.unitprice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
+                    <h5>Tạm Hết Hàng</h5>
                   )
                   :
                   (
-                    <span className="new-price" style={{ color: 'black', textDecoration: "none" }}>{product.unitprice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
+                    <div>
+                      <li className="add-cart active"><Link to="#" onClick={() => this.addItemToCart(product)} >Thêm vào giỏ</Link></li>
+                      <li><Link to="#" onClick={(id) => this.getInfoProduct(product.productId)} title="chi tiểt" className="quick-view-btn" data-toggle="modal" data-target="#exampleModalCenter"><i className="fa fa-eye" /></Link></li>
+                      <li><Link to="#" onClick={() => this.addItemToFavorite(product.productId)} className="links-details" title="yêu thích" ><i className="fa fa-heart-o" /></Link></li>
+                    </div>
                   )
+
               }
-            </div>
-          </div>
-          <div className="add-actions">
-            <ul className="add-actions-link">
-              <li className="add-cart active"><Link to="#" onClick={() => this.addItemToCart(product)} >Thêm vào giỏ</Link></li>
-              <li><Link onClick={(id) => this.getInfoProduct(product.productId)} title="quick view" className="quick-view-btn" data-toggle="modal" data-target="#exampleModalCenter"><i className="fa fa-eye" /></Link></li>
-              <li><Link onClick={() => this.addItemToFavorite(product.productId)} className="links-details" to="#" title="favorite" ><i className="fa fa-heart-o" /></Link></li>
             </ul>
           </div>
         </div>
       </div >
-
-
-
     )
   }
 }

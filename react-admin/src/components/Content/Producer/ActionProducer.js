@@ -6,7 +6,9 @@ import { Redirect } from 'react-router-dom';
 import callApi from '../../../utils/apiCaller';
 import { uploadImage } from '../../../utils/upload'
 import { css } from '@emotion/core';
-import ClipLoader from 'react-spinners/ClipLoader';;
+import ClipLoader from 'react-spinners/ClipLoader';
+import { toast } from 'react-toastify';
+import validateProducer from '../../../utils/validations/validateProducer'
 
 let id;
 const override = css`
@@ -27,19 +29,27 @@ class ActionProducer extends Component {
       redirectToProducer: false,
       img: null,
       loading: false,
-      
+      image: '',
+      renderImageLink: false,
     };
     id = this.props.id
   }
   async componentDidMount() {
 
     if (id) {
-      const res = await callApi(`supplier/${id}`, 'GET', null);
-      console.log("dữ liệu 1 supplier",res.data)
+      let token = localStorage.getItem('_auth');
+      const res = await callApi(`admin/supplier/${id}`, 'GET', null, token);
+      console.log("dữ liệu 1 supplier", res.data)
       this.setState({
         supplierName: res.data.supplierName,
-        supplierImage: res.data.supplierImage
+        image: res.data.imageLink,
       })
+
+      //đưa ảnh hiện tại vào imgLinkCheckOld
+      setTimeout(() => {
+        let { image } = this.state;
+        document.getElementById('imgLinkCheckOld').attributes.src.nodeValue = image;
+      }, 100);
     }
   }
 
@@ -52,6 +62,26 @@ class ActionProducer extends Component {
     });
   }
 
+  handleCheckImage = (event) => {
+    let { image, renderImageLink } = this.state;
+    console.log('imageLink là:', image);
+
+    //Check lỗi độ dài
+    if (!validateProducer.image(image)) {
+      console.log('xxxx');
+      return false;
+    }
+
+    this.setState({
+      renderImageLink: true,
+    });
+
+    setTimeout(() => {
+      document.getElementById('imgLinkCheck').attributes.src.nodeValue = image;
+    }, 100);
+
+  }
+
   handleChangeImage = (event) => {
     if (event.target.files[0]) {
       const img = event.target.files[0];
@@ -62,57 +92,41 @@ class ActionProducer extends Component {
   }
   handleSubmit = async (event) => {
     event.preventDefault();
-    const { supplierName } = this.state;
-    let { img, supplierImage } = this.state;
-    this.setState({
-      loading: true
-    })
-    //upload image to firebase
-    if (img !== null && img !== supplierImage) {
-      supplierImage = await uploadImage(img);
-    }
-    const newSupplierName = supplierName == '' ? null : supplierName;
-    const newImage= (supplierImage === '') ? null : supplierImage
-    if (!id) {
-      const newSupplier = { supplierName: newSupplierName,supplierImage:newImage }
-      const res = await this.props.add_Producer(newSupplier);
-      if(res && res.status == 201)
-      {
-        this.setState({
-          supplierName: '',
-          img :'',
-          loading:false,
-          redirectToProducer: true
-        })
-      }
-      else{
-        this.setState({
-          loading:false,
-         
-        })
-      }
-     
-    }
-    else {
-      const editSupplier = {
-        supplierName: newSupplierName,
-        supplierImage:newImage
-      }
 
-      console.log("dữ liệu sửa",editSupplier)
-      await this.props.edit_Producer(id, editSupplier);
-      console.log("Sửa sản phẩm", id)
+    const { supplierName, image } = this.state;
+
+    //check lỗi
+    if (!validateProducer.name(supplierName) || !validateProducer.image(image)) {
+      return;
+    }
+
+    const newProducer = {
+      "supplierName": supplierName,
+      "imageLink": image,
+    }
+
+    if (!id) {
+      console.log('newProducer: ', newProducer);
+      await this.props.add_Producer(newProducer);
       this.setState({
-        loading:false,
+        loading: false,
         redirectToProducer: true
       })
+
     }
+    else {
+      console.log('newProducer: ', newProducer);
+      await this.props.edit_Producer(id, newProducer);
+      this.setState({
+        loading: false,
+        redirectToProducer: true
+      })
 
-
+    }
   }
 
   render() {
-    const { supplierName, supplierImage, loading, redirectToProducer } = this.state;
+    const { supplierName, supplierImage, loading, redirectToProducer, image, renderImageLink } = this.state;
     if (redirectToProducer) {
       return <Redirect to='/producers'></Redirect>
     }
@@ -153,14 +167,123 @@ class ActionProducer extends Component {
                   <div className="card-body">
                     <form className="form-horizontal" onSubmit={(event) => this.handleSubmit(event)} >
                       <div className="form-group row">
-                        <label className="col-sm-3 form-control-label">Tên nhà cung cấp</label>
+                        <label className="col-sm-3 form-control-label">Tên Nhà Cung Cấp</label>
                         <div className="col-sm-9">
-                          <input name="supplierName" onChange={this.handleChange} value={supplierName} type="text" className="form-control" />
+                          <input
+                            name="supplierName"
+                            onChange={this.handleChange} value={supplierName}
+                            type="text"
+                            className="form-control"
+                            placeholder="Nhập tên nhà cung cấp"
+                          />
                         </div>
                       </div>
 
                       <div className="line" />
+                      {/* image */}
                       <div className="form-group row">
+                        <label htmlFor="fileInput" className="col-sm-3 form-control-label">Hình Ảnh</label>
+                        <div className="col-9 col-sm-9" >
+                          {/* <Dropzone onDrop={this.onDrop}>
+                            {({ getRootProps, getInputProps }) => (
+                              <section style={{ border: '1px dotted' }}>
+                                <div {...getRootProps({ className: 'dropzone' })}>
+                                  <input {...getInputProps()} />
+                                  <h2 className='ml-3'>Chọn ảnh tại đây!!!</h2>
+                                </div>
+                                <aside>
+
+                                  <div>
+                                    {
+                                      productImageSet && productImageSet.length > 0 ?
+                                        productImageSet.map((itemImage, index) => {
+                                          return (
+                                            < span key={index}>
+                                              <div className='model m-3'>
+                                                <div className="modal-content">
+                                                  <div className="modal-header">
+                                                    <button type="button"
+                                                      onClick={() => this.removeImage(index, true)}
+                                                      className="close_button" >
+                                                      <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                  </div>
+                                                  <img src={itemImage} style={{ height: 100, width: 100 }} alt="notfound" />
+                                                </div>
+                                              </div>
+                                            </span>
+                                          )
+                                        })
+                                        : null
+                                    }
+                                  </div>
+                                </aside>
+                              </section>
+                            )}
+                          </Dropzone> */}
+
+                          {/* Xử lý image */}
+                          <input
+                            type="text"
+                            onChange={this.handleChange}
+                            value={image}
+                            name="image"
+                            className="form-control"
+                            style={{ width: "93%", display: "inline" }}
+                          />
+                          <button
+                            className="btn btn-primary"
+                            type='button'
+                            onClick={(event) => { this.handleCheckImage(event) }}
+                            style={{ margin: "0 5px" }}
+                          >
+                            Check
+                          </button>
+                          {/* Dành cho edit sản phẩm */}
+                          {
+                            this.props.id ?
+                              (
+                                <p>
+                                  <img
+                                    id='imgLinkCheckOld'
+                                    src="" alt="not found"
+                                    style={{
+                                      width: "200px",
+                                      marginRight: "50px"
+                                    }}
+                                  />
+                                  <span style={{ fontSize: "20px", color: "#5f68df" }}>(Ảnh Hiện Tại)</span>
+                                </p>
+                              )
+                              :
+                              (
+                                null
+                              )
+                          }
+                          {
+                            !renderImageLink ?
+                              (
+                                null
+                              )
+                              :
+                              (
+                                <p>
+                                  <img
+                                    id='imgLinkCheck'
+                                    src="" alt="not found"
+                                    style={{
+                                      width: "200px",
+                                      marginRight: "50px"
+                                    }}
+                                  />
+                                  <span style={{ fontSize: "20px", color: "#5f68df" }}>(Ảnh Mới)</span>
+                                </p>
+                              )
+                          }
+                        </div>
+                      </div>
+
+                      {/* <div className="form-group row">
                         <label htmlFor="fileInput" className="col-sm-3 form-control-label">Hình Ảnh</label>
                         <div className="col-sm-9">
                           <input type="file" onChange={this.handleChangeImage} className="form-control-file" />
@@ -168,11 +291,12 @@ class ActionProducer extends Component {
                             <img src={supplierImage || 'http://via.placeholder.com/400x300'} id="output" className="fix-img" alt="avatar" />
                           </div>
                         </div>
-                      </div>
-                      <div className="line" />
+                      </div> */}
+
+
                       <div className="form-group row">
                         <div className="col-sm-4 offset-sm-3">
-                          <Link to = '/producers'type="reset" className="btn btn-secondary" style={{ marginRight: 2 }}>Thoát</Link>
+                          <Link to='/producers' type="reset" className="btn btn-secondary" style={{ marginRight: 2 }}>Thoát</Link>
                           <button type="submit" className="btn btn-primary">Lưu</button>
                         </div>
                       </div>

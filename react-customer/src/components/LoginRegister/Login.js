@@ -8,6 +8,7 @@ import { startLoading, doneLoading } from '../../utils/loading'
 import { Link } from 'react-router-dom'
 import { withRouter } from 'react-router-dom';
 import { GoogleLogin } from 'react-google-login'
+import validateLoginRegister from '../../utils/validations/validateLoginRegister';
 import "./style.css";
 toast.configure()
 
@@ -41,9 +42,12 @@ class Login extends Component {
 
     console.log(event)
     const { username, password } = this.state;
-    if (password.length < 6 || password.length > 32) {
-      return toast.error('Mật khẩu từ 6-24 ký tự');
+
+    //check lỗi
+    if (!validateLoginRegister.gmail(username) || !validateLoginRegister.password(password)) {
+      return;
     }
+
     const user = {
       username,
       password

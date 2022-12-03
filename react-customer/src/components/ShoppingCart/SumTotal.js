@@ -52,7 +52,7 @@ class SumTotal extends Component {
 
     if (sumTotal.length > 0) {
       amount = sumTotal.reduce((sum, item) => {
-        return sum += item.cartProductQuantity * item.product.unitprice
+        return sum += item.cartProductQuantity * item.product.unitprice * ((100 - item.product.discount) / 100)
       }, 0)
 
       sumProduct = sumTotal.reduce((sum, item) => {

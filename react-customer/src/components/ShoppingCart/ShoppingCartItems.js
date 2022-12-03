@@ -72,9 +72,13 @@ class ShoppingCartItems extends Component {
         <td className="product-subtotal">
           {/* <span className="amount">{formatNumber(item.priceAfterDiscount)}</span> */}
           {
-            item.product.discount > 0 ? (
-              <span className="amount" style={{ color: 'black', textDecoration: "line-through" }}>{formatNumber(item.product.unitprice)}</span>
-            )
+            item.product.discount > 0 ?
+              (
+                <>
+                  <span className="amount" style={{ color: 'black', textDecoration: "line-through" }}>{formatNumber(item.product.unitprice)}</span><br />
+                  <span className="amount" style={{ color: 'black' }}>{formatNumber(item.product.unitprice * ((100 - item.product.discount) / 100))}</span>
+                </>
+              )
               :
               (
                 <span className="amount" style={{ color: 'black', textDecoration: "none" }}>{formatNumber(item.product.unitprice)}</span>
@@ -91,7 +95,7 @@ class ShoppingCartItems extends Component {
         </td>
         {
           item.product.discount > 0 ? (
-            <td className="product-subtotal"><span className="amount">{formatNumber((item.product.discount / 100 * item.product.unitprice * item.cartProductQuantity))}</span></td>
+            <td className="product-subtotal"><span className="amount">{formatNumber(item.product.unitprice * ((100 - item.product.discount) / 100) * item.cartProductQuantity)}</span></td>
           )
             :
             (

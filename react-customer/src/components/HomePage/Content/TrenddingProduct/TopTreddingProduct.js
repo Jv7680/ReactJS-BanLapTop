@@ -20,7 +20,7 @@ class TopTreddingProduct extends Component {
 
   render() {
     const { products } = this.props;
- 
+
     const settings = {
       infinite: true,
       speed: 500,
@@ -28,7 +28,7 @@ class TopTreddingProduct extends Component {
       slidesToScroll: 1
     };
     return (
-      <section className="product-area li-trending-product pt-60">
+      <section className="product-area li-trending-product pt-60" style={{ height: "500px" }}>
         <div className="container">
           <div className="row">
             {/* Begin Li's Tab Menu Area */}

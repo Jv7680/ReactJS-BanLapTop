@@ -3,13 +3,13 @@ import callApi from '../../utils/apiCaller';
 import { actShowLoading, actHiddenLoading } from './loading'
 
 
-// lấy toàn bộ sản phẩm
+// lấy 12 sản phẩm mỗi page
 export const actFetchProductsRequest = (page) => {
     const newPage = page === null || page === undefined ? 1 : page
     return dispatch => {
         dispatch(actShowLoading());
         return new Promise((resolve, reject) => {
-            callApi(`product/all?page=${newPage}`, 'GET')
+            callApi(`product/search?page=${newPage}&size=12&keyword=`, 'GET')
                 .then(res => {
                     if (res && res.status === 200) {
                         console.log("đây là trả về", res);

@@ -125,8 +125,8 @@ class ProductViewDetail extends Component {
                 <div className="product-details-images slider-navigation-1">
                   {/* <div className="lg-image"> */}
                   <div className="fix-width-slick">
-                    <Slider  {...settings}>
-                      {/* {product.productImageList && product.productImageList.length
+                    {/* <Slider  {...settings}>
+                      {product.productImageList && product.productImageList.length
                         ? product.productImageList.map((item, index) => {
                           return (
                             <div key={index} className="fix-img-div-slick">
@@ -134,13 +134,17 @@ class ProductViewDetail extends Component {
                             </div>
                           );
                         })
-                        : null} */}
+                        : null}
                       <div className="fix-img-div-slick">
                         <img className="fix-img-slick" src={product.image} alt="not found" />
                       </div>
-                    </Slider>
+                    </Slider> */}
 
                     {/* <img className="fix-img" src={product.productImage} alt="Li's Product " /> */}
+                    <div className="fix-img-div-slick">
+                      <br /><br />
+                      <img className="fix-img-slick" src={product.image} alt="not found" />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -149,34 +153,51 @@ class ProductViewDetail extends Component {
               <div className="product-details-view-content sp-normal-content pt-60">
                 <div className="product-info">
                   <h2>{product.productName}</h2>
+                  {/* Xử lý ngừng kinh doanh, hết hàng, và có discount */}
                   {
                     product.isDelete == 'YES' ?
-                      <h1 className="font-weight-bold">Sản phẩm ngừng kinh doanh</h1>
+                      (
+                        <h1 className="font-weight-bold">Sản phẩm ngừng kinh doanh</h1>
+                      )
                       :
-                      <div className="price-box pt-20">
-                        {/* <span className="new-price new-price-2 mr-30">
-                          {product && product.unitprice ? product.priceAfterDiscount.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) : null}
-                        </span> */}
-                        {
-                          product.discount > 0 ?
-                            (
-                              <span className="new-price new-price-2" style={{ color: 'black', textDecoration: "line-through" }}>
-                                {product && product.unitprice ? product.unitprice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) : null}
-                              </span>
-                            )
-                            :
-                            (
-                              <span className="new-price new-price-2" style={{ color: 'black', textDecoration: "none" }}>
-                                {product && product.unitprice ? product.unitprice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) : null}
-                              </span>
-                            )
-
-                        }
-
-                      </div>
+                      (
+                        product.quantity === 0 ?
+                          (
+                            <>
+                              <h3>Tạm Hết Hàng! </h3>
+                              <h6>Chân thành xin lỗi quý khách, chúng tôi sẽ mong chóng nhập hàng để đáp ứng nhu cầu mua sắm của bạn.</h6>
+                            </>
+                          )
+                          :
+                          (
+                            <div className="price-box pt-20">
+                              {
+                                product.discount > 0 ?
+                                  (
+                                    <>
+                                      <p className="new-price new-price-2" style={{ color: 'black', textDecoration: "line-through" }}>
+                                        {product.unitprice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}  <span>&emsp;-{product.discount}%</span>
+                                      </p>
+                                      <p className="new-price new-price-2" style={{ color: 'black', textDecoration: "none" }}>
+                                        Chỉ còn: {(product.unitprice * ((100 - product.discount) / 100)).toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}
+                                      </p>
+                                    </>
+                                  )
+                                  :
+                                  (
+                                    <>
+                                      <span className="new-price new-price-2" style={{ color: 'black', textDecoration: "none" }}>
+                                        {product && product.unitprice ? product.unitprice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) : null}
+                                      </span>
+                                    </>
+                                  )
+                              }
+                            </div>
+                          )
+                      )
                   }
 
-
+                  {/* Mốt có thể đặt mô tả nhanh ở đây */}
                   <div className="product-desc">
                     <p>
                       <span dangerouslySetInnerHTML={{ __html: product.descriptionProduct }}></span>
@@ -184,8 +205,10 @@ class ProductViewDetail extends Component {
                   </div>
 
                   {
-                    product.isDelete == 'YES' ?
-                      null
+                    product.quantity === 0 || product.isDelete ?
+                      (
+                        null
+                      )
                       :
                       <div className="single-add-to-cart">
                         <form className="cart-quantity">
@@ -302,7 +325,7 @@ class ProductViewDetail extends Component {
 
         </div>
 
-      </div>
+      </div >
     );
   }
 }

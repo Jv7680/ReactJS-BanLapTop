@@ -2517,8 +2517,8 @@ textarea:focus {
 }
 
 .single-product-wrap:hover {
-	margin: 0 0 -75px;
-	padding: 0 0 75px;
+	margin: 0 0 -60px;
+	padding: 0 0 60px;
 	z-index: 9;
 }
 

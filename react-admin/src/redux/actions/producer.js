@@ -36,10 +36,11 @@ export const actFetchProducers = (producers) => {
 
 export const actAddProducerRequest = (data) => {
   return async dispatch => {
-    const res = await callApi('supplier', 'POST', data);
-    if (res && res.status === 201) {
+    let token = localStorage.getItem('_auth');
+    const res = await callApi('admin/supplier', 'POST', data, token);
+    if (res && res.status === 200) {
       toast.success('Thêm nhà cung cấp thành công')
-      dispatch(actAddProducer(res.data));
+      //dispatch(actAddProducer(res.data));
     }
     return res
   }
@@ -54,8 +55,9 @@ export const actAddProducer = (data) => {
 
 export const actDeleteProducerRequest = (id) => {
   return async dispatch => {
-    await callApi(`supplier/delete/${id}`, 'PUT', null);
-    dispatch(actDeleteProducer(id));
+    let token = localStorage.getItem('_auth');
+    await callApi(`admin/supplier/delete/${id}`, 'PUT', null, token);
+    dispatch(actFetchProducersRequest());
   }
 }
 
@@ -68,10 +70,11 @@ export const actDeleteProducer = (id) => {
 
 export const actEditProducerRequest = (id, data) => {
   return async dispatch => {
-    const res = await callApi(`supplier/${id}`, 'PUT', data);
+    let token = localStorage.getItem('_auth');
+    const res = await callApi(`admin/supplier/update/${id}`, 'PUT', data, token);
     if (res && res.status === 200) {
-      toast.success('Sửa sản phẩm thành công')
-      dispatch(actEditProducer(res.data));
+      toast.success('Sửa nhà cung cấp thành công')
+      //dispatch(actEditProducer(res.data));
     }
   }
 }

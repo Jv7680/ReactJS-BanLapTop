@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { actAddProductRequest, actEditProductRequest } from '../../../redux/actions/product';
@@ -11,6 +11,8 @@ import Dropzone from 'react-dropzone';
 import { css } from '@emotion/core';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { toast } from 'react-toastify';
+import validateProduct from '../../../utils/validations/validateProduct';
+
 let token;
 let id;
 const override = css`
@@ -120,12 +122,7 @@ class ActionProduct extends Component {
     console.log('imageLink là:', image);
 
     //Check lỗi độ dài
-    if (image.length === 0) {
-      toast.warning('Bạn chưa nhập link!');
-      return false;
-    }
-    else if (image.length > 500) {
-      toast.error('Link quá dài! Yêu cầu nhỏ hơn 500 ký tự.');
+    if (!validateProduct.image(image)) {
       return false;
     }
 
@@ -190,42 +187,19 @@ class ActionProduct extends Component {
       productImageSet
     } = this.state;
 
-    const newListImage = []
-    if (productImageSet.length > 0) {
-      productImageSet.map(item => {
-        newListImage.push({ name: item.image })
-      })
-    }
-    this.setState({
-      loading: true
-    })
-    if (filesImage.length > 0)
-      for (const file of filesImage) {
-        const builder = await uploadImage(file);
-        newListImage.push({ name: builder });
-      }
-    // up ảnh firebase
-
-    const newProductName = productName === '' ? null : productName;
+    const newProductName = productName === '' ? '' : productName;
     const newQuantity = parseInt(quantity);
     const newDiscount = parseInt(discount);
     const newUnitPrice = parseInt(unitPrice);
-    const newDescriptionProduct = descriptionProduct === '' ? 'không mô tả' : descriptionProduct;
+    const newDescriptionProduct = descriptionProduct === '' ? '' : descriptionProduct;
     const newCategoryId = parseInt(categoryId);
     const newSupplierId = parseInt(supplierId);
     const { image } = this.state;
-    // const newImage = productImage === '' ? 'http://via.placeholder.com/300x200' : productImage;
-    // console.log("image", newImage)
-    // const newProduct = {
-    //   productName: newProductName,
-    //   quantity: newQuantity,
-    //   discount: newDiscount,
-    //   unitPrice: newUnitPrice,
-    //   descriptionProduct: newDescriptionProduct,
-    //   categoryId: newCategoryId,
-    //   supplierId: newSupplierId,
-    //   productImage: newListImage
-    // }
+
+    //check lỗi
+    if (!validateProduct.name(newProductName) || !validateProduct.unitprice(newUnitPrice) || !validateProduct.discount(newDiscount) || !validateProduct.quantity(newQuantity) || !validateProduct.description(newDescriptionProduct) || !validateProduct.image(image)) {
+      return;
+    }
 
     const addNewProduct = {
       "productName": newProductName,
@@ -247,6 +221,10 @@ class ActionProduct extends Component {
       "description": newDescriptionProduct,
       "supplierId": newSupplierId
     }
+
+    this.setState({
+      loading: true
+    })
 
     if (!id) {
       console.log('addNewProduct: ', addNewProduct);

@@ -5,7 +5,7 @@ import { actRegisterRequest } from '../../redux/actions/auth';
 import { connect } from 'react-redux'
 import { startLoading, doneLoading } from '../../utils/loading'
 import { withRouter } from 'react-router-dom';
-
+import validateLoginRegister from '../../utils/validations/validateLoginRegister';
 
 toast.configure()
 
@@ -43,17 +43,14 @@ class Register extends Component {
       phonenumber,
       address
     }
+    console.log(phonenumber)
+    //check lỗi
+    if (!validateLoginRegister.lastname(lastname) || !validateLoginRegister.firstname(firstname) || !validateLoginRegister.gmail(gmail) || !validateLoginRegister.password(password) || !validateLoginRegister.phonenumber(phonenumber) || !validateLoginRegister.address(address)) {
+      return;
+    }
     if (password !== repassword) {
       toast.error('Mật khẩu không khớp!')
-      return
-    }
-    if (password.length < 6 || password.length > 32) {
-      toast.error('Mật khẩu chỉ 6-32 ký tự');
-      return
-    }
-    if (phonenumber.length !== 10) {
-      toast.error('SĐT không hợp lệ');
-      return
+      return;
     }
 
     console.log(user);
@@ -100,7 +97,7 @@ class Register extends Component {
                   className="mb-0"
                   type="text"
                   name="firstname"
-                  placeholder="Họ tên" />
+                  placeholder="Tên" />
               </div>
               <div className="col-md-12 mb-20">
                 <label>Gmail*</label>
@@ -108,7 +105,7 @@ class Register extends Component {
                   value={gmail}
                   onChange={this.handleChange}
                   className="mb-0"
-                  type="email"
+                  type="text"
                   name="gmail"
                   placeholder="Địa chỉ Gmail" />
               </div>
