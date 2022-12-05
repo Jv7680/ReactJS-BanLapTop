@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-
+import { Rating } from 'react-simple-star-rating';
 import { Link, Redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { connect } from "react-redux";
-import { actGetProductRequest } from "../../redux/actions/products";
+import store from "../..";
+import { actGetProductRequest, actFetchProductsRequest } from "../../redux/actions/products";
 import { actAddCartRequest } from "../../redux/actions/cart";
 import callApi from "../../utils/apiCaller";
 import BeautyStars from "beauty-stars";
@@ -12,6 +13,7 @@ import RatingView from "./RatingView"
 import "./style.css";
 import { is_empty } from "../../utils/validations";
 import Slider from "react-slick";
+import { result } from "lodash";
 toast.configure();
 
 let token;
@@ -32,19 +34,173 @@ class ProductViewDetail extends Component {
     super(props);
     this.state = {
       quantity: 1,
-      redirectYourLogin: false
+      redirectYourLogin: false,
+      cmtContent: '',
+      cmtRating: 1,
+      ratingState: '',
+      checkCommented: false,
     };
   }
 
-  // componentDidMount = async () => {
-  //   token = localStorage.getItem("_auth");
-  //   const { id } = this.props;
-  //   const res = await callApi(`product/${id}`, "GET");
-  //   console.log('ressss', res);
-  //   // if (res && res.status === 200) {
-  //   //   this.props.get_product(id);
-  //   // }
+  // componentWillMount = () => {
+
+  //   //kiểm tra tài khoản này đã từng comment chưa
+  //   if (this.checkCommented()) {
+  //     let { product } = this.props;
+  //     let idAccount = localStorage.getItem('_idaccount');
+  //     let listReviews = product.reviewsResponses.listReviews;
+
+  //     for (let i = 0; i < product.reviewsResponses.listReviews.length; i++) {
+  //       if (listReviews[i].accountId === parseInt(idAccount)) {
+  //         //tài khoản này đã comment
+  //         this.setState({
+  //           cmtContent: listReviews[i].contents,
+  //           cmtRating: listReviews[i].rating,
+  //           checkCommented: true,
+  //         });
+  //       }
+  //     }
+  //   }
   // }
+
+  handleChange = event => {
+    const name = event.target.name;
+    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+    this.setState({
+      [name]: value
+    });
+  }
+
+  handleOnclickRating = (startRating) => {
+    //1 sao
+    if (startRating === 20) {
+      this.setState({
+        cmtRating: 1,
+      });
+    }
+    //2 sao
+    else if (startRating === 40) {
+      this.setState({
+        cmtRating: 2,
+      });
+    }
+    //3 sao
+    else if (startRating === 60) {
+      this.setState({
+        cmtRating: 3,
+      });
+    }
+    //4 sao
+    else if (startRating === 80) {
+      this.setState({
+        cmtRating: 4,
+      });
+    }
+    //5 sao
+    else if (startRating === 100) {
+      this.setState({
+        cmtRating: 5,
+      });
+    }
+
+    setTimeout(() => {
+      console.log('cmtRating:', this.state.cmtRating);
+    }, 1000);
+  }
+
+  renderMyCMT = () => {
+    let { product } = this.props;
+    let idAccount = localStorage.getItem('_idaccount');
+    let listReviews = product.reviewsResponses.listReviews;
+
+    for (let i = 0; i < product.reviewsResponses.listReviews.length; i++) {
+      if (listReviews[i].accountId === parseInt(idAccount)) {
+        //tài khoản này đã comment
+        return (
+          <div class="comment-item media border p-3">
+            <div className="media-body">
+              <h5>
+                <span style={{ fontSize: "14px", fontStyle: "italic" }}>
+                  {listReviews[i].username}&nbsp;(Bạn)
+                </span>
+                <div className="mt-10">
+                  <Rating
+                    initialValue={listReviews[i].rating}
+                    readonly={true}
+                    size={18}
+                  />
+                </div>
+              </h5>
+              <p> {listReviews[i].contents}</p>
+            </div>
+          </div>
+        )
+      }
+    }
+
+    return null;
+  }
+
+  handleSubmitCMT = (event) => {
+    let { cmtContent, cmtRating } = this.state;
+    let idAccount = localStorage.getItem('_idaccount');
+    let idProduct = localStorage.getItem('_idproduct');
+
+    let token = localStorage.getItem('_auth');
+
+    let body = {
+      orderId: 2,
+      accountId: parseInt(idAccount),
+      productId: parseInt(idProduct),
+      contents: cmtContent,
+      rate: cmtRating,
+    }
+    //gọi api
+    let res = callApi('reviews', 'POST', body, token)
+      .then(result => {
+        toast.success('Đánh giá thành công.');
+        console.log('handleSubmitCMT result', result);
+
+        //cập nhật lại sản phẩm hiện tại
+        store.dispatch(actGetProductRequest(idProduct));
+      });
+
+    // setTimeout(() => {
+    //   //kiểm tra tài khoản này đã từng comment chưa
+    //   if (this.checkCommented()) {
+    //     let { product } = this.props;
+    //     let idAccount = localStorage.getItem('_idaccount');
+    //     let listReviews = product.reviewsResponses.listReviews;
+
+    //     for (let i = 0; i < product.reviewsResponses.listReviews.length; i++) {
+    //       if (listReviews[i].accountId === parseInt(idAccount)) {
+    //         //tài khoản này đã comment
+    //         this.setState({
+    //           cmtContent: listReviews[i].contents,
+    //           cmtRating: listReviews[i].rating,
+    //           checkCommented: true,
+    //         });
+    //       }
+    //     }
+    //   }
+    // }, 3000);
+  }
+
+  checkCommented = () => {
+    let { product } = this.props;
+    let idAccount = localStorage.getItem('_idaccount');
+    let listReviews = product.reviewsResponses.listReviews;
+
+    for (let i = 0; i < product.reviewsResponses.listReviews.length; i++) {
+      if (listReviews[i].accountId === parseInt(idAccount)) {
+        //tài khoản này đã comment
+        return true;
+      }
+    }
+
+    //tài khoản này chưa comment
+    return false;
+  }
 
   upItem = (quantity) => {
     if (quantity >= 5) {
@@ -111,10 +267,11 @@ class ProductViewDetail extends Component {
     };
     const { product, user } = this.props;
     console.log('product state của redux: ', product);
-    const { quantity, redirectYourLogin } = this.state;
+    const { quantity, redirectYourLogin, cmtContent, cmtRating, ratingState, checkCommented } = this.state;
     if (redirectYourLogin) {
       return <Redirect to="/login"></Redirect>
     }
+    const idAccount = parseInt(localStorage.getItem('_idaccount'));
     return (
       <div className="content-wraper">
         <div className="container">
@@ -268,51 +425,151 @@ class ProductViewDetail extends Component {
               <div className="product-description">
                 <span dangerouslySetInnerHTML={{ __html: product.description }}></span>
                 {console.log('product.reviewsResponses: ', product)}
+
+                {/* đánh giá tổng quát của sản phẩm */}
                 <RatingView rating={product.reviewsResponses.rating} listReviews={product.reviewsResponses.listReviews}></RatingView>
+
+                {/* thêm comment của bản thân */}
                 {
-                  product.reviewsResponses.listReviews ? (
+                  this.checkCommented() ?
+                    (
+                      <div className="cmtedArea">
+                        <br />
+                        <span
+                          style={{ fontSize: "15px", fontWeight: "bold" }}
+                        >
+                          Bạn đã đánh giá sản phẩm này.
+                        </span>
+                        <br />
+                        {/* <span
+                          style={{ marginLeft: "20px" }}
+                        >
+                          Đánh giá:&emsp;
+                          <Rating
+                            initialValue={5}
+                            readonly={true}
+                            size={18}
+                          />
+                          {null}
+                        </span>
+                        <textarea placeholder="Nhập comment của bạn"
+                          rows="5"
+                          name="cmtContent"
+                          value={this.state.cmtContent}
+                          onChange={this.handleChange}
+                          style={{ resize: "none", marginLeft: "20px" }}
+                        >
+                        </textarea>
+                        <br /> */}
+                      </div>
+                    )
+                    :
+                    (
+                      <div
+                        className="cmtArea"
+                      // style={{
+                      //   borderTop: "1px solid #3596ff",
+                      //   borderBottom: "1px solid #3596ff",
+                      //   borderLeft: "1px solid #3596ff",
+                      // }}
+                      >
+                        <br />
+                        <span
+                          style={{ fontSize: "15px", fontWeight: "bold" }}
+                        >
+                          Bạn chưa đánh giá sản phẩm này.
+                        </span>
+                        <br />
+                        <span
+                          style={{ marginLeft: "20px" }}
+                        >
+                          Đánh giá:&emsp;
+                          <Rating
+                            initialValue={1}
+                            readonly={false}
+                            size={18}
+                            onClick={(startRating) => { this.handleOnclickRating(startRating) }}
+                          />
+                          {null}
+                        </span>
+                        <textarea placeholder="Nhập comment của bạn"
+                          rows="5"
+                          name="cmtContent"
+                          value={this.state.cmtContent}
+                          onChange={this.handleChange}
+                          style={{ resize: "none", marginLeft: "20px" }}
+                        >
+                        </textarea>
+                        <br />
+                        <button
+                          className="btn btn-primary"
+                          onClick={this.handleSubmitCMT}
+                          style={{ marginLeft: "20px" }}
+                        >
+                          Gửi Bình Luận
+                        </button>
+                        <br />
+                        <br />
+                      </div>
+                    )
+                }
 
-                    product.reviewsResponses.listReviews.length > 0 ?
-                      (
-                        <div className="comment-list">
-                          <h5 className="text-muted mt-40">
-                            <span className="badge badge-success">{product.reviewsResponses.listReviews.length}</span>{" "}
-                            Comment
-                          </h5>
-                          {
-                            product.reviewsResponses.listReviews.map((cmt, index) => {
-                              return (
-                                <div key={index} class="comment-item media border p-3">
-                                  <div className="media-body">
-                                    <h5>
-                                      <small>
-                                        {cmt.customerName}
-                                      </small>
-                                      <div className="mt-10">
-                                        <BeautyStars
-                                          size={10}
-                                          activeColor={"#ed8a19"}
-                                          inactiveColor={"#c1c1c1"}
-                                          value={cmt.rating}
-                                        />
-                                      </div>
-                                    </h5>
-                                    <p> {cmt.comments}</p>
+
+
+                {/* danh sách comment */}
+                {
+                  product.reviewsResponses.listReviews ?
+                    (
+                      product.reviewsResponses.listReviews.length > 0 ?
+                        (
+                          <div className="comment-list">
+                            <h5 className="text-muted mt-40">
+                              <span className="badge badge-success">{product.reviewsResponses.listReviews.length}</span>
+                              {" "}Comment
+                            </h5>
+                            {/* Render ra comment của bản thân trước */}
+                            {
+                              this.renderMyCMT()
+                            }
+                            {/* Render ra comment của những người còn lại */}
+                            {
+                              product.reviewsResponses.listReviews.map((cmt, index) => {
+                                if (cmt.accountId === idAccount) {
+                                  return null;
+                                }
+                                return (
+                                  <div key={index} class="comment-item media border p-3">
+                                    <div className="media-body">
+                                      <h5>
+                                        <span style={{ fontSize: "14px" }}>
+                                          {cmt.username}
+                                        </span>
+                                        <div className="mt-10">
+                                          <Rating
+                                            initialValue={cmt.rating}
+                                            readonly={true}
+                                            size={18}
+                                          />
+                                        </div>
+                                      </h5>
+                                      <p> {cmt.contents}</p>
+                                    </div>
                                   </div>
-                                </div>
-                              )
-                            })
-                          }
-                        </div>
-                      ) : (
-
-                        <div className="comment-list">
-                          <h5 className="text-muted mt-40">
-                            <span className="badge badge-success">Chưa Có Comment</span>
-                          </h5>
-                        </div>
-                      )
-                  ) :
+                                )
+                              })
+                            }
+                          </div>
+                        )
+                        :
+                        (
+                          <div className="comment-list">
+                            <h5 className="text-muted mt-40">
+                              <span className="badge badge-success">Chưa Có Comment</span>
+                            </h5>
+                          </div>
+                        )
+                    )
+                    :
                     (
                       <h1>không có danh sách đánh giá sản phẩm</h1>
                     )

@@ -488,7 +488,7 @@ class ActionProduct extends Component {
                             value={image}
                             name="image"
                             className="form-control"
-                            style={{ width: "93%", display: "inline" }}
+                            style={{ width: "89%", display: "inline" }}
                           />
                           <button
                             className="btn btn-primary"

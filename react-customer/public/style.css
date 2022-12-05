@@ -504,9 +504,9 @@ input:focus {
 textarea {
 	resize: vertical;
 	background: #eceff8;
-	border: 2px solid #eceff8;
+	border: 2px solid #cdd9ff;
 	padding: 10px;
-	width: 100%;
+	width: 90%;
 	font-size: 14px;
 }
 

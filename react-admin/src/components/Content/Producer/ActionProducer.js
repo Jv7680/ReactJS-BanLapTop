@@ -229,13 +229,13 @@ class ActionProducer extends Component {
                             value={image}
                             name="image"
                             className="form-control"
-                            style={{ width: "93%", display: "inline" }}
+                            style={{ width: "89%", display: "inline" }}
                           />
                           <button
                             className="btn btn-primary"
                             type='button'
                             onClick={(event) => { this.handleCheckImage(event) }}
-                            style={{ margin: "0 5px" }}
+                            style={{ margin: "0 5px", display: "inline" }}
                           >
                             Check
                           </button>

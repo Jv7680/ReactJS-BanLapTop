@@ -38,6 +38,7 @@ class ProductItem extends Component {
     //Cần delay để tránh việc vào trang thông tin sản phẩm mà chưa call api xong
     setTimeout(() => {
       console.log('call api xong');
+      localStorage.setItem('_idproduct', id);
       this.props.history.push(`/products/${id}`);
     }, 250);
 

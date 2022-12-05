@@ -1,15 +1,9 @@
-
-
-
 import React, { Component } from "react";
-
-
 import "react-toastify/dist/ReactToastify.css";
-
 import BeautyStars from "beauty-stars";
 import { is_empty } from "../../utils/validations";
 
-
+import { Rating } from 'react-simple-star-rating';
 
 export default class RatingView extends Component {
 
@@ -17,17 +11,22 @@ export default class RatingView extends Component {
     const { rating, listReviews } = this.props;
     let count = 0;
     let showFixRating = "0";
+
     let oneStart = 0;
     let twoStart = 0;
     let threeStart = 0;
     let fourStart = 0;
     let fiveStart = 0;
+
     let showOneStart = 0;
     let showTwoStart = 0;
     let showThreeStart = 0;
     let showFourStart = 0;
     let showFiveStart = 0;
+
     showFixRating = is_empty(rating) ? 0 : rating;
+    showFixRating = showFixRating.toFixed(1);
+
     if (listReviews && listReviews.length > 0) {
       listReviews.forEach(item => {
         if (item.rating === 1) {
@@ -47,12 +46,15 @@ export default class RatingView extends Component {
         }
         count++;
       })
+
+      console.log('1 sao có:', oneStart);
+      console.log('list review:', listReviews);
+
       showOneStart = ((oneStart / count) * 100).toFixed(0);
       showTwoStart = ((twoStart / count) * 100).toFixed(0);
       showThreeStart = ((threeStart / count) * 100).toFixed(0);
       showFourStart = ((fourStart / count) * 100).toFixed(0);
       showFiveStart = ((fiveStart / count) * 100).toFixed(0);
-
     }
 
     return (
@@ -63,15 +65,19 @@ export default class RatingView extends Component {
               <h5>Đánh giá sản phẩm</h5>
               <h2 className="bold padding-bottom-7">
                 {showFixRating}
-                <small>/ 5</small>
+                <small>/5</small>
               </h2>
               <div>
-                <BeautyStars
+                {/* <BeautyStars
                   size={12}
                   editable={false}
                   activeColor={"#ed8a19"}
                   inactiveColor={"#c1c1c1"}
                   value={showFixRating}
+                /> */}
+                <Rating
+                  initialValue={showFixRating}
+                  readonly={true}
                 />
               </div>
             </div>
@@ -295,4 +301,5 @@ export default class RatingView extends Component {
       </div>
     )
   }
+
 }
