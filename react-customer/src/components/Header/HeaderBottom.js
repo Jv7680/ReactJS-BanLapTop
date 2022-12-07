@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { actFetchCategoriesRequest } from '../../redux/actions/category';
 import { actGetProductOfCategoryRequest } from '../../redux/actions/products';
 import { startLoading, doneLoading } from '../../utils/loading'
-
+import { NavLink } from "react-router-dom";
 
 
 class HeaderBottom extends Component {
@@ -41,17 +41,17 @@ class HeaderBottom extends Component {
                   </button>
                   <div className="collapse navbar-collapse" id="collapsibleNavId">
                     <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
-                      <li className="nav-item px-3 active">
-                        <Link className="nav-link" to="/">Trang chủ</Link>
+                      <li className="nav-item px-3 ">
+                        <NavLink className="nav-link" to="/" exact={true}>Trang chủ</NavLink>
+                      </li>
+                      <li className="nav-item px-3 ">
+                        <NavLink className="nav-link" to="/products" exact={true}>Sản phẩm</NavLink>
                       </li>
                       <li className="nav-item px-3">
-                        <Link className="nav-link " to="/products">Sản phẩm</Link>
+                        <NavLink className="nav-link" to="/about" exact={true}>Về chúng tôi</NavLink>
                       </li>
                       <li className="nav-item px-3">
-                        <Link className="nav-link" to="/about">Về chúng tôi</Link>
-                      </li>
-                      <li className="nav-item px-3">
-                        <Link className="nav-link" to="/contact">Liên hệ</Link>
+                        <NavLink className="nav-link" to="/contact" exact={true}>Liên hệ</NavLink>
                       </li>
                     </ul>
                   </div>

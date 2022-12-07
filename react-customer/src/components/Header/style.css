@@ -14,7 +14,8 @@
   background-color: rgb(71, 74, 240) !important;
   font-size: 16px;
   font-weight: 600 !important;
-  padding: 10px 0 5px;
+  /* padding: 10px 0 5px; */
+  padding: 0 0 0 0;
   font-family: sans-serif;
   color: black;
 }
@@ -35,6 +36,16 @@
 
 .navbar-light .navbar-nav .nav-link {
   color: #000000ad !important;
+}
+
+.navbar-light .navbar-nav a:hover {
+  color: whitesmoke !important;
+  /* background-color: #444edf; */
+}
+
+.navbar-light .navbar-nav a.active {
+  color: whitesmoke !important;
+  /* background-color: #5f68df; */
 }
 
 .navList__item-user-link {

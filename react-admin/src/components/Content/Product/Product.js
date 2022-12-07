@@ -98,7 +98,7 @@ class Product extends Component {
       confirmButtonText: 'Yes'
     }).then(async (result) => {
       if (result.value) {
-        await this.props.delete_product(id, currentPage, token);
+        await this.props.delete_product(id, currentPage);
         Swal.fire(
           'Đã xóa!',
           'Sản phẩm của bạn đã được xóa.',

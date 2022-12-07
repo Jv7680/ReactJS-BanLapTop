@@ -370,7 +370,7 @@ class ProductViewDetail extends Component {
                       <div className="single-add-to-cart">
                         <form className="cart-quantity">
                           <div className="quantity">
-                            <label>Số lượng</label>
+                            <label>Số lượng&emsp;&emsp;&emsp;<span style={{ fontSize: "15px", fontStyle: "italic", color: "green" }}>(Tồn kho:&nbsp;{product.quantity})</span></label>
                             <div className="cart-plus-minus">
                               <input
                                 onChange={() => { }}

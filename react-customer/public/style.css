@@ -1798,7 +1798,7 @@ textarea:focus {
 	cursor: pointer;
 	display: block;
 	position: relative;
-	padding: 0 15px 0 45px;
+	padding: 0 0px 0 65px;
 }
 
 .item-icon::before {
@@ -1806,7 +1806,7 @@ textarea:focus {
 	position: absolute;
 	font-family: fontawesome;
 	left: 22px;
-	top: 6px;
+	top: 8px;
 	display: block;
 	font-size: 20px;
 }

@@ -44,20 +44,25 @@ class HeaderTop extends Component {
 
                   <li>
                     {
-                      (!token)
-                        ? (<Link onClick={() => this.loadingPage()} to="/login" className="fix-link-color language-selector-wrapper"> Login </Link>)
-                        : (<div className="dropdown show">
+                      !token ?
+                        (
+                          <Link onClick={() => this.loadingPage()} to="/login" className="fix-link-color language-selector-wrapper"> Login </Link>
+                        )
+                        :
+                        (
+                          <div className="dropdown show">
 
-                          <Link to="#" className=" fix-link-color dropdown-toggle navList__item-user-link" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img src={user.image || user.imageLink || "https://i.ibb.co/NCdx7FF/avatar-Default.png" } class="navList__item-user-avatar"></img>
-                            <div class="navList__item-user-name ml-10"> {user.userCustomer || user.username ||usernamelocal }</div>
-                          </Link>
-                          <div className="fix-text-item dropdown-menu ht-setting-list " aria-labelledby="dropdownMenuLink">
-                            <Link className="fix-text-item dropdown-item" to="/profile">Cá nhân</Link>
-                            <Link className="fix-text-item dropdown-item" to="/order/status1">Đơn Hàng</Link>
-                            <Link onClick={this.logOut} to="/login" className="fix-text-item dropdown-item" href="/">Đăng xuất</Link>
+                            <Link to="#" className=" fix-link-color dropdown-toggle navList__item-user-link" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <img src={user.image || user.imageLink || "https://i.ibb.co/NCdx7FF/avatar-Default.png"} class="navList__item-user-avatar"></img>
+                              <div class="navList__item-user-name ml-10"> {user.userCustomer || user.username || usernamelocal}</div>
+                            </Link>
+                            <div className="fix-text-item dropdown-menu ht-setting-list " aria-labelledby="dropdownMenuLink">
+                              <Link className="fix-text-item dropdown-item" to="/profile">Cá nhân</Link>
+                              <Link className="fix-text-item dropdown-item" to="/order/status1">Đơn Hàng</Link>
+                              <Link onClick={this.logOut} to="/login" className="fix-text-item dropdown-item" href="/">Đăng xuất</Link>
+                            </div>
                           </div>
-                        </div>)
+                        )
                     }
                   </li>
                 </ul>

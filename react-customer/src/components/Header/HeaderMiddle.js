@@ -121,10 +121,14 @@ class HeaderMiddle extends Component {
                   <li className="hm-minicart">
                     <Link to="/cart">
                       <div className="hm-minicart-trigger">
-                        <i className="item-icon fab fa-opencart"></i>
-                        <span className="item-text">
-                          {/* <span className="cart-item-count">{count}</span> */}
+                        <span
+                          className="item-icon fa-cart-arrow-down"
+                          style={{ margin: "auto auto" }}
+                        >
                         </span>
+                        {/* <span className="item-text">
+                          <span className="cart-item-count">{count}</span>
+                        </span> */}
                       </div>
                     </Link>
                     <span />
