@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import './style.css'
 import { actTokenRequest } from '../../redux/actions/auth'
+import { actFetchUserRequset } from '../../redux/actions/user';
 import { startLoading, doneLoading } from '../../utils/loading'
 
 
@@ -54,7 +55,7 @@ class HeaderTop extends Component {
 
                             <Link to="#" className=" fix-link-color dropdown-toggle navList__item-user-link" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               <img src={user.image || user.imageLink || "https://i.ibb.co/NCdx7FF/avatar-Default.png"} class="navList__item-user-avatar"></img>
-                              <div class="navList__item-user-name ml-10"> {user.userCustomer || user.username || usernamelocal}</div>
+                              <div class="navList__item-user-name ml-10"> {user.lastname + " " + user.firstname || "not found"}</div>
                             </Link>
                             <div className="fix-text-item dropdown-menu ht-setting-list " aria-labelledby="dropdownMenuLink">
                               <Link className="fix-text-item dropdown-item" to="/profile">Cá nhân</Link>
@@ -85,6 +86,9 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
   return {
+    fetch_user: (id) => {
+      return dispatch(actFetchUserRequset(id))
+    },
     setTokenRedux: (token) => {
       dispatch(actTokenRequest(token))
     }

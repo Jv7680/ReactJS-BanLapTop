@@ -6,9 +6,11 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 
-export const actFetchUserRequset = (id,idaccount) => {
+export const actFetchUserRequset = (id) => {
     return async dispatch => {
-        const res =await callApi(`account/profile?customerId=${id}&accountId=${idaccount}`, 'GET');
+        let token = localStorage.getItem('_auth');
+        const res = await callApi(`profile/${id}`, 'GET', null, token);
+        console.log('actFetchUserRequset res: ', res);
         if (res && res.status === 200) {
             console.log(res.data)
             dispatch(actFetchUser(res.data));
@@ -19,10 +21,13 @@ export const actFetchUserRequset = (id,idaccount) => {
 
 export const actUpdateMeRequset = (data) => {
     return async dispatch => {
-        const res = await callApi('account/profile', 'PUT', data);
+        let id = localStorage.getItem('_id');
+        let token = localStorage.getItem('_auth');
+        const res = await callApi(`profile/update/${id}`, 'PUT', data, token);
+        console.log('actUpdateMeRequset res: ', res);
         if (res && res.status === 200) {
             console.log(res.data)
-            dispatch(actUpdateUser(res.data));
+            dispatch(actFetchUserRequset(id));
             toast.success('Cập nhập tài khoản thành công')
         }
     };

@@ -30,8 +30,7 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    //Chưa có api
-    //this.props.fetch_dashboard();
+    this.props.fetch_dashboard();
   }
   handleChangeDate(date, name) {
     console.log(date, name)
@@ -101,7 +100,9 @@ class Dashboard extends Component {
 
     const { dashboard, revenueSearch, productSelling } = this.props
     const { startDateRevenue, endDateRevenue, total, monthNow } = this.state
-    console.log("tổng", revenueSearch, productSelling.products)
+    console.log("tổng", revenueSearch, productSelling.products);
+    console.log("dashboard là: ", dashboard);
+
     return (
       <>
         <div className="content-inner">
@@ -124,7 +125,7 @@ class Dashboard extends Component {
                         <div role="progressbar" style={{ width: '100%', height: '4px' }} className="progress-bar bg-violet fix-processbar" />
                       </div>
                     </div>
-                    <div className="number"><strong>{dashboard.numberOfCustomer}</strong></div>
+                    <div className="number"><strong>{dashboard.totalCustomer}</strong></div>
                   </div>
                 </div>
                 {/* Item */}
@@ -148,7 +149,7 @@ class Dashboard extends Component {
                         <div role="progressbar" style={{ width: '100%', height: '4px' }} className="progress-bar bg-green fix-processbar" />
                       </div>
                     </div>
-                    <div className="number"><strong>{dashboard.totalProduct}</strong></div>
+                    <div className="number"><strong>{dashboard.totalProducts}</strong></div>
                   </div>
                 </div>
                 {/* Item */}
@@ -165,8 +166,8 @@ class Dashboard extends Component {
                     </div>
                     {/* {1000.toLocaleString('it-IT', {style : 'currency', currency : 'VND'})} */}
                     <div className="number"><strong>
-                      {dashboard && dashboard.revenue
-                        ? dashboard.revenue.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })
+                      {dashboard && dashboard.totalRevenue
+                        ? dashboard.totalRevenue.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })
                         : 0}</strong></div>
                   </div>
                 </div>

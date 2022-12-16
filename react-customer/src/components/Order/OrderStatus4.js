@@ -222,7 +222,7 @@ class OrderStatus4 extends Component {
                                                                     <th>Khách hàng</th>
                                                                     <th>Số điện thoại</th>
                                                                     <th>Ngày nhận</th>
-                                                                    <th>Hủy đơn</th>
+                                                                    <th>Trạng thái</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>

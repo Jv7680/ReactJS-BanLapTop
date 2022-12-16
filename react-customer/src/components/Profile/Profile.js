@@ -67,18 +67,18 @@ class Profile extends Component {
         this.closeModal = this.closeModal.bind(this);
     }
     async componentDidMount() {
-        id = localStorage.getItem('_id');
-        const idaccount = localStorage.getItem('_idaccount');
-        const res = await this.props.fetch_user(id, idaccount);
-        await this.props.fetch_address(id);
+        let id = localStorage.getItem('_id');
+        //const idaccount = localStorage.getItem('_idaccount');
+        const res = await this.props.fetch_user(id);
+        //await this.props.fetch_address(id);
         this.setState({
-            firstName: res.data.firstName,
-            lastName: res.data.lastName,
-            email: res.data.gmailCustomer,
-            phone: res.data.phoneNumberCustomer,
+            firstName: res.data.firstname,
+            lastName: res.data.lastname,
+            email: res.data.gmail,
+            phone: res.data.phonenumber,
             address: res.data.address,
             avatar: res.data.image,
-            userName: res.data.userCustomer,
+            userName: res.data.username,
             // listAdresses: resAddress.data
         })
     }
@@ -135,33 +135,40 @@ class Profile extends Component {
             loading: true
         })
         //upload image to firebase
-        if (img !== null && img !== avatar) {
-            avatar = await uploadImage(img);
-        }
+        // if (img !== null && img !== avatar) {
+        //     avatar = await uploadImage(img);
+        // }
 
-        const newAvatar = (avatar === '') ? null : avatar
-        const newAddress = (address === '') ? null : address
-        const newPhone = (phone === '') ? null : phone
-        const newfirstName = (firstName === '') ? null : firstName
+        // const newAvatar = (avatar === '') ? null : avatar
+        // const newAddress = (address === '') ? null : address
+        // const newPhone = (phone === '') ? null : phone
+        // const newfirstName = (firstName === '') ? null : firstName
 
 
         //edit
-        const editUser = {
-            customerId,
-            id,
-            image: newAvatar,
-            phoneNumber: newPhone,
-            email: email,
-            address: newAddress,
-            firstName: newfirstName,
-            lastName,
-            userName,
-            currentPassword: '',
-            newPassword: '',
-            reNewPassword: '',
+        // const editUser = {
+        //     customerId,
+        //     id,
+        //     image: newAvatar,
+        //     phoneNumber: newPhone,
+        //     email: email,
+        //     address: newAddress,
+        //     firstName: newfirstName,
+        //     lastName,
+        //     userName,
+        //     currentPassword: '',
+        //     newPassword: '',
+        //     reNewPassword: '',
+        // }
+
+        const newUser = {
+            firstName: firstName,
+            lastName: lastName,
+            address: address,
         }
 
-        await this.props.update_me(editUser);
+
+        await this.props.update_me(newUser);
         this.setState({
             loading: false,
         })
@@ -281,14 +288,14 @@ class Profile extends Component {
                         <div className="fix-img-div profile-img">
                             <img id="output" className="fix-img" src={avatar || 'https://i.ibb.co/NCdx7FF/avatar-Default.png'} alt="not found" />
                         </div>
-                        <span className="btn btn-default btn-file" style={{ color: '#212529' }}>
+                        {/* <span className="btn btn-default btn-file" style={{ color: '#212529' }}>
                             Chọn thư mục <input onChange={this.handleChangeImage} type="file" />
-                        </span>
+                        </span> */}
                     </div>
                     <div className="col-md-8">
                         <div className="profile-head" style={{}}>
                             <h5>
-                                {firstName} {lastName}
+                                {lastName} {firstName}
                             </h5>
 
                             <p className="proile-rating"></p>
@@ -303,9 +310,10 @@ class Profile extends Component {
                                             <a className="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Đổi mật khẩu</a>
                                         </li>
                                 }
-                                <li className="nav-item">
+                                {/* tạm đóng vì chưa có api */}
+                                {/* <li className="nav-item">
                                     <a className="nav-link" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">Quản lý Địa chỉ</a>
-                                </li>
+                                </li> */}
                             </ul>
                         </div>
                         <div className="row">
@@ -319,13 +327,13 @@ class Profile extends Component {
                                                     <label>Họ,tên đệm</label>
                                                 </div>
                                                 <div className="col-md-4">
-                                                    <input name="firstName" onChange={this.handleChange} value={firstName} className="form-control form-control-sm" type="text" />
+                                                    <input name="lastName" onChange={this.handleChange} value={lastName} className="form-control form-control-sm" type="text" />
                                                 </div>
                                                 <div className="col-md-1">
                                                     <label>Tên </label>
                                                 </div>
                                                 <div className="col-md-4">
-                                                    <input name="lastName" onChange={this.handleChange} value={lastName} className="form-control form-control-sm" type="text" />
+                                                    <input name="firstName" onChange={this.handleChange} value={firstName} className="form-control form-control-sm" type="text" />
                                                 </div>
                                             </div>
 
@@ -339,20 +347,21 @@ class Profile extends Component {
                                             </div>
                                             <div className="row mt-1 flex-item-center">
                                                 <div className="col-md-3">
+                                                    <label>SĐT</label>
+                                                </div>
+                                                <div className="col-md-9">
+                                                    <input disabled onChange={this.handleChange} name="phone" value={phone} className="form-control form-control-sm" type="text" />
+                                                </div>
+                                            </div>
+                                            <div className="row mt-1 flex-item-center">
+                                                <div className="col-md-3">
                                                     <label>Địa chỉ</label>
                                                 </div>
                                                 <div className="col-md-9">
                                                     <input onChange={this.handleChange} name="address" value={address} className="form-control form-control-sm" type="text" />
                                                 </div>
                                             </div>
-                                            <div className="row mt-1 flex-item-center">
-                                                <div className="col-md-3">
-                                                    <label>SĐT</label>
-                                                </div>
-                                                <div className="col-md-9">
-                                                    <input onChange={this.handleChange} name="phone" value={phone} className="form-control form-control-sm" type="text" />
-                                                </div>
-                                            </div>
+
                                             <div className="row mt-2 flex-item-center">
                                                 <div className="col-md-3">
                                                 </div>
@@ -366,7 +375,7 @@ class Profile extends Component {
                                         <form onSubmit={(event) => this.handleSubmitChangePassword(event)} >
                                             <div className="row mb-1">
                                                 <div className="col-md-3">
-                                                    <label>Mật khẩu</label>
+                                                    <label>Mật khẩu hiện tại</label>
                                                 </div>
                                                 <div className="col-md-9">
                                                     <input type="password" name="currentPassword" value={currentPassword} onChange={this.handleChange} className="form-control form-control-sm" />
@@ -392,7 +401,7 @@ class Profile extends Component {
                                                 <div className="col-md-3">
                                                 </div>
                                                 <div className="col-md-3">
-                                                    <button style={{ backgroundColor: '#f68169', border: '#0b0bed8c' }} type="submit" className="btn btn-primary">Đôi mật khẩu</button>
+                                                    <button style={{ backgroundColor: '#f68169', border: '#0b0bed8c' }} type="submit" className="btn btn-primary">Đổi mật khẩu</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -432,8 +441,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetch_user: (id, idaccount) => {
-            return dispatch(actFetchUserRequset(id, idaccount))
+        fetch_user: (id) => {
+            return dispatch(actFetchUserRequset(id))
         },
         update_me: (data) => {
             dispatch(actUpdateMeRequset(data))

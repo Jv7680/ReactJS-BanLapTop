@@ -447,12 +447,14 @@ nav.side-navbar a .badge {
 }
 
 nav.side-navbar .sidebar-header {
-  padding: 30px 15px;
+  padding: 10px 10px;
+  border-bottom: 1px solid;
 }
 
 nav.side-navbar .avatar {
   width: 55px;
   height: 55px;
+  /* margin: 0 auto; */
 }
 
 nav.side-navbar .title {

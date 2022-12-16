@@ -5,7 +5,9 @@ import { actShowLoading, actHiddenLoading } from './loading'
 export const actFetchDashboardRequest = () => {
   return async dispatch => {
     dispatch(actShowLoading());
-    const res = await callApi('statistic/general', 'GET', null);
+    let token = localStorage.getItem('_auth');
+    const res = await callApi('admin/dashboard/overview', 'GET', null, token);
+    console.log("res actFetchDashboardRequest là: ", res);
     if (res && res.status === 200) {
       dispatch(actFetchDashboard(res.data));
     }
@@ -41,7 +43,7 @@ export const actFetchRevenue = (data) => {
 }
 export const actFetchBestSellingProductRequest = (data, page) => {
 
-  
+
   const newPage = page === null || page === undefined ? 1 : page;
   return dispatch => {
     return new Promise((resolve, reject) => {

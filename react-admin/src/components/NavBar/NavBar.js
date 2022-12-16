@@ -67,21 +67,21 @@ class NavBar extends Component {
                 <Link to="/orders/status1">
                   <i className="fa-solid fa-align-left" />
                   Chờ duyệt
-                  <span class="ml-3 badge badge-danger">{dashboard.newOrders}</span>
+                  {/* <span class="ml-3 badge badge-danger">{dashboard.newOrders}</span> */}
                 </Link>
               </li>
               <li>
                 <Link to="/orders/status2">
                   <i className="fa-solid fa-list-check" />
                   Đã duyệt
-                  <span class="ml-3 badge badge-danger">{dashboard.newOrders}</span>
+                  {/* <span class="ml-3 badge badge-danger">{dashboard.newOrders}</span> */}
                 </Link>
               </li>
               <li>
                 <Link to="/orders/status3">
                   <i className="fa-solid fa-cart-flatbed" />
                   Đang giao
-                  <span class="ml-3 badge badge-warning">{dashboard.quantityOfApprovedOrder}</span>
+                  {/* <span class="ml-3 badge badge-warning">{dashboard.quantityOfApprovedOrder}</span> */}
                 </Link>
               </li>
 
@@ -89,14 +89,14 @@ class NavBar extends Component {
                 <Link to="/orders/status4">
                   <i className="fa-solid fa-clipboard-check" />
                   Đã giao
-                  <span class="ml-3 badge badge-success">{dashboard.quantityOfDeliveredOrder}</span>
+                  {/* <span class="ml-3 badge badge-success">{dashboard.quantityOfDeliveredOrder}</span> */}
                 </Link>
               </li>
               <li>
                 <Link to="/orders/status5">
                   <i className="fa-solid fa-calendar-xmark" />
                   Đã hủy
-                  <span class="ml-3 badge badge-danger">{dashboard.newOrders}</span>
+                  {/* <span class="ml-3 badge badge-danger">{dashboard.newOrders}</span> */}
                 </Link>
               </li>
             </ul>

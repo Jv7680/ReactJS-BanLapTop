@@ -1,6 +1,6 @@
 import * as Types from '../../constants/ActionType';
 import { Redirect } from 'react-router-dom';
-
+import { actFetchUserRequset } from '../../redux/actions/user';
 import callApi from '../../utils/apiCaller';
 import { toast } from 'react-toastify';
 import { startLoading, doneLoading } from '../../utils/loading';
@@ -21,7 +21,7 @@ export const actLoginRequest = (user) => {
             localStorage.setItem('_idaccount', idAccount)
             localStorage.setItem('_username', res.data.username);
             dispatch(actLogin(token));
-            dispatch(actFetchUser(res.data));
+            dispatch(actFetchUserRequset(id));
         }
     };
 }
