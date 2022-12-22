@@ -2,7 +2,7 @@ import { toast } from 'react-toastify';
 
 function checkPhonenumber(phonenumber) {
     for (let i = 0; i < phonenumber.length; i++) {
-        if (!parseInt(phonenumber[i])) {
+        if (!parseInt(phonenumber[i]) && parseInt(phonenumber[i]) != 0) {
             return false;
         }
     }

@@ -35,7 +35,8 @@ export const actUpdateMeRequset = (data) => {
 
 export const actChangePasswordMeRequset = (data) => {
     return async dispatch => {
-        const res = await callApi('account/password', 'PUT', data);
+        let token = localStorage.getItem('_auth');
+        const res = await callApi('profile/edit/password', 'PUT', data, token);
         if (res && res.status === 200) {
             toast.success('Thay đổi mật khẩu thành công')
         }

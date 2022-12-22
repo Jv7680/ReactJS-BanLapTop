@@ -10,7 +10,7 @@ export const actFetchProductsRequest = (page) => {
   const newPage = page === null || page === undefined ? 1 : page;
   return async dispatch => {
     let token = localStorage.getItem('_auth');
-    const res = await callApi(`product/all?page=${page}`, 'GET', null, token)
+    const res = await callApi(`admin/product/all?page=${page}&size=10`, 'GET', null, token)
     console.log('actFetchProductsRequest res: ', res);
     if (res && res.status === 200) {
       dispatch(actFetchProducts(res.data.listProducts));
@@ -24,7 +24,8 @@ export const actGetProductOfKeyRequest = (key, page) => {
   const newKey = (key === undefined || key === '' || key === null) ? 'laptop' : key
 
   return async dispatch => {
-    const res = await callApi(`product/search?page=${newPage}&size=5&keyword=${newKey}&page=${newPage}`, 'GET')
+    let token = localStorage.getItem('_auth');
+    const res = await callApi(`admin/product/search?page=1&size=20&keyword=${newKey}`, 'GET', null, token)
     if (res && res.status === 200) {
       dispatch(actFetchProducts(res.data.listProducts));
     };
@@ -87,12 +88,13 @@ export const actAddProduct = (data) => {
 }
 
 export const actDeleteProductRequest = (id, currentPage) => {
-  const data = {
-    isDelete: "YES"
+  const body = {
+    productId: id,
+    isDeleted: 1
   }
   return async dispatch => {
     let token = localStorage.getItem('_auth');
-    const res = await callApi(`admin/product/delete/${id}`, 'PUT', null, token);
+    const res = await callApi(`admin/product/updateStatus`, 'PUT', body, token);
     if (res && res.status == 200) {
       dispatch(actFetchProductsRequest(currentPage));
     }
@@ -100,16 +102,16 @@ export const actDeleteProductRequest = (id, currentPage) => {
   }
 }
 
-export const actActiveProductRequest = (id, page) => {
-  let newpage = is_empty(page) ? 1 : page;
-  const data = {
-    isDelete: "NO"
+export const actActiveProductRequest = (id, currentPage) => {
+  const body = {
+    productId: id,
+    isDeleted: 0
   }
   return async dispatch => {
-
-    const res = await callApi(`product/delete/${id}?page=${newpage}`, 'PUT', data);
+    let token = localStorage.getItem('_auth');
+    const res = await callApi(`admin/product/updateStatus`, 'PUT', body, token);
     if (res && res.status == 200) {
-      dispatch(actDeleteProduct(res.data.listProduct));
+      dispatch(actFetchProductsRequest(currentPage));
 
     }
 

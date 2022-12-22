@@ -5,6 +5,11 @@ import callApi from '../../utils/apiCaller';
 import { toast } from 'react-toastify';
 import { startLoading, doneLoading } from '../../utils/loading';
 import 'react-toastify/dist/ReactToastify.css';
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
+const MySwal = withReactContent(Swal)
+
 
 export const actLoginRequest = (user) => {
     return async dispatch => {
@@ -97,16 +102,24 @@ export const actToken = (token) => {
     }
 }
 
-export const actForgotPasswordRequest = (email) => {
+export const actForgotPasswordRequest = (body) => {
     return async () => {
         startLoading()
-        const res = await callApi('auth/forgot', 'POST', email);
+        console.log('body actForgotPasswordRequest: ', body);
+        localStorage.setItem('_mailreset', body.email);
+        const res = await callApi('auth/forgot', 'POST', body);
         if (res && res.status === 200) {
-            const mes = res.data.message ? res.data.message : "Vui lòng xác nhận email để đổi mật khẩu";
-            localStorage.setItem('_mailreset', email.email);
-            toast.success(mes)
+            //const mes = res.data.message ? res.data.message : "Vui lòng xác nhận email để đổi mật khẩu";
+            //localStorage.setItem('_mailreset', body.email);
+            //toast.success(mes)
+            MySwal.fire({
+                icon: 'success',
+                title: 'Xác Thực Mail Thành Công',
+                //text: 'Vui lòng điền đoạn mã đã được gửi đến mail của bạn!'
+            })
             doneLoading()
         }
+        doneLoading()
     };
 }
 
@@ -115,11 +128,11 @@ export const actPasswordRequest = (user) => {
         startLoading()
         const res = await callApi('auth/reset', 'POST', user);
         if (res && res.status === 200) {
-            const mes = res.data.message ? res.data.message : "Đổi mật khẩu thành công";
             localStorage.removeItem("_mailreset");
-            toast.success(mes)
+            toast.success("Đổi mật khẩu thành công")
             doneLoading()
         }
+        doneLoading()
     };
 }
 // export const actActiveRequest = (code) => {

@@ -11,7 +11,7 @@ class ResetPassword extends Component {
         super(props);
         this.state = {
             code: this.props.code,
-            email: '',
+            email: localStorage.getItem('_mailreset'),
             password: '',
             repassword: '',
             isActive: false,
@@ -19,18 +19,18 @@ class ResetPassword extends Component {
         }
     }
 
-    async componentWillMount() {
-        const { code } = this.state.code
-        console.log("code hientai", code)
-        startLoading();
-        const res = await callApi(`auth/reset/${code}`, 'GET', null);
-        doneLoading();
-        if (res && res.status === 200) {
-            toast.success('Xác thực thành công')
-            const mailCrurrent = localStorage.getItem("_mailreset");
-            this.setState({ isActive: true, email: mailCrurrent })
-        }
-    }
+    // async componentWillMount() {
+    //     const { code } = this.state.code
+    //     console.log("code hientai", code)
+    //     startLoading();
+    //     const res = await callApi(`auth/reset/${code}`, 'GET', null);
+    //     doneLoading();
+    //     if (res && res.status === 200) {
+    //         toast.success('Xác thực thành công')
+    //         const mailCrurrent = localStorage.getItem("_mailreset");
+    //         this.setState({ isActive: true, email: mailCrurrent })
+    //     }
+    // }
 
     handleChange = (event) => {
         let name = event.target.name;
@@ -39,14 +39,15 @@ class ResetPassword extends Component {
             [name]: value
         });
     }
-    sendPasswordReset = async (event) =>{
+    sendPasswordReset = async (event) => {
         event.preventDefault();
-        const {email,password,repassword} = this.state
+        const { email, password, repassword } = this.state
         const data = {
             email,
             password,
             repassword
         }
+        console.log(data);
         this.props.resetPassword(data)
         this.setState({
             password: '',
@@ -57,11 +58,11 @@ class ResetPassword extends Component {
 
 
     render() {
-        const { password, repassword,isSuccess} = this.state;
-        if(isSuccess){
-            return <Redirect to ='/login'></Redirect>
+        const { password, repassword, isSuccess } = this.state;
+        if (isSuccess) {
+            return <Redirect to='/login'></Redirect>
         }
-        
+
         return (
             <div className="container">
                 <div className="row">
@@ -97,7 +98,7 @@ class ResetPassword extends Component {
                                         <button
                                             onClick={this.sendPasswordReset}
                                             className="register-button mb-3 fix-button-resetpw">
-                                            Đổi mật khẩu
+                                            Gửi
                                         </button>
                                     </div>
                                 </div>
@@ -108,7 +109,7 @@ class ResetPassword extends Component {
             </div>
         )
     }
-    
+
 }
 const mapDispatchToProps = (dispatch) => {
     return {

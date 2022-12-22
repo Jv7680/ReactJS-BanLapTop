@@ -19,7 +19,7 @@ const customStyles = {
         bottom: "auto",
         marginRight: "-50%",
         transform: "translate(-50%, -50%)",
-        width: "500px"
+        width: "1000px"
     }
 };
 class OrderStatus4 extends Component {
@@ -30,13 +30,14 @@ class OrderStatus4 extends Component {
             redirectToProduct: false,
             ratingPoint: 0,
             modalIsOpen: false,
+            listProductOrdered: [],
             idOrderReview: 0,
             idProductReview: 0,
             textRating: ""
         }
-        this.openModal = this.openModal.bind(this);
-        this.afterOpenModal = this.afterOpenModal.bind(this);
-        this.closeModal = this.closeModal.bind(this);
+        // this.openModal = this.openModal.bind(this);
+        // this.afterOpenModal = this.afterOpenModal.bind(this);
+        // this.closeModal = this.closeModal.bind(this);
     }
     componentDidMount() {
         id = localStorage.getItem("_id");
@@ -52,23 +53,78 @@ class OrderStatus4 extends Component {
             })
     }
 
-    openModal(idOrder, idProduct) {
-        this.setState(
-            {
-                modalIsOpen: true,
-                idOrderReview: idOrder,
-                idProductReview: idProduct
-            }
-        );
+    openModalOrderDetail = (e, item) => {
+        e.preventDefault();
+
+
+        //lấy danh saasch sản phẩm của mỗi đơn hàng item
+        let listProductOrdered = item.lstOrdersDetail;
+        console.log('itemsss:', item);
+        console.log('listProductOrdered:', listProductOrdered);
+
+        localStorage.setItem('_orderId', item.orderId);
+        this.setState({
+            modalIsOpen: true,
+            listProductOrdered: item.lstOrdersDetail,
+        })
     }
 
-    afterOpenModal() {
-        this.subtitle.style.color = "#2d3136";
+    showItem(items) {
+        let result = null;
+        console.log('items: ', items)
+        if (items.length > 0) {
+            result = items.map((item, index) => {
+                return (
+                    <tr>
+                        <td className="li-product-thumbnail d-flex justify-content-center">
+                            <Link to={`/products/${item.productId}`} >
+                                <div className="fix-cart"> <img className="fix-img" src={item.imgLink} alt="Li's Product" /></div>
+                            </Link>
+                        </td>
+                        <td className="li-product-name">
+                            <Link className="text-dark" to={`/products/${item.productId}`}>{item.productName}</Link>
+                        </td>
+                        <td className="li-product-name">
+                            {item.price}
+                        </td>
+                        <td className="li-product-name">
+                            {item.quantity}
+                        </td>
+                        <td className="li-product-name">
+                            {
+                                item.isReviewed ?
+                                    (
+                                        <>
+                                            <Link className="text-dark" to={`/products/${item.productId}`}>
+                                                <span style={{ fontStyle: "italic", color: "green" }}>
+                                                    Đã đánh giá
+                                                </span>
+                                            </Link>
+                                        </>
+                                    )
+                                    :
+                                    (
+                                        <>
+                                            <Link className="text-dark" to={`/products/${item.productId}`}>
+                                                <span style={{ fontStyle: "italic", color: "red" }}>
+                                                    Đánh giá ngay
+                                                </span>
+                                            </Link>
+                                        </>
+                                    )
+                            }
+                        </td>
+                    </tr>
+                );
+            });
+        }
+        return result;
     }
 
-    closeModal() {
+    closeModal = () => {
         this.setState({ modalIsOpen: false });
     }
+
     handleChangeRating = value => {
         this.setState({
             ratingPoint: value
@@ -126,6 +182,7 @@ class OrderStatus4 extends Component {
 
     render() {
         const { orders } = this.props
+        const { listProductOrdered } = this.state
         const { idOrderReview, idProductReview, ratingPoint, textRating } = this.state
 
         console.log(orders)
@@ -135,7 +192,8 @@ class OrderStatus4 extends Component {
                     <div className="container-fluid">
                         <div className="row">
                             <div className="col-lg-12">
-                                <Modal
+
+                                {/* <Modal
                                     isOpen={this.state.modalIsOpen}
                                     onAfterOpen={this.afterOpenModal}
                                     onRequestClose={this.closeModal}
@@ -151,7 +209,6 @@ class OrderStatus4 extends Component {
                                             <div className="modal-inner-area row">
                                                 <div className="col-lg-12">
                                                     <div className="li-review-content">
-                                                        {/* Begin Feedback Area */}
                                                         <div className="feedback-area">
                                                             <div className="feedback">
                                                                 <h3 className="feedback-title">Tặng sao</h3>
@@ -200,15 +257,55 @@ class OrderStatus4 extends Component {
                                                                 </form>
                                                             </div>
                                                         </div>
-                                                        {/* Feedback Area End Here */}
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </Modal>
-                                <div className="card">
+                                    </div >
+                                </Modal > */}
+                                <div div className="card" >
                                     <div className="card-body">
+                                        <Modal
+                                            isOpen={this.state.modalIsOpen}
+                                            onAfterOpen={this.afterOpenModal}
+                                            onRequestClose={this.closeModal}
+                                            style={customStyles}
+                                            ariaHideApp={false}
+                                            contentLabel="Example Modal"
+                                        >
+                                            <div className="table-content table-responsive">
+                                                <table className="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th className="li-product-thumbnail">Ảnh</th>
+                                                            <th className="cart-product-name">Tên sản phẩm</th>
+                                                            <th className="li-product-price">Giá</th>
+                                                            <th className="li-product-quantity">Số lượng</th>
+                                                            <th className="li-product-quantity">Đánh giá</th>
+                                                            {/* <th className="li-product-subtotal">Tổng</th> */}
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {
+                                                            this.showItem(listProductOrdered)
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div className="feedback-input">
+                                                <div className="feedback-btn pb-15">
+
+                                                    <button
+                                                        onClick={this.closeModal}
+                                                        className="btn mr-1"
+                                                        style={{ background: "#fed700", color: "white" }}
+                                                    >
+                                                        Thoát
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                        </Modal>
                                         <div className="table-responsive">
                                             {
                                                 orders.length > 0 ?
@@ -217,7 +314,7 @@ class OrderStatus4 extends Component {
                                                             <thead>
                                                                 <tr>
                                                                     <th>id đơn hàng</th>
-                                                                    <th>sản phẩm</th>
+                                                                    <th>Tổng sản phẩm</th>
                                                                     <th>Tổng tiền</th>
                                                                     <th>Khách hàng</th>
                                                                     <th>Số điện thoại</th>
@@ -228,10 +325,10 @@ class OrderStatus4 extends Component {
                                                             <tbody>
                                                                 {orders && orders.length ? orders.map((item, index) => {
                                                                     return (
-                                                                        <tr key={index}>
+                                                                        <tr key={index} onDoubleClick={(e) => { this.openModalOrderDetail(e, item) }}>
                                                                             <th scope="row">{item.orderId}</th>
                                                                             <td>
-                                                                                {
+                                                                                {/* {
                                                                                     item.lstOrdersDetail && item.lstOrdersDetail.length ?
                                                                                         item.lstOrdersDetail.map((product, index) => {
                                                                                             return (
@@ -262,6 +359,9 @@ class OrderStatus4 extends Component {
 
                                                                                             )
                                                                                         }) : null
+                                                                                } */}
+                                                                                {
+                                                                                    item.totalQuantity
                                                                                 }
                                                                             </td>
                                                                             <td>{formatNumber(item.totalAmount)}</td>
@@ -285,8 +385,6 @@ class OrderStatus4 extends Component {
                                                                                 :
                                                                                 (<td>
                                                                                     <span className="badge badge-pill badge-success mb-10">Đã giao</span>
-                                                                                    <br />
-                                                                                    <span>Đã đánh giá</span>
                                                                                 </td>)
 
                                                                             }
@@ -311,12 +409,12 @@ class OrderStatus4 extends Component {
                                         </div>
                                     </div>
 
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
+                                </div >
+                            </div >
+                        </div >
+                    </div >
+                </section >
+            </div >
 
         )
     }

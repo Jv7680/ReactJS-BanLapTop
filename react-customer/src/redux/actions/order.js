@@ -84,7 +84,8 @@ export const actDeleteOrderRequest = (id) => {
     let body = {
       orderStatus: 5,
     }
-    const res = await callApi(`admin/orders/update/${id}`, "PUT", body, tokenAdmin);
+    let token = localStorage.getItem('_auth');
+    const res = await callApi(`orders/cancel/${id}`, "PUT", null, token);
     if (res && res.status === 200) {
       dispatch(actDeleteOrder(id));
     }

@@ -5,14 +5,22 @@ import './style.css'
 import { actTokenRequest } from '../../redux/actions/auth'
 import { actFetchUserRequset } from '../../redux/actions/user';
 import { startLoading, doneLoading } from '../../utils/loading'
-
+//import { actFetchUserRequset } from '../../redux/actions/user'
 
 class HeaderTop extends Component {
+
+  componentDidMount = () => {
+    if (localStorage.getItem('_auth') && localStorage.getItem('_id')) {
+      this.props.fetch_user(localStorage.getItem('_id'));
+    }
+  }
+
   logOut = async () => {
-    localStorage.removeItem('_auth');
-    localStorage.removeItem('_id');
-    localStorage.removeItem('_username');
+    // localStorage.removeItem('_auth');
+    // localStorage.removeItem('_id');
+    // localStorage.removeItem('_username');
     const token = null;
+    localStorage.clear();
     startLoading();
     await this.props.setTokenRedux(token);
     doneLoading();

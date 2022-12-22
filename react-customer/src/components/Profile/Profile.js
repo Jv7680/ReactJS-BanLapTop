@@ -15,6 +15,7 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import ItemAddress from './ItemAddress';
 import { is_empty } from '../../utils/validations';
+import { Link } from 'react-router-dom';
 const MySwal = withReactContent(Swal)
 toast.configure()
 
@@ -103,7 +104,7 @@ class Profile extends Component {
 
     handleSubmitChangePassword = (event) => {
         event.preventDefault();
-        const customerId = parseInt(localStorage.getItem("_id"));
+        const accountId = parseInt(localStorage.getItem("_id"));
         const id = parseInt(localStorage.getItem("_idaccount"));
         const { currentPassword, newPassword, reNewPassword } = this.state;
         if (newPassword.length < 6 || newPassword.length > 32) {
@@ -114,14 +115,13 @@ class Profile extends Component {
             return
         }
         const data = {
-            customerId,
-            id,
-            currentPassword,
-            newPassword,
-            reNewPassword
+            accountId,
+            //currentPassword,
+            password: newPassword,
+            repassword: reNewPassword
         }
         startLoading();
-        this.props.change_pw_me(data, token);
+        this.props.change_pw_me(data);
         doneLoading();
     }
     handleSubmit = async (event) => {
@@ -373,20 +373,21 @@ class Profile extends Component {
                                     </div>
                                     <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                                         <form onSubmit={(event) => this.handleSubmitChangePassword(event)} >
-                                            <div className="row mb-1">
+                                            {/* Tạm đóng mục nhập mật khẩu hiện tại */}
+                                            {/* <div className="row mb-1">
                                                 <div className="col-md-3">
                                                     <label>Mật khẩu hiện tại</label>
                                                 </div>
                                                 <div className="col-md-9">
                                                     <input type="password" name="currentPassword" value={currentPassword} onChange={this.handleChange} className="form-control form-control-sm" />
                                                 </div>
-                                            </div>
+                                            </div> */}
                                             <div className="row mb-1">
                                                 <div className="col-md-3">
                                                     <label>Mật khẩu mới</label>
                                                 </div>
                                                 <div className="col-md-9">
-                                                    <input type="password" name="newPassword" value={newPassword} onChange={this.handleChange} className="form-control form-control-sm" />
+                                                    <input type="text" name="newPassword" value={newPassword} onChange={this.handleChange} className="form-control form-control-sm" />
                                                 </div>
                                             </div>
                                             <div className="row">
@@ -394,7 +395,7 @@ class Profile extends Component {
                                                     <label>Nhập lại mật khẩu</label>
                                                 </div>
                                                 <div className="col-md-9">
-                                                    <input type="password" name="reNewPassword" value={reNewPassword} onChange={this.handleChange} className="form-control form-control-sm" />
+                                                    <input type="text" name="reNewPassword" value={reNewPassword} onChange={this.handleChange} className="form-control form-control-sm" />
                                                 </div>
                                             </div>
                                             <div className="row mt-2">
@@ -402,7 +403,9 @@ class Profile extends Component {
                                                 </div>
                                                 <div className="col-md-3">
                                                     <button style={{ backgroundColor: '#f68169', border: '#0b0bed8c' }} type="submit" className="btn btn-primary">Đổi mật khẩu</button>
+
                                                 </div>
+                                                {/* <a href="#" style={{ margin: "0 0 0 auto", fontStyle: "italic", textDecoration: "underline" }}>Quên mật khẩu</a>&emsp;&ensp; */}
                                             </div>
                                         </form>
                                     </div>
@@ -426,7 +429,7 @@ class Profile extends Component {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div >
             </div >
         )
     }

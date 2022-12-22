@@ -85,31 +85,20 @@ class Product extends Component {
     window.scrollTo(0, 0);
 
   }
-  handleRemove = (id, name) => {
+  handleRemove = (id) => {
     let { currentPage } = this.state;
-    console.log('currentPage product', currentPage)
-    MySwal.fire({
-      title: `Xóa sản phẩm ${name} ?`,
-      text: "Bạn chắc chắn muốn xóa sản phẩm này !",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes'
-    }).then(async (result) => {
-      if (result.value) {
-        await this.props.delete_product(id, currentPage);
-        Swal.fire(
-          'Đã xóa!',
-          'Sản phẩm của bạn đã được xóa.',
-          'success'
-        )
-      }
-    })
-  }
-  handleActive = async (id, currentPage, name) => {
+    console.log('handleRemove currentPage', currentPage);
+    console.log('handleRemove productId', id);
 
-    await this.props.active_product(id, currentPage, token);
+    this.props.delete_product(id, currentPage);
+
+  }
+  handleActive = (id) => {
+    let { currentPage } = this.state;
+    console.log('handleActive currentPage', currentPage);
+    console.log('handleActive productId', id);
+
+    this.props.active_product(id, currentPage);
   }
 
   handleChange = event => {
@@ -256,8 +245,8 @@ class Product extends Component {
                             <th>Tồn kho</th>
                             {/* <th>Properties</th> */}
 
-                            <th style={{ textAlign: "center" }}>Chức năng</th>
-                            <th>trạng thái</th>
+                            <th style={{ textAlign: "center" }}>Sửa</th>
+                            <th>Ngừng kinh doanh</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -279,7 +268,7 @@ class Product extends Component {
                                 <td style={{ textAlign: "center" }}>
                                   <div>
                                     <span title='Edit' className="fix-action"><Link to={`/products/edit/${item.productId}`}> <i className="fa fa-edit"></i></Link></span>
-                                    <span
+                                    {/* <span
                                       onClick={() => this.handleRemove(item.productId, item.productName)}
                                       title='Delete'
                                       className="fix-action"
@@ -287,16 +276,16 @@ class Product extends Component {
                                       <Link to="#">
                                         <i className="fa fa-trash" style={{ color: '#ff00008f' }}></i>
                                       </Link>
-                                    </span>
+                                    </span> */}
                                   </div>
 
                                 </td>
                                 <td>
                                   {
-                                    item.isDelete == 'NO' ?
-                                      <Switch onChange={() => this.handleRemove(item.productId, currentPage, item.productName)} checked={true} />
+                                    item.isdeleted == 1 ?
+                                      <Switch onChange={() => this.handleActive(item.productId)} checked={true} />
                                       :
-                                      <Switch onChange={() => this.handleActive(item.productId, currentPage, item.productName)} checked={false} />
+                                      <Switch onChange={() => this.handleRemove(item.productId)} checked={false} />
 
                                   }
 

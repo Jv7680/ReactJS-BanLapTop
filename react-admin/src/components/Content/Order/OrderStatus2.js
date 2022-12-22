@@ -6,7 +6,7 @@ import Moment from 'react-moment';
 import { actFetchOrdersRequest, actApproveOrdersRequest, actDeleteOrderRequest } from '../../../redux/actions/order';
 import { actFetchDashboardRequest } from '../../../redux/actions/dashboard'
 import { formatNumber } from '../../../config/TYPE'
-
+import Modal from "react-modal";
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Paginator from 'react-js-paginator';
@@ -23,6 +23,17 @@ const override = css`
     transform: translate(-50%, -50%);
     z-index: 9999;
 `;
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    width: "1000px"
+  }
+};
 class OrderStatus2 extends Component {
   constructor(props) {
     super(props);
@@ -31,7 +42,9 @@ class OrderStatus2 extends Component {
       total: 0,
       currentPage: 1,
       statusPage: 'Chưa duyệt',
-      redirectToProduct: false
+      redirectToProduct: false,
+      modalIsOpen: false,
+      listProductOrdered: [],
     }
 
   }
@@ -138,8 +151,56 @@ class OrderStatus2 extends Component {
     event.preventDefault();
   }
 
+  openModalOrderDetail = (e, item) => {
+    e.preventDefault();
+
+
+    //lấy danh saasch sản phẩm của mỗi đơn hàng item
+    let listProductOrdered = item.lstOrdersDetail;
+    console.log('itemsss:', item);
+    console.log('listProductOrdered:', listProductOrdered);
+    localStorage.setItem('_orderId', item.orderId);
+    this.setState({
+      modalIsOpen: true,
+      listProductOrdered: item.lstOrdersDetail,
+    })
+  }
+
+  showItem(items) {
+    let result = null;
+    console.log('items: ', items)
+    if (items.length > 0) {
+      result = items.map((item, index) => {
+        return (
+          <tr>
+            <td className="li-product-thumbnail d-flex justify-content-center">
+              <Link to={`/products/edit/${item.productId}`} >
+                <div className="fix-cart"> <img className="fix-img" src={item.imgLink} alt="Li's Product" /></div>
+              </Link>
+            </td>
+            <td className="li-product-name">
+              <Link className="text-dark" to={`/products/edit/${item.productId}`}>{item.productName}</Link>
+            </td>
+            <td className="li-product-name">
+              {item.price}
+            </td>
+            <td className="li-product-name">
+              {item.quantity}
+            </td>
+          </tr>
+        );
+      });
+    }
+    return result;
+  }
+
+  closeModal = () => {
+    this.setState({ modalIsOpen: false });
+  }
+
   render() {
     const { orders } = this.props;
+    const { listProductOrdered } = this.state
     const { searchText, total, statusPage } = this.state;
     console.log('orders state của redux', orders)
     return (
@@ -169,12 +230,52 @@ class OrderStatus2 extends Component {
                   </div>
 
                   <div className="card-body">
+                    <Modal
+                      isOpen={this.state.modalIsOpen}
+                      onAfterOpen={this.afterOpenModal}
+                      onRequestClose={this.closeModal}
+                      style={customStyles}
+                      ariaHideApp={false}
+                      contentLabel="Example Modal"
+                    >
+                      <div className="table-content table-responsive">
+                        <table className="table">
+                          <thead>
+                            <tr>
+                              <th className="li-product-thumbnail">Ảnh</th>
+                              <th className="cart-product-name">Tên sản phẩm</th>
+                              <th className="li-product-price">Giá</th>
+                              <th className="li-product-quantity">Số lượng</th>
+                              {/* <th className="li-product-subtotal">Tổng</th> */}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {
+                              this.showItem(listProductOrdered)
+                            }
+                          </tbody>
+                        </table>
+                      </div>
+                      <div className="feedback-input">
+                        <div className="feedback-btn pb-15">
+
+                          <button
+                            onClick={this.closeModal}
+                            className="btn mr-1"
+                            style={{ background: "#fed700", color: "white" }}
+                          >
+                            Thoát
+                          </button>
+                        </div>
+                      </div>
+
+                    </Modal>
                     <div className="table-responsive">
                       <table className="table table-hover">
                         <thead>
                           <tr>
                             <th>id đơn hàng</th>
-                            <th>sản phẩm</th>
+                            <th>Tổng sản phẩm</th>
                             <th>Tổng tiền</th>
                             <th>Khách hàng</th>
                             <th>Số điện thoại</th>
@@ -190,10 +291,10 @@ class OrderStatus2 extends Component {
                         <tbody>
                           {orders && orders.length ? orders.map((item, index) => {
                             return (
-                              <tr key={index}>
+                              <tr key={index} onDoubleClick={(e) => { this.openModalOrderDetail(e, item) }}>
                                 <th scope="row">{item.orderId}</th>
                                 <td>
-                                  {
+                                  {/* {
                                     item.lstOrdersDetail && item.lstOrdersDetail.length ?
                                       item.lstOrdersDetail.map((product, index) => {
                                         return (
@@ -224,6 +325,9 @@ class OrderStatus2 extends Component {
 
                                         )
                                       }) : null
+                                  } */}
+                                  {
+                                    item.totalQuantity
                                   }
                                 </td>
                                 <td>{formatNumber(item.totalAmount)}</td>

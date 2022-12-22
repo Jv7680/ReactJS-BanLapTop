@@ -34,11 +34,13 @@ export const actFetchProductsRequest = (page) => {
 // lấy sản phẩm theo id
 export const actGetProductRequest = (id) => {
     return async dispatch => {
+        localStorage.setItem('_idproduct', id);
         dispatch(actShowLoading());
         const res = await callApi(`product/${id}`, 'GET');
         if (res && res.status === 200) {
             console.log("vào đây rồi lấy thông tin luôn rồi", res.data)
             dispatch(actGetProduct(res.data));
+            setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
         }
         setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
     }
@@ -56,7 +58,7 @@ export const actGetProductOfKeyRequest = (key, page) => {
     const newKey = (key === undefined || key === '' || key === null) ? 'latop' : key
     console.log(newPage, newKey)
     return dispatch => {
-        dispatch(actShowLoading());
+        //dispatch(actShowLoading());
         return new Promise((resolve, reject) => {
             let token = localStorage.getItem('_auth');
             console.log('newKey: ', newKey);
@@ -70,13 +72,13 @@ export const actGetProductOfKeyRequest = (key, page) => {
                         dispatch(actFetchKeySearch(newKeyPage));
                         console.log("lưu search", newKeyPage)
                         resolve(res.data);
-                        setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
+                        //setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
                     }
                 })
                 .catch(err => {
                     console.log(err);
                     reject(err);
-                    setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
+                    //setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
                 });
         });
     };

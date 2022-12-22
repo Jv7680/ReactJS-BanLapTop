@@ -45,12 +45,16 @@ class HeaderMiddle extends Component {
       return toast.error('Vui lòng nhập sản phẩm cần tìm ...');
     }
     else {
-      startLoading();
-      await this.props.searchProduct(textSearch);
+      //startLoading();
+      let res = await this.props.searchProduct(textSearch);
+      //doneLoading();
+      if (res.status === 200) {
+        this.props.history.push(`/search/${textSearch}`);
+      }
       this.setState({
         textSearch: ''
       })
-      doneLoading();
+
     }
 
   }
@@ -99,8 +103,8 @@ class HeaderMiddle extends Component {
                 {/* <button className="li-btn" type="submit"></button> */}
                 <Link
                   onClick={this.handleClick}
-                  to={`/search/${textSearch}`}>
-                  <button className="li-btn" type="submit"><i className="fa fa-search" /></button>
+                  to={`#`}>
+                  <button className="li-btn" type="button"><i className="fa fa-search" /></button>
                 </Link>
               </form>
               {/* Header Middle Searchbox Area End Here */}

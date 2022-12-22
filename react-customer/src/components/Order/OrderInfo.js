@@ -18,9 +18,9 @@ class OrderInfo extends Component {
         super(props);
 
         this.state = {
-            recipientname: "",
-            address: "",
-            phoneNumber: "",
+            recipientname: `${this.props.userInfo.lastname} ${this.props.userInfo.firstname}`,
+            address: `${this.props.userInfo.address}`,
+            phoneNumber: `${this.props.userInfo.phonenumber}`,
             customerNote: "",
         }
 
@@ -160,6 +160,7 @@ const mapStateToProps = (state) => {
     return {
         user: state.auth,
         cart: state.cart,
+        userInfo: state.user,
     }
 }
 

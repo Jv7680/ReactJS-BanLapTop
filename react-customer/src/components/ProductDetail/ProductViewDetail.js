@@ -42,25 +42,13 @@ class ProductViewDetail extends Component {
     };
   }
 
-  // componentWillMount = () => {
+  componentWillMount = async () => {
 
-  //   //kiểm tra tài khoản này đã từng comment chưa
-  //   if (this.checkCommented()) {
-  //     let { product } = this.props;
-  //     let idAccount = localStorage.getItem('_idaccount');
-  //     let listReviews = product.reviewsResponses.listReviews;
+    await this.props.get_product(this.props.id);
+  }
 
-  //     for (let i = 0; i < product.reviewsResponses.listReviews.length; i++) {
-  //       if (listReviews[i].accountId === parseInt(idAccount)) {
-  //         //tài khoản này đã comment
-  //         this.setState({
-  //           cmtContent: listReviews[i].contents,
-  //           cmtRating: listReviews[i].rating,
-  //           checkCommented: true,
-  //         });
-  //       }
-  //     }
-  //   }
+  // componentDidMount = () => {
+  //   this.props.get_product(this.props.id);
   // }
 
   handleChange = event => {
@@ -123,6 +111,9 @@ class ProductViewDetail extends Component {
                 <span style={{ fontSize: "14px", fontStyle: "italic" }}>
                   {listReviews[i].username}&nbsp;(Bạn)
                 </span>
+                <span style={{ fontSize: "14px", fontStyle: "italic", float: "right" }}>
+                  {listReviews[i].reviewsDate}&nbsp;
+                </span>
                 <div className="mt-10">
                   <Rating
                     initialValue={listReviews[i].rating}
@@ -143,13 +134,14 @@ class ProductViewDetail extends Component {
 
   handleSubmitCMT = (event) => {
     let { cmtContent, cmtRating } = this.state;
+    let idOrder = localStorage.getItem('_orderId');
     let idAccount = localStorage.getItem('_idaccount');
     let idProduct = localStorage.getItem('_idproduct');
 
     let token = localStorage.getItem('_auth');
 
     let body = {
-      orderId: 2,
+      orderId: parseInt(idOrder),
       accountId: parseInt(idAccount),
       productId: parseInt(idProduct),
       contents: cmtContent,
@@ -312,9 +304,12 @@ class ProductViewDetail extends Component {
                   <h2>{product.productName}</h2>
                   {/* Xử lý ngừng kinh doanh, hết hàng, và có discount */}
                   {
-                    product.isDelete == 'YES' ?
+                    product.isDeleted === 'yes' ?
                       (
-                        <h1 className="font-weight-bold">Sản phẩm ngừng kinh doanh</h1>
+                        <>
+                          <h3>Ngừng Kinh Doanh! </h3>
+                          <h6>Chân thành xin lỗi quý khách, chúng tôi đã ngừng kinh doanh sản phẩm này.</h6>
+                        </>
                       )
                       :
                       (
@@ -543,6 +538,9 @@ class ProductViewDetail extends Component {
                                       <h5>
                                         <span style={{ fontSize: "14px" }}>
                                           {cmt.username}
+                                        </span>
+                                        <span style={{ fontSize: "14px", fontStyle: "italic", float: "right" }}>
+                                          {cmt.reviewsDate}&nbsp;
                                         </span>
                                         <div className="mt-10">
                                           <Rating

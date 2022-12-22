@@ -82,7 +82,7 @@ class ProductAll extends Component {
                   </div>
                 </div>
                 {/* product-select-box start */}
-                {/* <div className="product-select-box">
+                <div className="product-select-box">
                   <div className="product-short">
                     <p>:</p>
                     <select
@@ -96,7 +96,7 @@ class ProductAll extends Component {
                       <option value="-price">Price (High &gt; Low)</option>
                     </select>
                   </div>
-                </div> */}
+                </div>
                 {/* product-select-box end */}
               </div>
               {/* shop-top-bar end */}

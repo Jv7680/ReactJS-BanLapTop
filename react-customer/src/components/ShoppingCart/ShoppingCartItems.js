@@ -64,7 +64,7 @@ class ShoppingCartItems extends Component {
             className="far fa-trash-alt" /></Link>
         </td>
         <td className="li-product-thumbnail d-flex justify-content-center">
-          <Link to={`/products/${item.productId}`} >
+          <Link to={`/products/${item.product.productId}`} >
             <div className="fix-cart"> <img className="fix-img" src={item.product.image} alt="Li's Product" /></div>
           </Link></td>
         <td className="li-product-name">
