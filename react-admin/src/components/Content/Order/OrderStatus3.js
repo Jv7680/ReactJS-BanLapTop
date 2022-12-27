@@ -184,7 +184,7 @@ class OrderStatus3 extends Component {
               <Link className="text-dark" to={`/products/edit/${item.productId}`}>{item.productName}</Link>
             </td>
             <td className="li-product-name">
-              {item.price}
+              {formatNumber(item.price)}
             </td>
             <td className="li-product-name">
               {item.quantity}
