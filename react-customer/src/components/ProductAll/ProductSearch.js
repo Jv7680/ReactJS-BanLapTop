@@ -52,48 +52,7 @@ class ShopCategory extends Component {
               </div>
               {/* Li's Banner Area End Here *presentation/}
               {/* shop-top-bar start */}
-              <div className="shop-top-bar mt-30">
-                <div className="shop-bar-inner">
-                  <div className="product-view-mode">
-                    {/* shop-item-filter-list start */}
-                    <ul className="nav shop-item-filter-list" role="tablist">
-                      <li className="active" role="presentation">
-                        <a
-                          aria-selected="true"
-                          className="active show"
-                          data-toggle="tab"
-                          role="tab"
-                          aria-controls="grid-view"
-                          href="#grid-view"
-                        >
-                          <i className="fa fa-th" />
-                        </a>
-                      </li>
-                    </ul>
-                    {/* shop-item-filter-list end */}
-                  </div>
-                  <div className="toolbar-amount">
-                    <span>Showing 1 to 12</span>
-                  </div>
-                </div>
-                {/* product-select-box start */}
-                <div className="product-select-box">
-                  <div className="product-short">
-                    <p>Sort By:</p>
-                    <select
-                      className="nice-select"
-                      onChange={this.handleChangeSelectSort}
-                    >
-                      <option value="createdAt">All</option>
-                      <option value="nameProduct">Name (A - Z)</option>
-                      <option value="-nameProduct">Name (Z - A)</option>
-                      <option value="price">Price (Low &gt; High)</option>
-                      <option value="-price">Price (High &gt; Low)</option>
-                    </select>
-                  </div>
-                </div>
-                {/* product-select-box end */}
-              </div>
+
               {/* shop-top-bar end */}
               {/* shop-products-wrapper start */}
               <div className="shop-products-wrapper">
@@ -122,7 +81,7 @@ class ShopCategory extends Component {
                 <div className="paginatoin-area">
                   <div className="row">
                     <div className="col-lg-6 col-md-6">
-                      <p>Showing 1-12 items</p>
+                      {/* <p>Showing 1-12 items</p> */}
                     </div>
                     <div className="col-lg-6 col-md-6">
                       <ul className="pagination-box">

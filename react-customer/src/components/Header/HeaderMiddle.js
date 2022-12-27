@@ -47,13 +47,12 @@ class HeaderMiddle extends Component {
     else {
       //startLoading();
       let res = await this.props.searchProduct(textSearch);
+      //console.log('searchProduct res: ', res);
       //doneLoading();
-      if (res.status === 200) {
-        this.props.history.push(`/search/${textSearch}`);
-      }
-      this.setState({
-        textSearch: ''
-      })
+      this.props.history.push(`/search/${textSearch}`);
+      // this.setState({
+      //   textSearch: ''
+      // })
 
     }
 
@@ -156,8 +155,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    searchProduct: (key) => {
-      dispatch(actGetProductOfKeyRequest(key))
+    searchProduct: (key, page) => {
+      dispatch(actGetProductOfKeyRequest(key, page))
     },
     fetch_items: (id) => {
       dispatch(actFetchCartRequest(id))

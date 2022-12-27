@@ -104,7 +104,7 @@ const routes = [
     main: (match) => <ShopCategoryPage match={match} />
   },
   {
-    path: '/search',
+    path: '/search/:key',
     exact: false,
     main: (match) => <ProductSearchPage match={match} />
   },

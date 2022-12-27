@@ -4,7 +4,7 @@ import { actShowLoading, actHiddenLoading } from './loading'
 
 
 // lấy 12 sản phẩm mỗi page
-export const actFetchProductsRequest = (page) => {
+export const actFetchProductsRequest = (page, newKey) => {
     const newPage = page === null || page === undefined ? 1 : page
     return dispatch => {
         dispatch(actShowLoading());
@@ -62,7 +62,7 @@ export const actGetProductOfKeyRequest = (key, page) => {
         return new Promise((resolve, reject) => {
             let token = localStorage.getItem('_auth');
             console.log('newKey: ', newKey);
-            callApi(`product/search?keyword=${newKey}`, 'GET', null, token)
+            callApi(`product/search?page=${newPage}&size=12&keyword=${newKey}`, 'GET', null, token)
                 .then(res => {
                     if (res && res.status === 200) {
                         localStorage.setItem("_keyword", newKey)
