@@ -113,12 +113,12 @@ class HeaderMiddle extends Component {
                 <ul className="hm-menu">
 
                   {/* Begin Header Middle Wishlist Area */}
-                  <li className="hm-wishlist">
+                  {/* <li className="hm-wishlist">
                     <Link to="/wishlist">
-                      {/* <span className="cart-item-count wishlist-item-count"> {countWishList.length}</span> */}
+                      <span className="cart-item-count wishlist-item-count"> {countWishList.length}</span>
                       <i className="fa fa-heart-o" />
                     </Link>
-                  </li>
+                  </li> */}
 
                   {/* Header Middle Wishlist Area End Here */}
                   {/* Begin Header Mini Cart Area */}

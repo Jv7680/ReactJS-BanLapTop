@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import ProductItem from "./ProductItem";
+import NewItem from "./NewItem";
 import { connect } from "react-redux";
 import { actFetchProductsRequest } from "../../redux/actions/products";
+import { actFetchNewsRequest } from "../../redux/actions/news";
 import Paginator from 'react-js-paginator';
 
-class ProductAll extends Component {
+class NewAll extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -13,12 +14,12 @@ class ProductAll extends Component {
     };
   }
 
-  componentDidMount() {
-    this.fetch_reload_data();
+  componentWillMount = async () => {
+    await this.fetch_reload_data();
   }
 
   fetch_reload_data() {
-    this.props.fetch_products().then(res => {
+    this.props.fetch_news().then(res => {
       this.setState({
         total: res.totalPage
       });
@@ -38,27 +39,25 @@ class ProductAll extends Component {
 
 
   render() {
-    let { products } = this.props;
+    let { news } = this.props;
     const { total } = this.state;
 
     return (
-      <div className="content-wraper pt-60 pb-60">
+      <div className="content-wraper pb-60">
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
               {/* Begin Li's Banner Area */}
-              <div className="single-banner shop-page-banner">
+              {/* <div className="single-banner shop-page-banner">
                 <a href="/">
                   <img
-                    src={process.env.PUBLIC_URL + '/images/bannerproductpage.png'}
+                    src="https://i.ibb.co/rfh0sf4/2.jpg"
                     alt="Li's Static Banner"
                   />
                 </a>
-              </div>
+              </div> */}
               {/* Li's Banner Area End Here *presentation/}
-              {/* shop-top-bar start */}
 
-              {/* shop-top-bar end */}
               {/* shop-products-wrapper start */}
               <div className="shop-products-wrapper">
                 <div className="tab-content">
@@ -69,13 +68,13 @@ class ProductAll extends Component {
                   >
                     <div className="product-area shop-product-area">
                       <div className="row">
-                        {products && products.length
-                          ? products.map((item, index) => {
+                        {news && news.length
+                          ? news.map((item, index) => {
                             return (
-                              <ProductItem
+                              <NewItem
                                 key={index}
-                                product={item}
-                              ></ProductItem>
+                                newItem={item}
+                              ></NewItem>
                             );
                           })
                           : null}
@@ -86,7 +85,6 @@ class ProductAll extends Component {
                 <div className="paginatoin-area">
                   <div className="row">
                     <div className="col-lg-6 col-md-6">
-                      <p>Xem từ 1-12 sản phẩm</p>
                     </div>
                     <div className="col-lg-6 col-md-6">
                       <ul className="pagination-box">
@@ -111,16 +109,16 @@ class ProductAll extends Component {
 
 const mapStateToProps = state => {
   return {
-    products: state.products
+    news: state.news
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetch_products: (page) => {
-      return dispatch(actFetchProductsRequest(page));
+    fetch_news: (page) => {
+      return dispatch(actFetchNewsRequest(page));
     }
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductAll);
+export default connect(mapStateToProps, mapDispatchToProps)(NewAll);

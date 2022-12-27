@@ -13,6 +13,8 @@ import OrderStatus2Page from './pages/OrderStatus2Page';
 import OrderStatus3Page from './pages/OrderStatus3Page';
 import OrderStatus4Page from './pages/OrderStatus4Page';
 import OrderStatus5Page from './pages/OrderStatus5Page';
+import NewPage from './pages/NewPage';
+import ActionNew from './components/Content/New/ActionNew';
 
 const routes = [
     {
@@ -94,6 +96,21 @@ const routes = [
         path: '/producers/edit/:id',
         exact: false,
         main: ({ match, history }) => <ActionProducerPage match={match} history={history} />
+    },
+    {
+        path: '/news',
+        exact: true,
+        main: () => <NewPage />
+    },
+    {
+        path: '/news/add',
+        exact: false,
+        main: ({ match, history }) => <ActionNew match={match} history={history} />
+    },
+    {
+        path: '/news/edit/:id',
+        exact: false,
+        main: ({ match, history }) => <ActionNew match={match} history={history} />
     }
 
 ]

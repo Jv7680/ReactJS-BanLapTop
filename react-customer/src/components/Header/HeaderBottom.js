@@ -47,6 +47,9 @@ class HeaderBottom extends Component {
                       <li className="nav-item px-3 ">
                         <NavLink className="nav-link" to="/products" exact={true}>Sản phẩm</NavLink>
                       </li>
+                      <li className="nav-item px-3 ">
+                        <NavLink className="nav-link" to="/news" exact={true}>Tin tức</NavLink>
+                      </li>
                       <li className="nav-item px-3">
                         <NavLink className="nav-link" to="/about" exact={true}>Về chúng tôi</NavLink>
                       </li>

@@ -1,0 +1,19 @@
+.fix-img-div {
+  height: 220px;
+  width: 230px;
+  overflow: hidden;
+}
+
+.fix-img {
+  height: 90%;
+  width: 90% !important;
+  object-fit: contain;
+  padding: 10px;
+}
+
+.fix-imgNew {
+  height: 90%;
+  width: 95% !important;
+  object-fit: contain;
+  padding-top: 10px;
+}

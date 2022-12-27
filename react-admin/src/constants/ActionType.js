@@ -1,6 +1,14 @@
 export const LOGIN = 'LOGIN';
 export const TOKEN_REDUX = 'TOKEN_REDUX';
 
+export const FETCH_NEWS = 'FETCH_NEWS';
+export const FETCH_NEW = 'FETCH_NEW';
+export const SEARCH_NEWS = 'SEARCH_NEWS';
+export const ADD_NEW = 'ADD_NEW';
+export const REMOVE_NEW = 'REMOVE_NEW';
+export const EDIT_NEW = 'EDIT_NEW';
+export const FETCH_KEYSEARCH = 'FETCH_KEYSEARCH';
+
 export const FETCH_ROLES = 'FETCH_ROLES';
 export const FIND_ROLES = 'FIND_ROLES';
 export const EDIT_ROLE = 'EDIT_ROLE';

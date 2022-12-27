@@ -24,6 +24,8 @@ import ProfilePage from './pages/ProfilePage';
 import ProductWishListPage from './pages/ProductWishListPage'
 import ActiveAccountPage from './pages/ActiveAccountPage';
 import OrderInfoPage from './pages/OrderInfoPage';
+import NewPage from './pages/NewPage';
+import NewDetailPage from './pages/NewDetailPage';
 
 const routes = [
   {
@@ -121,6 +123,16 @@ const routes = [
     path: '/order/:status',
     exact: false,
     main: (match) => < OrderPage match={match} />
+  },
+  {
+    path: '/news',
+    exact: true,
+    main: (match) => < NewPage match={match} />
+  },
+  {
+    path: '/news/:id',
+    exact: true,
+    main: (match) => < NewDetailPage match={match} />
   },
   {
     path: '/checkout',

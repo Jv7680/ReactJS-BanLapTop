@@ -260,7 +260,11 @@ class Product extends Component {
                                     <img src={item.image} className="fix-img" alt="not found" />
                                   </div>
                                 </td>
-                                <td><p className="text-truncate" style={{ width: 300 }}>{item.description}</p></td>
+                                <td>
+                                  <p className="text-truncate" style={{ width: 300 }}>
+                                    {item.description.replace(/<(?:.|\n)*?>/gm, '').slice(0, 70)}...
+                                  </p>
+                                </td>
                                 <td>{item.unitprice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</td>
                                 <td>{item.quantity}</td>
                                 {/* <td>{item.properties}</td> */}

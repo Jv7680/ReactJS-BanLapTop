@@ -2522,6 +2522,22 @@ textarea:focus {
 	z-index: 9;
 }
 
+.single-product-wrapNew {
+	background: #ffffff none repeat scroll 0 0;
+	position: relative;
+	padding: 0 0 18px 0;
+	cursor: pointer;
+	-webkit-transition: all 0.3s ease-in-out;
+	transition: all 300ms ease-in 0s;
+}
+
+.single-product-wrapNew:hover {
+	/* margin: 0 0 -60px; */
+	margin: -20px;
+	background: #bebebe none repeat scroll 0 0;
+	/* z-index: 9; */
+}
+
 .single-product-wrap.mt-40:hover {
 	margin: 40px 0 -85px;
 }

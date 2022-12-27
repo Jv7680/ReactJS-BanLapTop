@@ -133,7 +133,7 @@ class TopDiscountProductItems extends Component {
                     <div>
                       <li className="add-cart active"><Link to="#" onClick={() => this.addItemToCart(product)} >Thêm vào giỏ</Link></li>
                       <li><Link to="#" onClick={(id) => this.getInfoProduct(product.productId)} title="chi tiểt" className="quick-view-btn" data-toggle="modal" data-target="#exampleModalCenter"><i className="fa fa-eye" /></Link></li>
-                      <li><Link to="#" onClick={() => this.addItemToFavorite(product.productId)} className="links-details" title="yêu thích" ><i className="fa fa-heart-o" /></Link></li>
+                      {/* <li><Link to="#" onClick={() => this.addItemToFavorite(product.productId)} className="links-details" title="yêu thích" ><i className="fa fa-heart-o" /></Link></li> */}
                     </div>
                   )
               }

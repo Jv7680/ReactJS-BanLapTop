@@ -20,6 +20,8 @@ import loading from './loading';
 import search from './search'
 import addresses from './address';
 import wishlist from './wishlist';
+import news from './news';
+import _new from './new';
 
 const appReducers = combineReducers({
     categories,
@@ -27,6 +29,8 @@ const appReducers = combineReducers({
     loading,
     products,
     product,
+    news,
+    _new,
     productsOffice,
     productsTopDiscount,
     productsTopBestProduct,
