@@ -18,7 +18,7 @@ const customStyles = {
         bottom: "auto",
         marginRight: "-50%",
         transform: "translate(-50%, -50%)",
-        width: "700px"
+        width: "1000px"
     }
 };
 
@@ -78,7 +78,7 @@ class OrderStatus5 extends Component {
                             <Link className="text-dark" to={`/products/${item.productId}`}>{item.productName}</Link>
                         </td>
                         <td className="li-product-name">
-                            {item.price}
+                            {formatNumber(item.price)}
                         </td>
                         <td className="li-product-name">
                             {item.quantity}

@@ -85,12 +85,12 @@ class OrderStatus4 extends Component {
                             <Link className="text-dark" to={`/products/${item.productId}`}>{item.productName}</Link>
                         </td>
                         <td className="li-product-name">
-                            {item.price}
+                            {formatNumber(item.price)}
                         </td>
                         <td className="li-product-name">
                             {item.quantity}
                         </td>
-                        <td className="li-product-name">
+                        {/* <td className="li-product-name">
                             {
                                 item.isReviewed ?
                                     (
@@ -113,7 +113,7 @@ class OrderStatus4 extends Component {
                                         </>
                                     )
                             }
-                        </td>
+                        </td> */}
                     </tr>
                 );
             });
@@ -281,7 +281,7 @@ class OrderStatus4 extends Component {
                                                             <th className="cart-product-name">Tên sản phẩm</th>
                                                             <th className="li-product-price">Giá</th>
                                                             <th className="li-product-quantity">Số lượng</th>
-                                                            <th className="li-product-quantity">Đánh giá</th>
+                                                            {/* <th className="li-product-quantity">Đánh giá</th> */}
                                                             {/* <th className="li-product-subtotal">Tổng</th> */}
                                                         </tr>
                                                     </thead>
