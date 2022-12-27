@@ -448,7 +448,7 @@ nav.side-navbar a .badge {
 
 nav.side-navbar .sidebar-header {
   padding: 10px 10px;
-  border-bottom: 1px solid;
+  /* border-bottom: 1px solid; */
 }
 
 nav.side-navbar .avatar {

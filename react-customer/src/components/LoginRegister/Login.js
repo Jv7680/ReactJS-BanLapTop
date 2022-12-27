@@ -118,9 +118,9 @@ class Login extends Component {
                 <button onClick={(event) => this.handleSubmit(event)} className="register-button mt-0 mb-3" value="Login">Đăng nhập</button>
               </div>
               <div className="col-md-8">
-                <button onClick={(event) => this.handleLoginGoogle(event)} className="loginBtn loginBtn--google" value="LoginGoogle" ref="googleLoginBtn">
+                {/* <button onClick={(event) => this.handleLoginGoogle(event)} className="loginBtn loginBtn--google" value="LoginGoogle" ref="googleLoginBtn">
                   Login with Google
-                </button>
+                </button> */}
               </div>
               {/* <div className="col-8">
                 <GoogleLogin 
