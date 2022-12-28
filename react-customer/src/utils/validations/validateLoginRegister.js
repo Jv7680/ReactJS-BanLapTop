@@ -69,8 +69,8 @@ const validateLoginRegister = {
     },
 
     phonenumber: (phonenumber) => {
-        if (phonenumber.length < 10 || phonenumber.length > 12) {
-            toast.error('Số điện thoại từ 10-12 ký tự!');
+        if (phonenumber.length != 10) {
+            toast.error('Số điện thoại cần 10 ký tự!');
             return false;
         }
         else if (!checkPhonenumber(phonenumber)) {
