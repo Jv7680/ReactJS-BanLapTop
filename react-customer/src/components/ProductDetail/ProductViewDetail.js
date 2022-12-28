@@ -592,8 +592,8 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    get_product: productId => {
-      dispatch(actGetProductRequest(productId));
+    get_product: async (productId) => {
+      await dispatch(actGetProductRequest(productId));
     },
     addCart: (idCustomer, product, quantity, token) => {
       dispatch(actAddCartRequest(idCustomer, product, quantity, token));
